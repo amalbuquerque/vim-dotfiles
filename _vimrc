@@ -1,19 +1,16 @@
-﻿" call pathogen#infect()
-call pathogen#infect('C:\\dados\\programas\\vim\\vim73\\bundle')
+﻿" call pathogen#infect() " with this, it will search for packages on '~/.vim/bundle'
+" call pathogen#infect('C:\\dados\\programas\\vim\\vim73\\bundle')
+" 2014-05-30, AA: Removed configs already set on sensible.vim
+source $VIMRUNTIME/vimrc_example.vim
+source $VIMRUNTIME/mswin.vim
+behave mswin
+
+call pathogen#infect($VIMRUNTIME . '\\bundle')
 
 set nocompatible
 
 " unnamed register = windows clipboard
 set clipboard=unnamed
-
-" cenas copiadas do amix_ultimate_vimrc
-
-" Enable filetype plugin
-filetype plugin on
-filetype indent on
-
-" Set to auto read when a file is changed from the outside
-set autoread
 
 " Remap VIM 0 to first non-blank character
 map 0 ^
@@ -46,23 +43,16 @@ map <leader>e :tabnew! $MYVIMRC<cr>
 " When vimrc is edited, reload it
 autocmd! bufwritepost _vimrc source $MYVIMRC
 
-" Set 7 lines to the curors - when moving vertical..
+" Set 7 lines to the cursors - when moving vertical..
 set scrolloff=7
 
-" Set bigger history
-set history=1000
-
-set wildmenu "Turn on WiLd menu
 set wildmode=list:longest
-
-set ruler "Always show current position
 
 set cmdheight=2 "The commandbar height
 
 set hidden "Change buffer - without saving
 
 " Set backspace config
-set backspace=eol,start,indent
 set whichwrap+=<,>,h,l
 
 set ignorecase "Ignore case when searching
@@ -70,7 +60,6 @@ set smartcase
 
 set hlsearch "Highlight search things
 
-set incsearch "Make search act like search in modern browsers
 set nolazyredraw "Don't redraw while executing macros 
 
 set magic "Set magic on, for regular expressions
@@ -116,10 +105,6 @@ endif
 set background=dark
 set nonu
 
-" Tinha encoding=utf-8 mas imprimia mal os caracteres PT
-set encoding=latin1
-set penc=latin1
-
 " Turn backup off, since most stuff is in SVN, git anyway...
 set directory=%TMP%
 set backupdir=%TMP%
@@ -139,13 +124,11 @@ endtry
 set expandtab
 set shiftwidth=4
 set tabstop=4
-set smarttab
 
 set lbr
 set tw=500
 
-set ai "Auto indent
-set si "Smart indet
+set smartindent "Smart indet
 set cindent "Use C-style indent
 set wrap "Wrap lines
 set textwidth=1000 "por defeito sao 500 apenas
@@ -410,7 +393,6 @@ au FileType cs set errorformat=\ %#%f(%l\\\,%c):\ error\ CS%n:\ %m
 autocmd BufEnter *.md exe 'noremap <leader>m :!start C:\Users\oiu027\AppData\Local\Google\Chrome\Application\chrome.exe %:p<CR>'
 
 " Colocar o caminho do ficheiro de tags gerado com o Ctags
-" set tag=C:/Users/AnaLus~1/Desktop/nho/Vim/SINtags/tags.sin
 set tag=$VIMRUNTIME\ctags\alltags
 
 """"""""""""""""""""""""""""""
@@ -516,10 +498,6 @@ set guicursor=n:block-blinkon0-Cursor,v:block-blinkon0-VisualCursor,c-i-ci:ver25
 " noremap <leader>y :CommandTFlush<cr>
 
 " FIM cenas copiadas do amix_ultimate_vimrc
-
-source $VIMRUNTIME/vimrc_example.vim
-source $VIMRUNTIME/mswin.vim
-behave mswin
 
 "set diffexpr=MyDiff()
 "function MyDiff()
