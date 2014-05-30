@@ -1,7 +1,6 @@
 ﻿" call pathogen#infect() " with this, it will search for packages on '~/.vim/bundle'
 " call pathogen#infect('C:\\dados\\programas\\vim\\vim73\\bundle')
 " 2014-05-30, AA: Removed configs already set on sensible.vim
-"adgads
 source $VIMRUNTIME/vimrc_example.vim
 source $VIMRUNTIME/mswin.vim
 behave mswin
