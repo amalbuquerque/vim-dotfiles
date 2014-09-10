@@ -31,6 +31,12 @@ nmap <leader>w :w!<cr>
 " jj => nao ter de ir ao Esc
 imap jj <Esc>
 
+" 2014-06-19, AA: http://vim.wikia.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
+" Ctrl+BS Apaga previous word
+" imap <C-BS> <C-W>
+inoremap <C-BS> <C-\><C-o>db
+inoremap <C-Del> <C-\><C-o>dw
+
 " Teclado PT ` e dificil de usar
 nnoremap \ `
 
