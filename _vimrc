@@ -1,11 +1,22 @@
-﻿" call pathogen#infect() " with this, it will search for packages on '~/.vim/bundle'
+" call pathogen#infect() " with this, it will search for packages on '~/.vim/bundle'
 " call pathogen#infect('C:\\dados\\programas\\vim\\vim73\\bundle')
 " 2014-05-30, AA: Removed configs already set on sensible.vim
-source $VIMRUNTIME/vimrc_example.vim
-source $VIMRUNTIME/mswin.vim
-behave mswin
+" 2014-09-18, AA: Comentei as 3 seguintes linhas para funcar no cygwin
+" source $VIMRUNTIME/vimrc_example.vim
+" source $VIMRUNTIME/mswin.vim
+" behave mswin
 
-call pathogen#infect($VIMRUNTIME . '\\bundle')
+" 2014-09-18, AA: Para fazer o autoload do pathogen do lado do windows
+if has('win32') || has('win64')
+  set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
+endif
+
+" 2014-09-18, AA: Substitui a path por $HOME . '\\.vim\\bundle'
+if has("win32")
+    call pathogen#infect($HOME . '\\.vim\\bundle\\{}')
+else
+    call pathogen#infect($HOME . '/.vim/bundle/{}')
+endif
 
 set nocompatible
 
@@ -81,7 +92,13 @@ set tm=500
 
 " Set font according to system
 " set guifont=Courier_New:h12 " :cANSI 
-set guifont=Envy\ Code\ R:h10:cANSI
+if has ("gui_running")
+    if has("gui_gtk2")
+        set guifont=Envy\ Code\ R\ 10
+    elseif has("gui_win32")
+        set guifont=Envy\ Code\ R:h10:cANSI
+    endif
+endif
 
 " abrir utf-8 the right way
 if has("multi_byte")
@@ -536,4 +553,6 @@ hi User2 guifg=#dd3333 guibg=#222222
 hi User3 guifg=#ff66ff guibg=#222222
 hi User4 guifg=#a0ee40 guibg=#222222
 hi User5 guifg=#eeee40 guibg=#222222
+
+
 
