@@ -114,6 +114,17 @@ if has("multi_byte")
   " set fileencodings=ucs-bom,utf-8,latin1
 endif
 
+" 2014-09-30, AA: Copied from
+" http://www.reddit.com/r/vim/comments/1rzr72/how_do_i_work_with_different_file_encodings_in_vim/
+function! CheckFileEncoding()
+  if exists('b:fenc_at_read') && &fileencoding != b:fenc_at_read
+    exec 'e! ++enc=' . &fileencoding
+    unlet b:fenc_at_read
+  endif
+endfunction
+au BufRead let b:fenc_at_read=&fileencoding
+au BufWinEnter call CheckFileEncoding()
+
 if has("gui_running")
   " set guioptions-=mT
   set guioptions-=m
@@ -356,7 +367,8 @@ inoremap ?t <><esc>i
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General Abbrevs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-iab xdate <c-r>=strftime("%y/%d/%m %H:%M:%S")<cr>
+iab xdate <c-r>=strftime("%Y-%m-%d")<cr>
+iab xtime <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr>
 
 "Move a line of text using ALT+[jk]
 nmap <M-j> mz:m+<cr>`z
