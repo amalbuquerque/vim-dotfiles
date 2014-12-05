@@ -14,6 +14,9 @@ endif
 " 2014-09-18, AA: Substitui a path por $HOME . '\\.vim\\bundle'
 if has("win32")
     call pathogen#infect($HOME . '\\.vim\\bundle\\{}')
+    source $VIMRUNTIME/vimrc_example.vim
+    " source $VIMRUNTIME/mswin.vim
+    behave mswin
 else
     call pathogen#infect($HOME . '/.vim/bundle/{}')
 endif
@@ -34,6 +37,9 @@ let g:mapleader = ","
 " easy xml editing
 let g:xml_syntax_folding = 1
 set foldmethod=syntax
+
+" 2014-10-27, AA: latex indenting
+let g:tex_flavor='latex'
 
 " Fast saving
 nmap <leader>w :w!<cr>
@@ -125,16 +131,22 @@ endfunction
 au BufRead let b:fenc_at_read=&fileencoding
 au BufWinEnter call CheckFileEncoding()
 
+" 2014-11-04, AA: using seoul256
+" instead of molokai
+let g:seoul256_background = 233
 if has("gui_running")
   " set guioptions-=mT
   set guioptions-=m
   set guioptions-=T
   set t_Co=256
-  colorscheme molokai
+  " colorscheme molokai
+  " colorscheme seoul256
+  colorscheme atom-dark
   " colorscheme peaksea
   " colorscheme ir_black
 else
-  colorscheme zellner
+  " colorscheme zellner
+  colorscheme seoul256
 endif
 set background=dark
 set nonu
@@ -160,12 +172,16 @@ set shiftwidth=4
 set tabstop=4
 
 set lbr
-set tw=500
 
 set smartindent "Smart indet
 set cindent "Use C-style indent
 set wrap "Wrap lines
 set textwidth=1000 "por defeito sao 500 apenas
+
+" 2014-11-07, AA: using https://github.com/haya14busa/incsearch.vim.git
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
 
 " Really useful!
 "  In visual mode when you press * or # to search for the current selection
@@ -246,11 +262,13 @@ func! CurrentFileDir(cmd)
   return a:cmd . " " . expand("%:p:h") . "/"
 endfunc
 
-" Map space to / (search) 
+" 2014-11-07, AA: Map space to : (command) 
 " C-space to ? (backwards search)
-map <space> /
-map <C-space> ?
-map <silent> <leader><cr> :noh<cr>
+map <space> :
+" 2014-11-07, AA: never used it!
+" map <C-space> ?
+" map <silent> <leader><cr> :noh<cr>
+map <silent> <leader><leader> :noh<cr>
 
 " Smart way to move btw. windows
 map <C-j> <C-W>j
@@ -346,12 +364,13 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Parenthesis/bracket expanding
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-vnoremap ?1 <esc>`>i)<esc>`<i(<esc>
-vnoremap ?2 <esc>`>i]<esc>`<i[<esc>
-vnoremap ?3 <esc>`>i}<esc>`<i{<esc>
-vnoremap ?$ <esc>`>i"<esc>`<i"<esc>
-vnoremap ?q <esc>`>i'<esc>`<i'<esc>
-vnoremap ?e <esc>`>i"<esc>`<i"<esc>
+" 2014-11-03, AA: surround.vim faz isto com o S", ou S{, etc.
+" vnoremap ?1 <esc>`>a)<esc>`<i(<esc>
+" vnoremap ?2 <esc>`>a]<esc>`<i[<esc>
+" vnoremap ?3 <esc>`>a}<esc>`<i{<esc>
+" vnoremap ?$ <esc>`>a"<esc>`<i"<esc>
+" vnoremap ?q <esc>`>a'<esc>`<i'<esc>
+" vnoremap ?e <esc>`>a"<esc>`<i"<esc>
 
 " Map auto complete of (, ", ', [
 inoremap ?1 ()<esc>i
@@ -361,6 +380,26 @@ inoremap ?4 {<esc>o}<esc>O<tab>
 inoremap ?q ''<esc>i
 inoremap ?e ""<esc>i
 inoremap ?t <><esc>i
+
+" 2014-11-03, AA: From http://stackoverflow.com/a/4952200/687420
+" mapping to make movements operate on 1 screen line in wrap mode
+function! ScreenMovement(movement)
+   if &wrap
+      return "g" . a:movement
+   else
+      return a:movement
+   endif
+endfunction
+onoremap <silent> <expr> j ScreenMovement("j")
+onoremap <silent> <expr> k ScreenMovement("k")
+onoremap <silent> <expr> 0 ScreenMovement("0")
+onoremap <silent> <expr> ^ ScreenMovement("^")
+onoremap <silent> <expr> $ ScreenMovement("$")
+nnoremap <silent> <expr> j ScreenMovement("j")
+nnoremap <silent> <expr> k ScreenMovement("k")
+nnoremap <silent> <expr> 0 ScreenMovement("0")
+nnoremap <silent> <expr> ^ ScreenMovement("^")
+nnoremap <silent> <expr> $ ScreenMovement("$")
 
 
 
@@ -409,6 +448,13 @@ map <leader>u :TMiniBufExplorer<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Omni complete functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" 2014-11-04, AA: From http://robots.thoughtbot.com/vim-you-complete-me
+imap <Tab> <C-P>
+imap <C-Tab> <C-X><C-O>
+set complete=.,b,u,]
+set completeopt=menu,preview
+
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
 """""""""""""""""""""""""""""""""""""""""""""""""""
@@ -441,6 +487,23 @@ let g:yankring_min_element_length = 2 " exclude single char deletes
 let g:yankring_max_history = 20
 map <leader>y :YRShow<cr>
 map <leader>cy :YRClear<cr>
+
+""""""""""""""""""""""""""""""
+" => Ruby section
+""""""""""""""""""""""""""""""
+au FileType ruby set omnifunc=rubycomplete#Complete 
+" au FileType ruby let g:rubycomplete_buffer_loading = 1 
+" au FileType ruby let g:rubycomplete_classes_in_global = 1
+
+
+""""""""""""""""""""""""""""""
+" => Text (prose) section
+""""""""""""""""""""""""""""""
+" 2014-11-10, AA: From https://github.com/junegunn/limelight.vim
+autocmd User GoyoEnter Limelight
+autocmd User GoyoLeave Limelight!
+au FileType text Goyo
+nnoremap <Leader>G :Goyo<CR>
 
 """"""""""""""""""""""""""""""
 " => Python section
@@ -566,5 +629,28 @@ hi User3 guifg=#ff66ff guibg=#222222
 hi User4 guifg=#a0ee40 guibg=#222222
 hi User5 guifg=#eeee40 guibg=#222222
 
+" 2014-11-04, AA: Vim-sneak, Alternativa ao Easymotion
+let g:sneak#streak = 1
+
+" 2014-11-03, AA: Easymotion plug-in
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+
+" Bi-directional find motion
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+" `s{char}{label}`
+" nmap s <Plug>(easymotion-s)
+" or
+" `s{char}{char}{label}`
+" Need one more keystroke, but on average, it may be more comfortable.
+" 2014-11-04, AA: Substitui pelo Vim-streak
+" nmap s <Plug>(easymotion-s2)
+
+" Turn on case sensitive feature
+let g:EasyMotion_smartcase = 1
+
+" JK motions: Line motions
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+" 2014-11-03, END
 
 
