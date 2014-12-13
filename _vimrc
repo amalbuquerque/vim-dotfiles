@@ -38,9 +38,6 @@ let g:mapleader = ","
 let g:xml_syntax_folding = 1
 set foldmethod=syntax
 
-" 2014-10-27, AA: latex indenting
-let g:tex_flavor='latex'
-
 " Fast saving
 nmap <leader>w :w!<cr>
 
@@ -99,11 +96,18 @@ set tm=500
 " Set font according to system
 " set guifont=Courier_New:h12 " :cANSI 
 if has ("gui_running")
+    " 2014-12-08 10:59:50, AA: latex config for Gvim
+    let g:Tex_ViewRule_pdf='SumatraPDF'
+
     if has("gui_gtk2")
         set guifont=Envy\ Code\ R\ 10
     elseif has("gui_win32")
         set guifont=Envy\ Code\ R:h10:cANSI
     endif
+else
+    " 2014-12-08 10:59:50, AA: latex config for shell
+    let g:Tex_CompileRule_pdf = 'latexmk -pdf -f $*'
+    let g:Tex_ViewRule_pdf = 'run /cygdrive/c/dados/programas/sumatraPDF/SumatraPDF'
 endif
 
 " abrir utf-8 the right way
@@ -262,10 +266,14 @@ func! CurrentFileDir(cmd)
   return a:cmd . " " . expand("%:p:h") . "/"
 endfunc
 
-" 2014-11-07, AA: Map space to : (command) 
-" C-space to ? (backwards search)
+" 2014-12-08 12:28:07, AA: Center screen on next/prev search:
+nmap n nzz
+nmap N Nzz
+
+" 2014-11-07, AA: Map space to : (command)
 map <space> :
 " 2014-11-07, AA: never used it!
+" C-space to ? (backwards search)
 " map <C-space> ?
 " map <silent> <leader><cr> :noh<cr>
 map <silent> <leader><leader> :noh<cr>
@@ -525,6 +533,19 @@ au FileType python map <buffer> <leader>D ?def
 
 
 """"""""""""""""""""""""""""""
+" => Latex section
+"""""""""""""""""""""""""""""""
+" 2014-10-27, AA: latex indenting
+let g:tex_flavor='latex'
+let g:Tex_MultipleCompileFormats='dvi,pdf'
+let g:Tex_DefaultTargetFormat = 'pdf'
+
+au FileType tex set textwidth=80
+au FileType tex set sw=2
+au FileType tex set iskeyword+=:
+au FileType bib set textwidth=80
+
+""""""""""""""""""""""""""""""
 " => JavaScript section
 """""""""""""""""""""""""""""""
 au FileType javascript call JavaScriptFold()
@@ -653,4 +674,15 @@ map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 " 2014-11-03, END
 
+set number        " always show line numbers
+set list
 
+" 2014-12-07 13:30:20, AA:
+" Define characters to show when you show formatting
+" stolen from https://github.com/tpope/vim-sensible
+if &listchars ==# 'eol:$'
+  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+  if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
+    let &listchars = "tab:\u21e5,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
+  endif
+endif
