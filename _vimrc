@@ -576,8 +576,8 @@ let MRU_Max_Entries = 400
 map <leader>r :MRU<CR>
 
 "Quickly open a buffer for scripbble
-map <leader>q :e ~/buffer<cr>
-au BufRead,BufNewFile ~/buffer iab <buffer> xh1 ===========================================
+map <leader>q :e ~/Dropbox/etc/scratchpad.txt<cr>
+au BufRead,BufNewFile ~/Dropbox/etc/scratchpad.txt iab <buffer> xh1 ============================ <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr> ========
 
 map <leader>pp :setlocal paste! paste?<cr>
 
