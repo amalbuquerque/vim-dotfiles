@@ -42,8 +42,9 @@ set foldmethod=syntax
 nmap <leader>w :w!<cr>
 
 " 2014-03-20, AA: http://approache.com/blog/increase-your-productivity-with-vim-and-terminal/
-" jj => nao ter de ir ao Esc
-imap jj <Esc>
+" 2014-12-18, AA: Updated from http://www.reddit.com/r/vim/comments/2po023/which_key_do_you_bind_to_esc/
+" jk => nao ter de ir ao Esc
+imap jk <Esc>
 
 " 2014-06-19, AA: http://vim.wikia.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
 " Ctrl+BS Apaga previous word
@@ -509,6 +510,7 @@ au FileType ruby set omnifunc=rubycomplete#Complete
 """"""""""""""""""""""""""""""
 " 2014-11-10, AA: From https://github.com/junegunn/limelight.vim
 autocmd User GoyoEnter Limelight
+autocmd User GoyoEnter set textwidth=80
 autocmd User GoyoLeave Limelight!
 au FileType text Goyo
 nnoremap <Leader>G :Goyo<CR>
