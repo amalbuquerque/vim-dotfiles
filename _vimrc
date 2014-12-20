@@ -545,7 +545,19 @@ let g:Tex_DefaultTargetFormat = 'pdf'
 au FileType tex set textwidth=80
 au FileType tex set sw=2
 au FileType tex set iskeyword+=:
+au FileType tex nmap <leader>E :call LatexEn()<CR>
 au FileType bib set textwidth=80
+
+function! LatexEn()
+  " 2014-12-13 12:30:44, AA: To add the things I deactivated on
+  " C:\Users\lejboua\.vim\bundle\vim-latex\ftplugin\latex-suite\brackets.vim
+	call Tex_MakeMap('<M-b>', '<Plug>Tex_MathBF', 'i', '<buffer> <silent>')
+	call Tex_MakeMap('<M-c>', '<Plug>Tex_MathCal', 'i', '<buffer> <silent>')
+	call Tex_MakeMap('<M-l>', '<Plug>Tex_LeftRight', 'i', '<buffer> <silent>')
+	call Tex_MakeMap('<M-b>', '<Plug>Tex_MathBF', 'v', '<buffer> <silent>')
+	call Tex_MakeMap('<M-c>', '<Plug>Tex_MathCal', 'v', '<buffer> <silent>')
+	call Tex_MakeMap('<M-l>', '<Plug>Tex_LeftRight', 'n', '<buffer> <silent>')
+endfunction
 
 """"""""""""""""""""""""""""""
 " => JavaScript section
