@@ -52,6 +52,16 @@ imap jk <Esc>
 inoremap <C-BS> <C-\><C-o>db
 inoremap <C-Del> <C-\><C-o>dw
 
+" 2015-02-03, AA:
+" expands %% to current file's directory in command-line mode
+cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
+
+" visually select the last paste or change
+nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+
+" switch to last buffer, like alt+tab
+nnoremap <Leader><Tab> :b#<CR>
+
 " Teclado PT ` e dificil de usar
 nnoremap \ `
 
@@ -452,7 +462,8 @@ let g:bufExplorerSortBy = "name"
 
 autocmd BufRead,BufNew :call UMiniBufExplorer
 
-map <leader>u :MBEToggle<cr>
+map <leader>t :TMiniBufExplorer<cr>
+map <leader>u :MiniBufExplorer<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Omni complete functions
