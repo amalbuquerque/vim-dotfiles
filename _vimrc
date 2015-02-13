@@ -425,8 +425,8 @@ nnoremap <silent> <expr> $ ScreenMovement("$")
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General Abbrevs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-iab xdate <c-r>=strftime("%Y-%m-%d")<cr>
-iab xtime <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr>
+inoreabbrev xdate <c-r>=strftime("%Y-%m-%d")<cr>
+inoreabbrev xtime <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr>
 
 "Move a line of text using ALT+[jk]
 nmap <M-j> mz:m+<cr>`z
