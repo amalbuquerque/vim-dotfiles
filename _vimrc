@@ -505,8 +505,34 @@ let g:yankring_window_width = 30
 let g:yankring_max_element_length = 262144 " 250kB
 let g:yankring_min_element_length = 2 " exclude single char deletes
 let g:yankring_max_history = 20
+" 2015-03-17 11:38:28, AA: YankRing manages Vim Registers 0-9
+let g:yankring_manage_numbered_reg = 1
 map <leader>y :YRShow<cr>
 map <leader>cy :YRClear<cr>
+
+""""""""""""""""""""""""""""""
+" => Ledger stuff
+""""""""""""""""""""""""""""""
+let g:ledger_bin = 'C:/dados/programas/ledger/ledger.exe'
+let g:ledger_maxwidth = 66
+
+nnoremap <F9> :call AllFoldsToggle()<CR>
+
+function! AllFoldsToggle()
+    if !exists('g:folds_open')
+        let g:folds_open = 0
+    endif
+
+    if g:folds_open == 1
+        " Close all folds
+        execute "normal zM"
+        let g:folds_open = 0
+    else
+        " Open all folds
+        execute "normal zR"
+        let g:folds_open = 1
+    endif
+endfunction
 
 """"""""""""""""""""""""""""""
 " => Ruby section
@@ -583,7 +609,7 @@ au FileType javascript imap <c-a> alert();<esc>hi
 au FileType javascript inoremap <buffer> $r return 
 au FileType javascript inoremap <buffer> $f //--- PH ----------------------------------------------<esc>FP2xi
 
-function! JavaScriptFold() 
+function! JavaScriptFold()
     setl foldmethod=syntax
     setl foldlevelstart=1
     syn region foldBraces start=/{/ end=/}/ transparent fold keepend extend
