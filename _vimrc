@@ -626,7 +626,11 @@ endfunction
 let MRU_Max_Entries = 400
 map <leader>r :MRU<CR>
 
-"Quickly open a buffer for scripbble
+" 2015-03-24 08:48:43, AA: Em casa
+" map <leader>l :e ~/Dropbox/etc/2015.ledger<cr>
+map <leader>l :e Z:/Dropbox/etc/2015.ledger<cr>
+
+"Quickly open a buffer for scribble
 map <leader>q :e ~/Dropbox/etc/scratchpad.txt<cr>
 au BufRead,BufNewFile ~/Dropbox/etc/scratchpad.txt iab <buffer> xh1 ============================ <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr> ========
 
