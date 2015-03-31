@@ -22,3 +22,4 @@ https://github.com/tpope/vim-speeddating
 https://github.com/vim-scripts/VOoM
 https://github.com/sukima/xmledit/
 https://github.com/jballanc/YankRing.vim
+https://github.com/Shougo/unite.vim

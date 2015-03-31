@@ -281,8 +281,8 @@ endfunc
 nmap n nzz
 nmap N Nzz
 
-" 2014-11-07, AA: Map space to : (command)
-" map <space> :
+" 2015-03-31 22:40:16, AA: Map space to / (command)
+nnoremap <space> /
 " 2015-03-31 14:12:30, AA: Map ; to : (command)
 nnoremap ; :
 " 2014-11-07, AA: never used it!
@@ -441,31 +441,21 @@ vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 """"""""""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""
-" => bufExplorer plugin
-""""""""""""""""""""""""""""""
-let g:bufExplorerDefaultHelp=0
-let g:bufExplorerShowRelativePath=1
-map <leader>o :BufExplorer<cr>
-
-
-""""""""""""""""""""""""""""""
 " => Minibuffer plugin
 """"""""""""""""""""""""""""""
-let g:miniBufExplModSelTarget = 1
-let g:miniBufExplorerMoreThanOne = 2
-let g:miniBufExplModSelTarget = 0
-let g:miniBufExplUseSingleClick = 1
-let g:miniBufExplMapWindowNavVim = 1
-" 2012-04-25: Para que apare?a em cima
-" let g:miniBufExplVSplit = 25
-" let g:miniBufExplSplitBelow=1
+" 2015-03-31 23:14:04, AA: Removed
+" let g:miniBufExplModSelTarget = 1
+" let g:miniBufExplorerMoreThanOne = 2
+" let g:miniBufExplModSelTarget = 0
+" let g:miniBufExplUseSingleClick = 1
+" let g:miniBufExplMapWindowNavVim = 1
 
 let g:bufExplorerSortBy = "name"
 
-autocmd BufRead,BufNew :call UMiniBufExplorer
-
-map <leader>t :TMiniBufExplorer<cr>
-map <leader>u :MiniBufExplorer<cr>
+" 2015-03-31 23:14:04, AA: Removed
+" autocmd BufRead,BufNew :call UMiniBufExplorer
+" map <leader>t :MBEToggle<cr>
+" map <leader>u :MBEFocus<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Omni complete functions
@@ -654,8 +644,15 @@ map <leader>bb :cd ..<cr>
 " 2012-04-25: Comentado porque era muito pesado (recursivo desde a raiz)
 " map <leader>F :FufFile **/<CR>
 " map <leader>f :FufFile<CR>
-map <leader>f :FufFileWithCurrentBufferDir **/<CR>
-map <leader>x :FufBuffer<CR>
+" 2015-03-31 22:42:04, AA: Replaced Fuzzyfinder with Unite
+" map <leader>f :FufFileWithCurrentBufferDir **/<CR>
+" map <leader>x :FufBuffer<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""
+" => 2015-03-31 22:41:34, AA: Vim Unite Stuff
+"""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <leader>f :Unite -start-insert file<CR>
+nnoremap <leader>x :Unite -quick-match buffer<CR>
 
 " not blinking cursor
 set guicursor=n:block-blinkon0-Cursor,v:block-blinkon0-VisualCursor,c-i-ci:ver25-blinkon0-Cursor,r-cr:hor16-blinkon0-Cursor
