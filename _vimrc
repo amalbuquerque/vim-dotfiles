@@ -629,8 +629,11 @@ let MRU_Max_Entries = 400
 map <leader>r :MRU<CR>
 
 " 2015-03-24 08:48:43, AA: Em casa
-" map <leader>l :e ~/Dropbox/etc/2015.ledger<cr>
-map <leader>l :e Z:/Dropbox/etc/2015.ledger<cr>
+if filereadable(expand("~/Dropbox/etc/2015.ledger"))
+    map <leader>l :e ~/Dropbox/etc/2015.ledger<cr>
+else
+    map <leader>l :e Z:/Dropbox/etc/2015.ledger<cr>
+endif
 
 "Quickly open a buffer for scribble
 map <leader>q :e ~/Dropbox/etc/scratchpad.txt<cr>
