@@ -551,7 +551,8 @@ au FileType ruby set omnifunc=rubycomplete#Complete
 autocmd User GoyoEnter Limelight
 autocmd User GoyoEnter set textwidth=80
 autocmd User GoyoLeave Limelight!
-au FileType text Goyo
+" 2015-03-31 22:19:00, AA: Disabled auto Goyo
+" au FileType text Goyo
 nnoremap <Leader>G :Goyo<CR>
 
 """"""""""""""""""""""""""""""
