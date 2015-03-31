@@ -282,7 +282,9 @@ nmap n nzz
 nmap N Nzz
 
 " 2014-11-07, AA: Map space to : (command)
-map <space> :
+" map <space> :
+" 2015-03-31 14:12:30, AA: Map ; to : (command)
+nnoremap ; :
 " 2014-11-07, AA: never used it!
 " C-space to ? (backwards search)
 " map <C-space> ?
