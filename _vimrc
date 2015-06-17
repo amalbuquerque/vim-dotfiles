@@ -151,8 +151,10 @@ au BufWinEnter call CheckFileEncoding()
 let g:seoul256_background = 233
 if has("gui_running")
   " set guioptions-=mT
-  set guioptions-=m
-  set guioptions-=T
+  " set guioptions-=m
+  " set guioptions-=T
+  " 2015/06/17 15:43:49 AA:
+  set guioptions=a
   set t_Co=256
   " colorscheme molokai
   " colorscheme seoul256
