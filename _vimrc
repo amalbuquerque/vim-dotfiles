@@ -287,6 +287,8 @@ nmap N Nzz
 nnoremap <space> /
 " 2015-03-31 14:12:30, AA: Map ; to : (command)
 nnoremap ; :
+" 2015/06/17 15:56:51, AA: Map Backspace to Toggle between current file and previous
+nnoremap <BS> <C-^>
 " 2014-11-07, AA: never used it!
 " C-space to ? (backwards search)
 " map <C-space> ?
