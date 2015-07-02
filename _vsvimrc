@@ -1,0 +1,40 @@
+
+" Remap VIM 0 to first non-blank character
+map 0 ^
+
+" With a map leader it's possible to do extra key combinations
+" like <leader>w saves the current file
+let mapleader = ","
+let g:mapleader = ","
+
+" Fast saving
+nmap <leader>w :w!<cr>
+
+" 2014-03-20, AA: http://approache.com/blog/increase-your-productivity-with-vim-and-terminal/
+" 2014-12-18, AA: Updated from http://www.reddit.com/r/vim/comments/2po023/which_key_do_you_bind_to_esc/
+" jk => nao ter de ir ao Esc
+imap jk <Esc>
+
+" 2014-06-19, AA: http://vim.wikia.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
+" Ctrl+BS Apaga previous word
+" imap <C-BS> <C-W>
+inoremap <C-BS> <C-\><C-o>db
+inoremap <C-Del> <C-\><C-o>dw
+
+" visually select the last paste or change
+nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+
+" switch to last buffer, like alt+tab
+nnoremap <Leader><Tab> :b#<CR>
+
+" Teclado PT ` e dificil de usar
+nnoremap \ `
+
+" Map auto complete of (, ", ', [
+inoremap ?1 ()<esc>i
+inoremap ?2 []<esc>i
+inoremap ?3 {}<esc>i
+inoremap ?4 {<esc>o}<esc>O<tab>
+inoremap ?q ''<esc>i
+inoremap ?e ""<esc>i
+inoremap ?t <><esc>i
