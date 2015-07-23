@@ -550,6 +550,9 @@ autocmd User GoyoEnter FileType text Goyo
 autocmd User GoyoLeave Limelight!
 nnoremap <Leader>G :Goyo<CR>
 
+autocmd Filetype text set nocindent
+autocmd Filetype text set formatoptions=tcqjn
+
 """"""""""""""""""""""""""""""
 " => Python section
 """"""""""""""""""""""""""""""
