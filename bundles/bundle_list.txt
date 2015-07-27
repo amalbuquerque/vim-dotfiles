@@ -2,7 +2,6 @@ https://github.com/junegunn/goyo.vim.git
 https://github.com/haya14busa/incsearch.vim.git
 https://github.com/vim-scripts/L9
 https://github.com/junegunn/limelight.vim
-https://github.com/yegappan/mru
 https://github.com/junegunn/seoul256.vim.git
 https://github.com/msanders/snipmate.vim
 https://github.com/tpope/vim-surround
@@ -11,7 +10,6 @@ https://github.com/tpope/vim-commentary
 https://github.com/Lokaltog/vim-easymotion.git
 https://github.com/tpope/vim-endwise
 https://github.com/tpope/vim-fugitive
-https://lejboua@bitbucket.org/ns9tks/vim-fuzzyfinder
 https://github.com/ledger/vim-ledger
 https://github.com/junegunn/vim-peekaboo
 https://github.com/tpope/vim-repeat.git
