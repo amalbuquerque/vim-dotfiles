@@ -444,23 +444,6 @@ vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 " Cenas dos plug-ins
 """"""""""""""""""""""""""""""""""
 
-""""""""""""""""""""""""""""""
-" => Minibuffer plugin
-""""""""""""""""""""""""""""""
-" 2015-03-31 23:14:04, AA: Removed
-" let g:miniBufExplModSelTarget = 1
-" let g:miniBufExplorerMoreThanOne = 2
-" let g:miniBufExplModSelTarget = 0
-" let g:miniBufExplUseSingleClick = 1
-" let g:miniBufExplMapWindowNavVim = 1
-
-let g:bufExplorerSortBy = "name"
-
-" 2015-03-31 23:14:04, AA: Removed
-" autocmd BufRead,BufNew :call UMiniBufExplorer
-" map <leader>t :MBEToggle<cr>
-" map <leader>u :MBEFocus<cr>
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Omni complete functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -493,18 +476,14 @@ autocmd BufEnter *.md exe 'noremap <leader>m :!start C:\Users\oiu027\AppData\Loc
 set tag=$VIMRUNTIME\ctags\alltags
 
 """"""""""""""""""""""""""""""
-" => yankRing plugin
+" => yankRing with Unite
 """"""""""""""""""""""""""""""
-let g:yankring_window_use_horiz = 0  " Use vertical split
-let g:yankring_window_width = 30
-" let g:yankring_max_element_length = 4194304 " 4M
-let g:yankring_max_element_length = 262144 " 250kB
-let g:yankring_min_element_length = 2 " exclude single char deletes
-let g:yankring_max_history = 20
-" 2015-03-17 11:38:28, AA: YankRing manages Vim Registers 0-9
-let g:yankring_manage_numbered_reg = 1
-map <leader>y :YRShow<cr>
-map <leader>cy :YRClear<cr>
+" 2015/07/27 13:04:49, AA: replaced YankRing with Unite
+let g:unite_source_history_yank_enable = 1
+let g:unite_source_history_yank_save_clipboard = 1
+let g:unite_source_history_yank_limit = 10000
+let g:unite_source_history_yank_file = $HOME.'/.vim/yankring.txt'
+nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank<cr>
 
 """"""""""""""""""""""""""""""
 " => Ledger stuff
@@ -534,7 +513,7 @@ endfunction
 " => Ruby section
 """"""""""""""""""""""""""""""
 au FileType ruby set omnifunc=rubycomplete#Complete 
-" au FileType ruby let g:rubycomplete_buffer_loading = 1 
+" au FileType ruby let g:rubycomplete_buffer_loading = 1
 " au FileType ruby let g:rubycomplete_classes_in_global = 1
 
 
@@ -624,8 +603,10 @@ endfunction
 """"""""""""""""""""""""""""""
 " => MRU plugin
 """"""""""""""""""""""""""""""
-let MRU_Max_Entries = 400
-map <leader>r :MRU<CR>
+" let MRU_Max_Entries = 400
+" map <leader>r :MRU<CR>
+" 2015/07/27 11:27:03, AA: Replaced by Unite MRU
+nnoremap <silent> <leader>r :<C-u>Unite file_mru<CR>
 
 " 2015-03-24 08:48:43, AA: Em casa
 if filereadable(expand("~/Dropbox/etc/2015.ledger"))
@@ -642,25 +623,27 @@ map <leader>pp :setlocal paste! paste?<cr>
 
 map <leader>bb :cd ..<cr>
 
-""""""""""""""""""""""""""""""
-" => Vim Fuzzyfinder examples
-""""""""""""""""""""""""""""""
-" <CR> - opens in a previous window.
-" <C-j> - opens in a split window.
-" <C-k> - opens in a vertical-split window.
-" <C-]> - opens in a new tab page. 
-" 2012-04-25: Comentado porque era muito pesado (recursivo desde a raiz)
-" map <leader>F :FufFile **/<CR>
-" map <leader>f :FufFile<CR>
-" 2015-03-31 22:42:04, AA: Replaced Fuzzyfinder with Unite
-" map <leader>f :FufFileWithCurrentBufferDir **/<CR>
-" map <leader>x :FufBuffer<CR>
-
 """""""""""""""""""""""""""""""""""""""""""""
 " => 2015-03-31 22:41:34, AA: Vim Unite Stuff
 """""""""""""""""""""""""""""""""""""""""""""
 nnoremap <leader>f :Unite -start-insert file<CR>
 nnoremap <leader>x :Unite -quick-match buffer<CR>
+
+function! s:unite_settings() "{
+    " C-c to exit Unite
+    imap <buffer> <C-c> <Esc><Plug>(unite_all_exit)
+    nmap <buffer> <C-c> <Plug>(unite_all_exit)
+    " Enable navigation with alt-j and alt-k in insert mode
+    imap <buffer> <M-j>     <Plug>(unite_select_next_line)
+    imap <buffer> <M-k>     <Plug>(unite_select_previous_line)
+    inoremap <silent> <buffer> <expr> <C-o><C-n> unite#do_action('tabopen')
+    inoremap <silent> <buffer> <expr> <C-o><C-j> unite#do_action('below')
+    inoremap <silent> <buffer> <expr> <C-o><C-k> unite#do_action('above')
+    inoremap <silent> <buffer> <expr> <C-o><C-h> unite#do_action('left')
+    inoremap <silent> <buffer> <expr> <C-o><C-l> unite#do_action('right')
+endfunction
+
+autocmd Filetype unite call s:unite_settings()
 
 " not blinking cursor
 set guicursor=n:block-blinkon0-Cursor,v:block-blinkon0-VisualCursor,c-i-ci:ver25-blinkon0-Cursor,r-cr:hor16-blinkon0-Cursor

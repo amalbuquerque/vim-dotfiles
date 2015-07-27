@@ -2,7 +2,6 @@ https://github.com/junegunn/goyo.vim.git
 https://github.com/haya14busa/incsearch.vim.git
 https://github.com/vim-scripts/L9
 https://github.com/junegunn/limelight.vim
-https://github.com/deep-orca/minibufexpl.vim
 https://github.com/yegappan/mru
 https://github.com/junegunn/seoul256.vim.git
 https://github.com/msanders/snipmate.vim
@@ -21,5 +20,5 @@ https://github.com/justinmk/vim-sneak.git
 https://github.com/tpope/vim-speeddating
 https://github.com/vim-scripts/VOoM
 https://github.com/sukima/xmledit/
-https://github.com/jballanc/YankRing.vim
 https://github.com/Shougo/unite.vim
+https://github.com/Shougo/neomru.vim

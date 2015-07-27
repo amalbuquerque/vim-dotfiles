@@ -2,7 +2,8 @@ function update_it {
     if [ -d .git ]; then
         # echo 'GIT'
         # git config --get remote.origin.url
-        git pull
+        # 2015/07/27 11:41:31, AA: Ignore the file modes (RWX)
+        git -c core.fileMode=false pull
     else
         if [ -d .hg ]; then
             # echo 'HG'
