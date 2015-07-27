@@ -167,6 +167,7 @@ else
 endif
 set background=dark
 set nonu
+set colorcolumn=81
 
 " Turn backup off, since most stuff is in SVN, git anyway...
 set directory=%TMP%
