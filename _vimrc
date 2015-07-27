@@ -626,7 +626,8 @@ map <leader>bb :cd ..<cr>
 """""""""""""""""""""""""""""""""""""""""""""
 " => 2015-03-31 22:41:34, AA: Vim Unite Stuff
 """""""""""""""""""""""""""""""""""""""""""""
-nnoremap <leader>f :Unite -start-insert file<CR>
+" nnoremap <leader>f :Unite -start-insert file<CR>
+nnoremap <leader>f :Unite file<CR>
 nnoremap <leader>x :Unite -quick-match buffer<CR>
 
 function! s:unite_settings() "{
@@ -642,6 +643,14 @@ function! s:unite_settings() "{
     inoremap <silent> <buffer> <expr> <C-o><C-h> unite#do_action('left')
     inoremap <silent> <buffer> <expr> <C-o><C-l> unite#do_action('right')
 endfunction
+
+" 2015/07/27 13:32:48, AA:
+" change prompt and start NOT in insert mode
+  call unite#custom#profile('default', 'context',
+                          \ { 'prompt': '» ',
+                          \   'start_insert' : '0'})
+  call unite#filters#matcher_default#use(['matcher_fuzzy'])
+  call unite#filters#sorter_default#use(['sorter_rank'])
 
 autocmd Filetype unite call s:unite_settings()
 
