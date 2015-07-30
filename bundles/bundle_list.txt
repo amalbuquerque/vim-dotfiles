@@ -21,3 +21,4 @@ https://github.com/sukima/xmledit/
 https://github.com/Shougo/unite.vim
 https://github.com/Shougo/neomru.vim
 https://github.com/tpope/vim-vinegar
+https://github.com/pangloss/vim-javascript
