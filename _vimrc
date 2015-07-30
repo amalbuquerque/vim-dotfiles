@@ -530,6 +530,11 @@ autocmd User GoyoEnter FileType text Goyo
 autocmd User GoyoLeave Limelight!
 nnoremap <Leader>G :Goyo<CR>
 
+" 2015/07/28 07:53:10, AA: Activate only limelight (highlight current paragraph)
+" From: https://zenbro.github.io/2015/06/09/meditating-on-code.html
+nmap <silent> gl :Limelight!!<CR>
+xmap gl <Plug>(Limelight)
+
 autocmd Filetype text set nocindent
 autocmd Filetype text set formatoptions=tcqjn
 
