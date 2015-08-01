@@ -13,12 +13,12 @@ endif
 
 " 2014-09-18, AA: Substitui a path por $HOME . '\\.vim\\bundle'
 if has("win32")
-    call pathogen#infect($HOME . '\\.vim\\bundle\\{}')
+    call pathogen#infect($HOME . '\\vim-dotfiles\\bundles\\{}', $HOME . '\\.vim\\bundle\\{}')
     source $VIMRUNTIME/vimrc_example.vim
     " source $VIMRUNTIME/mswin.vim
     behave mswin
 else
-    call pathogen#infect($HOME . '/.vim/bundle/{}')
+    call pathogen#infect($HOME . '/vim-dotfiles/bundles/{}', $HOME . '/.vim/bundle/{}')
 endif
 
 set nocompatible
