@@ -13,7 +13,7 @@ endif
 
 " 2014-09-18, AA: Substitui a path por $HOME . '\\.vim\\bundle'
 if has("win32")
-    call pathogen#infect($HOME . '\\vim-dotfiles\\bundles\\{}', $HOME . '\\.vim\\bundle\\{}')
+    call pathogen#infect($HOME . '\vim-dotfiles\bundles\{}', $HOME . '\.vim\bundle\{}')
     source $VIMRUNTIME/vimrc_example.vim
     " source $VIMRUNTIME/mswin.vim
     behave mswin
@@ -27,7 +27,8 @@ set nocompatible
 set clipboard=unnamed
 
 " Remap VIM 0 to first non-blank character
-map 0 ^
+" 2015/08/03 14:43:50, AA: 0 equals ^ only in normal mode
+noremap 0 ^
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
@@ -450,7 +451,9 @@ vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " 2014-11-04, AA: From http://robots.thoughtbot.com/vim-you-complete-me
-imap <Tab> <C-P>
+" imap <Tab> <C-P>
+" 2015/08/03 14:40:08, AA: Using snipmate from the actual repository
+imap <Tab> <Plug>snipMateNextOrTrigger
 imap <C-Tab> <C-X><C-O>
 set complete=.,b,u,]
 set completeopt=menu,preview
