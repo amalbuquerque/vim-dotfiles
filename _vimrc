@@ -286,7 +286,8 @@ nmap n nzz
 nmap N Nzz
 
 " 2015-03-31 22:40:16, AA: Map space to / (command)
-nnoremap <space> /
+" 2015/08/14 14:37:01, AA: Removed to be used for SneakNext
+" nnoremap <space> /
 " 2015-03-31 14:12:30, AA: Map ; to : (command)
 nnoremap ; :
 " 2015/06/17 15:56:51, AA: Map Backspace to Toggle between current file and previous
@@ -719,6 +720,8 @@ hi User5 guifg=#eeee40 guibg=#222222
 
 " 2014-11-04, AA: Vim-sneak, Alternativa ao Easymotion
 let g:sneak#streak = 1
+let g:sneak#s_next = 1
+nmap <Space> <Plug>SneakNext
 
 " 2014-11-03, AA: Easymotion plug-in
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
