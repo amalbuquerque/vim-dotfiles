@@ -14,17 +14,20 @@ endif
 " 2014-09-18, AA: Substitui a path por $HOME . '\\.vim\\bundle'
 if has("win32")
     call pathogen#infect($HOME . '\vim-dotfiles\bundles\{}', $HOME . '\.vim\bundle\{}')
-    source $VIMRUNTIME/vimrc_example.vim
+    " source $VIMRUNTIME/vimrc_example.vim
     " source $VIMRUNTIME/mswin.vim
-    behave mswin
+    " behave mswin
 else
     call pathogen#infect($HOME . '/vim-dotfiles/bundles/{}', $HOME . '/.vim/bundle/{}')
+    " 2015/08/15 23:24:27, AA: Only needed
+    " in the terminal to copy to the windows clipboard
+    " if used with gvim breaks the paste in visual mode
+    " unnamed register = windows clipboard
+    set clipboard=unnamed
+
 endif
 
 set nocompatible
-
-" unnamed register = windows clipboard
-set clipboard=unnamed
 
 " Remap VIM 0 to first non-blank character
 " 2015/08/03 14:43:50, AA: 0 equals ^ only in normal mode
