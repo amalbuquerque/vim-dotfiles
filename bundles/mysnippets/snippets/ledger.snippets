@@ -2,3 +2,8 @@ snippet ent
 	`strftime("%Y-%m-%d")` * ${1:trans}
 		${3:acc_to}    €${4:value}
 		${2:acc_from}
+
+snippet lev
+	`strftime("%Y-%m-%d")` * Levantamento €${1:}
+		Assets:Cash:Carteira    €$1
+		Assets:Bank:Conta Caderneta

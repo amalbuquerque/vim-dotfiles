@@ -81,6 +81,10 @@ autocmd! bufwritepost _vimrc source $MYVIMRC
 " Set 7 lines to the cursors - when moving vertical..
 set scrolloff=7
 
+" 2015/08/19 10:01:29, AA: To toggle the editing line to be always
+" centered on the screen
+nnoremap <Leader>zz :let &scrolloff=999-&scrolloff<CR>
+
 set wildmode=list:longest
 
 set cmdheight=2 "The commandbar height
@@ -404,13 +408,13 @@ endfunction
 " vnoremap ?e <esc>`>a"<esc>`<i"<esc>
 
 " Map auto complete of (, ", ', [
-inoremap ?1 ()<esc>i
-inoremap ?2 []<esc>i
-inoremap ?3 {}<esc>i
-inoremap ?4 {<esc>o}<esc>O<tab>
-inoremap ?q ''<esc>i
-inoremap ?e ""<esc>i
-inoremap ?t <><esc>i
+inoremap ;a ()<esc>i
+inoremap ;s []<esc>i
+inoremap ;d {}<esc>i
+inoremap ;f {<esc>o}<esc>O<tab>
+inoremap ;q ''<esc>i
+inoremap ;w ""<esc>i
+inoremap ;e <><esc>i
 
 " 2014-11-03, AA: From http://stackoverflow.com/a/4952200/687420
 " mapping to make movements operate on 1 screen line in wrap mode
@@ -498,6 +502,8 @@ nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank
 """"""""""""""""""""""""""""""
 let g:ledger_bin = 'C:/dados/programas/ledger/ledger.exe'
 let g:ledger_maxwidth = 66
+autocmd FileType ledger inoreabbrev con Assets:Bank:Conta Caderneta
+autocmd FileType ledger inoreabbrev cas Assets:Cash:Carteira
 
 nnoremap <F9> :call AllFoldsToggle()<CR>
 
