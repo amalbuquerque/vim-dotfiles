@@ -14,6 +14,7 @@ https://github.com/MarcWeber/vim-addon-mw-utils.git
 https://github.com/garbas/vim-snipmate
 https://github.com/honza/vim-snippets.git
 https://github.com/sukima/xmledit/
+https://github.com/idbrii/vim-focusclip
 https://github.com/tpope/vim-commentary
 https://github.com/tpope/vim-endwise
 https://github.com/tpope/vim-fugitive

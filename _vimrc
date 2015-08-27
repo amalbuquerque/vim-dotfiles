@@ -23,7 +23,8 @@ else
     " in the terminal to copy to the windows clipboard
     " if used with gvim breaks the paste in visual mode
     " unnamed register = windows clipboard
-    set clipboard=unnamed
+    " set clipboard=unnamed
+    " 2015/08/27 17:49:41, AA: disabled to use vim-focusclip
 
 endif
 
