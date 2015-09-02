@@ -17,6 +17,9 @@ if has("win32")
     " source $VIMRUNTIME/vimrc_example.vim
     " source $VIMRUNTIME/mswin.vim
     " behave mswin
+    " 2015/08/22 18:51:39, AA: a la tmux
+    nnoremap <C-a><C-a> <C-w><C-w>
+
 else
     call pathogen#infect($HOME . '/vim-dotfiles/bundles/{}', $HOME . '/.vim/bundle/{}')
     " 2015/08/15 23:24:27, AA: Only needed
