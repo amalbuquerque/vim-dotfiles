@@ -26,3 +26,4 @@ https://github.com/tpope/vim-vinegar
 https://github.com/pangloss/vim-javascript
 https://github.com/vim-scripts/L9
 https://github.com/vim-scripts/VOoM
+https://github.com/terryma/vim-expand-region
