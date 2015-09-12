@@ -42,6 +42,11 @@ noremap 0 ^
 let mapleader = ","
 let g:mapleader = ","
 
+" 2015/09/12 17:44:38, AA:
+let delimitMate_expand_space = 1
+let delimitMate_expand_cr = 1
+let delimitMate_jump_expansion = 1
+
 " easy xml editing
 let g:xml_syntax_folding = 1
 set foldmethod=syntax
@@ -97,6 +102,7 @@ set hidden "Change buffer - without saving
 
 " Set backspace config
 set whichwrap+=<,>,h,l
+set backspace=indent,eol,start
 
 set ignorecase "Ignore case when searching
 set smartcase
