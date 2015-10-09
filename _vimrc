@@ -312,8 +312,13 @@ nmap N Nzz
 " 2015-03-31 14:12:30, AA: Map ; to : (command)
 nnoremap ; :
 " 2015/09/21 17:20:11, AA: Map ;; to ;
-nnoremap ;; ;
-vnoremap ;; ;
+" nnoremap ;; ;
+" vnoremap ;; ;
+" 2015/10/09 10:58:19, AA: Replaced ; functionality with f
+" using clever-f plugin
+" f; matches all signs (like ., (, :, %, {, ), etc.)
+let g:clever_f_chars_match_any_signs = ';'
+let g:clever_f_smart_case = 1
 
 " 2015/06/17 15:56:51, AA: Map Backspace to Toggle between current file and previous
 nnoremap <BS> <C-^>
@@ -749,7 +754,8 @@ hi User5 guifg=#eeee40 guibg=#222222
 let g:sneak#streak = 1
 let g:sneak#s_next = 1
 nmap <Space> <Plug>SneakNext
-nmap ;; <Plug>SneakNext
+" 2015/10/09 11:02:36, AA: dummy, replaced by clever-f
+" nmap ;; <Plug>SneakNext
 
 " 2014-11-03, AA: Easymotion plug-in
 let g:EasyMotion_do_mapping = 0 " Disable default mappings

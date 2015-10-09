@@ -28,3 +28,4 @@ https://github.com/vim-scripts/L9
 https://github.com/vim-scripts/VOoM
 https://github.com/terryma/vim-expand-region
 https://github.com/Raimondi/delimitMate
+https://github.com/rhysd/clever-f.vim
