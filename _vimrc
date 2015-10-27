@@ -403,6 +403,8 @@ set statusline +=%1*%=%5l%*             "current line
 set statusline +=%2*/%L%*               "total lines
 set statusline +=%6*%4v\ %*             "virtual column number
 set statusline +=%2*0x%04B\ %*          "character under cursor
+" 2015/10/27 16:45:02, AA: wordcount
+set statusline+=%6*w:%{wordCount#WordCount()}%*
 
 function! CurDir()
     " tinha isto mas tirei o substitute:
