@@ -30,3 +30,4 @@ https://github.com/terryma/vim-expand-region
 https://github.com/Raimondi/delimitMate
 https://github.com/rhysd/clever-f.vim
 https://github.com/ChesleyTan/wordCount.vim
+https://github.com/vim-latex/vim-latex
