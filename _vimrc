@@ -84,6 +84,9 @@ let vimrc_file_path=expand('<sfile>:p')
 " Fast editing of the .vimrc
 map <leader>e :tabnew! $MYVIMRC<cr>
 
+" * 2015/12/16 10:31:16, AA: Fast closing of window
+map <leader>cc :close<cr>
+
 " When vimrc is edited, reload it
 autocmd! bufwritepost _vimrc source $MYVIMRC
 
@@ -126,7 +129,10 @@ set tm=500
 " set guifont=Courier_New:h12 " :cANSI 
 if has ("gui_running")
     " 2014-12-08 10:59:50, AA: latex config for Gvim
-    let g:Tex_ViewRule_pdf='SumatraPDF'
+    " let g:Tex_ViewRule_pdf='C:/Program\ Files\ (x86)/SumatraPDF/SumatraPDF.exe'
+    " 2015/11/08 23:19:26, AA: The full path didn't work, had to put
+    " the sumatrapdf folder in the $PATH
+    let g:Tex_ViewRule_pdf='sumatrapdf'
 
     if has("gui_gtk2")
         set guifont=Envy\ Code\ R\ 10
@@ -346,9 +352,9 @@ map <left> :bp<cr>
 
 " Tab configuration
 map <leader>tn :tabnew<cr>
-map <leader>te :tabedit 
+map <leader>te :tabedit
 map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove 
+map <leader>tm :tabmove
 
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
@@ -607,17 +613,27 @@ au FileType tex set textwidth=80
 au FileType tex set sw=2
 au FileType tex set iskeyword+=:
 au FileType tex nmap <leader>E :call LatexEn()<CR>
+" 2015/11/08 23:05:11, AA: <leader>b builds document
+au FileType tex nmap <leader>b :call Tex_RunLaTeX()<CR>
+au FileType tex nmap <leader>v :call Tex_ViewLaTeX()<CR>
 au FileType bib set textwidth=80
 
 function! LatexEn()
   " 2014-12-13 12:30:44, AA: To add the things I deactivated on
   " C:\Users\lejboua\.vim\bundle\vim-latex\ftplugin\latex-suite\brackets.vim
-	call Tex_MakeMap('<M-b>', '<Plug>Tex_MathBF', 'i', '<buffer> <silent>')
-	call Tex_MakeMap('<M-c>', '<Plug>Tex_MathCal', 'i', '<buffer> <silent>')
-	call Tex_MakeMap('<M-l>', '<Plug>Tex_LeftRight', 'i', '<buffer> <silent>')
-	call Tex_MakeMap('<M-b>', '<Plug>Tex_MathBF', 'v', '<buffer> <silent>')
-	call Tex_MakeMap('<M-c>', '<Plug>Tex_MathCal', 'v', '<buffer> <silent>')
-	call Tex_MakeMap('<M-l>', '<Plug>Tex_LeftRight', 'n', '<buffer> <silent>')
+  " * 2015/12/27 22:24:03, AA: Commented this and replaced by the imap lines
+  " according to: http://vim-latex.sourceforge.net/faq.shtml#faq-euro-symbols
+	" call Tex_MakeMap('<M-b>', '<Plug>Tex_MathBF', 'i', '<buffer> <silent>')
+	" call Tex_MakeMap('<M-c>', '<Plug>Tex_MathCal', 'i', '<buffer> <silent>')
+	" call Tex_MakeMap('<M-l>', '<Plug>Tex_LeftRight', 'i', '<buffer> <silent>')
+	" call Tex_MakeMap('<M-b>', '<Plug>Tex_MathBF', 'v', '<buffer> <silent>')
+	" call Tex_MakeMap('<M-c>', '<Plug>Tex_MathCal', 'v', '<buffer> <silent>')
+	" call Tex_MakeMap('<M-l>', '<Plug>Tex_LeftRight', 'n', '<buffer> <silent>')
+    imap <C-b> <Plug>Tex_MathBF
+    imap <C-c> <Plug>Tex_MathCal
+    imap <C-l> <Plug>Tex_LeftRight
+  " 2015/12/27 22:25:58, AA: from http://vim-latex.sourceforge.net/faq.shtml#faq-e-acute
+    imap <buffer> <leader>it <Plug>Tex_InsertItemOnThisLine
 endfunction
 
 """"""""""""""""""""""""""""""
