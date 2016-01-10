@@ -1,4 +1,5 @@
 " 2016/01/10, AA: having also vim-pathogen on the bundle directory
+set runtimepath+=~/.vim/
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 " call pathogen#infect() " with this, it will search for packages on '~/.vim/bundle'
 " call pathogen#infect('C:\\dados\\programas\\vim\\vim73\\bundle')
