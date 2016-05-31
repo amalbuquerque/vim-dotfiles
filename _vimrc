@@ -673,9 +673,9 @@ nnoremap <silent> <leader>r :<C-u>Unite file_mru<CR>
 
 " 2015-03-24 08:48:43, AA: Em casa
 if filereadable(expand("~/Dropbox/etc/2015.ledger"))
-    map <leader>l :e ~/Dropbox/etc/2015.ledger<cr>
+    map <leader>l :e ~/Dropbox/etc/2015.ledger<cr>Go<CR>
 else
-    map <leader>l :e Z:/Dropbox/etc/2015.ledger<cr>
+    map <leader>l :e Z:/Dropbox/etc/2015.ledger<cr>Go<CR>
 endif
 
 "Quickly open a buffer for scribble
