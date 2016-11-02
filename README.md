@@ -13,3 +13,4 @@ Howto, 2015-03-27 17:07:58:
 * cp ./bundles/clone_bundles.sh ~/.vim/bundle
 * cd ~/.vim/bundle
 * clone_bundles.sh bundle_list.txt
+* touch ~/.vimrc && echo 'source ˜/vim-dotfiles/_vimrc' >> ~/.vimrc
