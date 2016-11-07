@@ -141,6 +141,8 @@ if has ("gui_running")
         set guifont=Envy\ Code\ R\ 10
     elseif has("gui_win32")
         set guifont=Envy\ Code\ R:h10:cANSI
+    elseif has("macunix")
+        set guifont=Envy\ Code\ R\ for\ Powerline:h13
     endif
 else
     " 2014-12-08 10:59:50, AA: latex config for shell
@@ -534,7 +536,13 @@ nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank
 """"""""""""""""""""""""""""""
 " => Ledger stuff
 """"""""""""""""""""""""""""""
-let g:ledger_bin = 'C:/dados/programas/ledger/ledger.exe'
+
+if has('win32') || has('win64')
+      let g:ledger_bin = 'C:/dados/programas/ledger/ledger.exe'
+  else
+      let g:ledger_bin = '/usr/local/bin/ledger'
+endif
+
 let g:ledger_maxwidth = 66
 autocmd FileType ledger inoreabbrev con Assets:Bank:Conta Caderneta
 autocmd FileType ledger inoreabbrev cas Assets:Cash:Carteira

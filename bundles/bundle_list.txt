@@ -33,3 +33,4 @@ https://github.com/ChesleyTan/wordCount.vim
 https://github.com/vim-latex/vim-latex
 https://github.com/tpope/vim-pathogen
 https://github.com/tpope/vim-unimpaired
+https://github.com/tpope/vim-rails
