@@ -34,3 +34,4 @@ https://github.com/vim-latex/vim-latex
 https://github.com/tpope/vim-pathogen
 https://github.com/tpope/vim-unimpaired
 https://github.com/tpope/vim-rails
+https://github.com/Shougo/neoyank.vim

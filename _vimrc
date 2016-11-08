@@ -339,6 +339,12 @@ nnoremap <BS> <C-^>
 " map <silent> <leader><cr> :noh<cr>
 map <silent> <leader><leader> :noh<cr>
 
+" 2016/11/08 11:41:14, AA: From http://tex.stackexchange.com/a/3655/65117
+" Because IMAP_JumpForward was taking the C-j mapping
+" redef C-j to C-g
+imap <C-g> <Plug>IMAP_JumpForward
+nmap <C-g> <Plug>IMAP_JumpForward
+
 " Smart way to move btw. windows
 map <C-j> <C-W>j
 map <C-k> <C-W>k
@@ -527,6 +533,7 @@ set tag=$VIMRUNTIME\ctags\alltags
 " => yankRing with Unite
 """"""""""""""""""""""""""""""
 " 2015/07/27 13:04:49, AA: replaced YankRing with Unite
+" 2016/11/08 11:47:03, AA: Now depends on a external neoyank.vim
 let g:unite_source_history_yank_enable = 1
 let g:unite_source_history_yank_save_clipboard = 1
 let g:unite_source_history_yank_limit = 10000
@@ -698,7 +705,8 @@ map <leader>bb :cd ..<cr>
 " => 2015-03-31 22:41:34, AA: Vim Unite Stuff
 """""""""""""""""""""""""""""""""""""""""""""
 " nnoremap <leader>f :Unite -start-insert file<CR>
-nnoremap <leader>f :Unite file<CR>
+nnoremap <leader>F :Unite file<CR>
+nnoremap <leader>f :Unite -start-insert file_rec<CR>
 nnoremap <leader>x :Unite -quick-match buffer<CR>
 
 function! s:unite_settings() "{
