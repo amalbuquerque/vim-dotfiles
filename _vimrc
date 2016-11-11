@@ -53,9 +53,13 @@ let delimitMate_jump_expansion = 1
 " easy xml editing
 let g:xml_syntax_folding = 1
 set foldmethod=syntax
+" 2016/11/11 16:53:42, AA: To start with all the folds opened
+set foldlevelstart=20
 
 " Fast saving
 nmap <leader>w :w!<cr>
+" 2016/11/11 18:01:42, AA: copy the contents of the file to the clipboard (OSX)
+nmap <leader>c :%w !pbcopy<cr>
 
 " 2014-03-20, AA: http://approache.com/blog/increase-your-productivity-with-vim-and-terminal/
 " 2014-12-18, AA: Updated from http://www.reddit.com/r/vim/comments/2po023/which_key_do_you_bind_to_esc/
@@ -88,7 +92,7 @@ let vimrc_file_path=expand('<sfile>:p')
 map <leader>e :tabnew! $MYVIMRC<cr>
 
 " * 2015/12/16 10:31:16, AA: Fast closing of window
-map <leader>cc :close<cr>
+map <leader>z :close<cr>
 
 " When vimrc is edited, reload it
 autocmd! bufwritepost _vimrc source $MYVIMRC
@@ -98,7 +102,7 @@ set scrolloff=7
 
 " 2015/08/19 10:01:29, AA: To toggle the editing line to be always
 " centered on the screen
-nnoremap <Leader>zz :let &scrolloff=999-&scrolloff<CR>
+nnoremap <Leader>ss :let &scrolloff=999-&scrolloff<CR>
 
 set wildmode=list:longest
 
@@ -241,7 +245,8 @@ vnoremap <silent> # :call VisualSearch('b')<CR>
 
 " When you press gv you vimgrep after the selected text
 vnoremap <silent> gv :call VisualSearch('gv')<CR>
-map <leader>g :vimgrep // **/*.<left><left><left><left><left><left><left>
+" map <leader>g :vimgrep // **/*.<left><left><left><left><left><left><left>
+map <leader>g :Ack!<Space> --ruby
 
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
@@ -538,6 +543,8 @@ let g:unite_source_history_yank_enable = 1
 let g:unite_source_history_yank_save_clipboard = 1
 let g:unite_source_history_yank_limit = 10000
 let g:unite_source_history_yank_file = $HOME.'/.vim/yankring.txt'
+" 2016/11/10 10:38:08, AA: From https://github.com/Shougo/unite.vim/issues/986
+let g:unite_source_rec_async_command = [ 'ag', '-l', '-g', '', '--nocolor'  ]
 nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank<cr>
 
 """"""""""""""""""""""""""""""
@@ -706,7 +713,7 @@ map <leader>bb :cd ..<cr>
 """""""""""""""""""""""""""""""""""""""""""""
 " nnoremap <leader>f :Unite -start-insert file<CR>
 nnoremap <leader>F :Unite file<CR>
-nnoremap <leader>f :Unite -start-insert file_rec<CR>
+nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
 nnoremap <leader>x :Unite -quick-match buffer<CR>
 
 function! s:unite_settings() "{
