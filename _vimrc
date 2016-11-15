@@ -246,7 +246,7 @@ vnoremap <silent> # :call VisualSearch('b')<CR>
 " When you press gv you vimgrep after the selected text
 vnoremap <silent> gv :call VisualSearch('gv')<CR>
 " map <leader>g :vimgrep // **/*.<left><left><left><left><left><left><left>
-map <leader>g :Ack!<Space> --ruby
+map <leader>g :Ack! --ruby<Space>
 
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
@@ -547,6 +547,9 @@ let g:unite_source_history_yank_file = $HOME.'/.vim/yankring.txt'
 let g:unite_source_rec_async_command = [ 'ag', '-l', '-g', '', '--nocolor'  ]
 nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank<cr>
 
+" NERDTree
+nnoremap <silent> <C-n> :NERDTreeToggle<CR>
+
 """"""""""""""""""""""""""""""
 " => Ledger stuff
 """"""""""""""""""""""""""""""
@@ -582,7 +585,10 @@ endfunction
 """"""""""""""""""""""""""""""
 " => Ruby section
 """"""""""""""""""""""""""""""
-au FileType ruby set omnifunc=rubycomplete#Complete 
+au FileType ruby set omnifunc=rubycomplete#Complete
+au FileType ruby set shiftwidth=2
+au FileType ruby inoremap ,,p require "pry"; binding.pry
+
 " au FileType ruby let g:rubycomplete_buffer_loading = 1
 " au FileType ruby let g:rubycomplete_classes_in_global = 1
 

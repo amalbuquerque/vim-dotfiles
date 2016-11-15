@@ -37,3 +37,5 @@ https://github.com/tpope/vim-rails
 https://github.com/Shougo/neoyank.vim
 https://github.com/mileszs/ack.vim
 https://github.com/Shougo/vimproc.vim
+https://github.com/scrooloose/nerdtree
+https://github.com/tpope/vim-git
