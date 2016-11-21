@@ -49,6 +49,8 @@ let g:mapleader = ","
 let delimitMate_expand_space = 1
 let delimitMate_expand_cr = 1
 let delimitMate_jump_expansion = 1
+" 2016/11/16 13:32:56, AA: Control-, goes to the next closing thing (bracket, parenthesis, quote, etc.)
+imap <C-b> <Plug>delimitMateS-Tab
 
 " easy xml editing
 let g:xml_syntax_folding = 1
@@ -587,7 +589,9 @@ endfunction
 """"""""""""""""""""""""""""""
 au FileType ruby set omnifunc=rubycomplete#Complete
 au FileType ruby set shiftwidth=2
-au FileType ruby inoremap ,,p require "pry"; binding.pry
+" 2016/11/18 12:12:35, AA: Too slow
+" au FileType ruby iabbrev ,,p require "pry"; Pry.commands.alias_command "c", "continue"; Pry.commands.alias_command "s", "step"; Pry.commands.alias_command "n", "next"; Pry.commands.alias_command "x", "exit"; binding.pry
+au FileType ruby iabbrev ,,p require "pry"; binding.pry
 
 " au FileType ruby let g:rubycomplete_buffer_loading = 1
 " au FileType ruby let g:rubycomplete_classes_in_global = 1
@@ -721,6 +725,16 @@ map <leader>bb :cd ..<cr>
 nnoremap <leader>F :Unite file<CR>
 nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
 nnoremap <leader>x :Unite -quick-match buffer<CR>
+nnoremap <leader>x :Unite -quick-match buffer<CR>
+
+" 2016/11/17 15:25:47, AA: unite-tag (ctags stuff)
+let g:unite_source_tag_max_fname_length = 50
+let g:unite_source_tag_max_name_length = 50
+
+
+nnoremap <F10> :Unite -vertical -winwidth=50 outline<CR>
+nnoremap <F7> :UniteWithCursorWord -immediately tag<CR>
+nnoremap <F8> :<C-w>}
 
 function! s:unite_settings() "{
     " C-c to exit Unite

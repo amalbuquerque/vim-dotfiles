@@ -39,3 +39,5 @@ https://github.com/mileszs/ack.vim
 https://github.com/Shougo/vimproc.vim
 https://github.com/scrooloose/nerdtree
 https://github.com/tpope/vim-git
+https://github.com/tsukkee/unite-tag
+https://github.com/Shougo/unite-outline
