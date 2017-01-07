@@ -267,6 +267,16 @@ function! ChangeFont()
     execute "set guifont=" . l:to_use
 endfunction
 
+" 2016/08/18 18:55:36: function to clean esttab .csv output from stata
+function! CleanStataCSV()
+    " Remove = -> It's needed
+    " execute "%s/=//g"
+    " Remove " -> They are needed
+    " execute "%s/\"//g"
+    " Replace , by ;
+    execute "%s/,/;/g"
+endfunction
+
 " 2013-03-07, AA: Copia as matches (mesmo multiline) para os registers
 function! CopyMatches(reg)
   let hits = []
