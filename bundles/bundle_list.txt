@@ -41,3 +41,7 @@ https://github.com/scrooloose/nerdtree
 https://github.com/tpope/vim-git
 https://github.com/tsukkee/unite-tag
 https://github.com/Shougo/unite-outline
+https://github.com/christoomey/vim-tmux-navigator
+https://github.com/tomasr/molokai
+https://github.com/elixir-lang/vim-elixir
+https://github.com/ahw/vim-pbcopy

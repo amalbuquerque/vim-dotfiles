@@ -183,11 +183,7 @@ au BufWinEnter call CheckFileEncoding()
 
 " 2014-11-04, AA: using seoul256
 " instead of molokai
-let g:seoul256_background = 233
 if has("gui_running")
-  " set guioptions-=mT
-  " set guioptions-=m
-  " set guioptions-=T
   " 2015/06/17 15:43:49 AA:
   set guioptions=a
   set t_Co=256
@@ -196,11 +192,19 @@ if has("gui_running")
   colorscheme atom-dark
   " colorscheme peaksea
   " colorscheme ir_black
+  " set background=dark
 else
   " colorscheme zellner
-  colorscheme seoul256
+  colorscheme molokai
+  " Cool colors of seoul256
+  hi TabLine term=underline cterm=underline ctermfg=245 ctermbg=237 gui=underline guibg=#4B4B4B
+  hi TabLineFill term=reverse cterm=reverse ctermfg=235 gui=reverse guifg=#333233
+  hi TabLineSel term=bold cterm=bold ctermfg=187 ctermbg=23 gui=bold guifg=#DFDEBD guibg=#007173
+  " colorscheme atom-dark-256
+  " let g:seoul256_background = 233
+  " colorscheme seoul256
 endif
-set background=dark
+
 set nonu
 set colorcolumn=81
 
@@ -510,6 +514,13 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 """"""""""""""""""""""""""""""""""
+" Log files
+""""""""""""""""""""""""""""""""""
+au Filetype conf set foldmethod=manual
+au Filetype log set foldmethod=manual
+" TODO: Doesn't work
+" au Filetype nnoremap <C-f> V//\n\n<CR>zf
+""""""""""""""""""""""""""""""""""
 " Cenas dos plug-ins
 """"""""""""""""""""""""""""""""""
 
@@ -561,6 +572,14 @@ nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank
 
 " NERDTree
 nnoremap <silent> <C-n> :NERDTreeToggle<CR>
+
+
+""""""""""""""""""""""""""""""
+" => Git stuff
+""""""""""""""""""""""""""""""
+
+nnoremap <silent> <leader>gs :Gstatus<CR>
+nnoremap <silent> <leader>gl :Glog<CR>
 
 """"""""""""""""""""""""""""""
 " => Ledger stuff
@@ -621,8 +640,8 @@ nnoremap <Leader>G :Goyo<CR>
 
 " 2015/07/28 07:53:10, AA: Activate only limelight (highlight current paragraph)
 " From: https://zenbro.github.io/2015/06/09/meditating-on-code.html
-nmap <silent> gl :Limelight!!<CR>
-xmap gl <Plug>(Limelight)
+nmap <silent> <leader>L :Limelight!!<CR>
+xmap <leader>L <Plug>(Limelight)
 
 autocmd Filetype text set nocindent
 autocmd Filetype text set formatoptions=tcqjn
@@ -735,7 +754,7 @@ map <leader>bb :cd ..<cr>
 nnoremap <leader>F :Unite file<CR>
 nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
 nnoremap <leader>x :Unite -quick-match buffer<CR>
-nnoremap <leader>x :Unite -quick-match buffer<CR>
+nnoremap <leader>gg :Unite -start-insert file_rec/git<CR>
 
 " 2016/11/17 15:25:47, AA: unite-tag (ctags stuff)
 let g:unite_source_tag_max_fname_length = 50
@@ -864,3 +883,21 @@ if &listchars ==# 'eol:$'
     let &listchars = "tab:\u21e5,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
   endif
 endif
+
+" 2016/11/29 09:01:23, AA: Toggle zoom
+" From: http://stackoverflow.com/a/26551079/687420
+
+" Zoom / Restore window.
+function! s:ZoomToggle() abort
+    if exists('t:zoomed') && t:zoomed
+        execute t:zoom_winrestcmd
+        let t:zoomed = 0
+    else
+        let t:zoom_winrestcmd = winrestcmd()
+        resize
+        vertical resize
+        let t:zoomed = 1
+    endif
+endfunction
+command! ZoomToggle call s:ZoomToggle()
+nnoremap \| :ZoomToggle<CR>
