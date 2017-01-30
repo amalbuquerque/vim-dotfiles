@@ -45,3 +45,4 @@ https://github.com/christoomey/vim-tmux-navigator
 https://github.com/tomasr/molokai
 https://github.com/elixir-lang/vim-elixir
 https://github.com/ahw/vim-pbcopy
+https://github.com/ctrlpvim/ctrlp.vim

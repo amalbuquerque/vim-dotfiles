@@ -61,7 +61,9 @@ set foldlevelstart=20
 " Fast saving
 nmap <leader>w :w!<cr>
 " 2016/11/11 18:01:42, AA: copy the contents of the file to the clipboard (OSX)
-nmap <leader>c :%w !pbcopy<cr>
+" nmap <leader>c :%w !pbcopy<cr>
+" now using vim-pbcopy, normal mode: cy{motion}, visual mode: cy
+let g:vim_pbcopy_escape_backslashes = 1
 
 " 2014-03-20, AA: http://approache.com/blog/increase-your-productivity-with-vim-and-terminal/
 " 2014-12-18, AA: Updated from http://www.reddit.com/r/vim/comments/2po023/which_key_do_you_bind_to_esc/
@@ -571,6 +573,7 @@ let g:unite_source_rec_async_command = [ 'ag', '-l', '-g', '', '--nocolor'  ]
 nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank<cr>
 
 " NERDTree
+let NERDTreeHijackNetrw=0
 nnoremap <silent> <C-n> :NERDTreeToggle<CR>
 
 
@@ -750,9 +753,9 @@ map <leader>bb :cd ..<cr>
 """""""""""""""""""""""""""""""""""""""""""""
 " => 2015-03-31 22:41:34, AA: Vim Unite Stuff
 """""""""""""""""""""""""""""""""""""""""""""
-" nnoremap <leader>f :Unite -start-insert file<CR>
-nnoremap <leader>F :Unite file<CR>
-nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
+" nnoremap <leader>F :Unite file<CR>
+" 2017/01/30 16:30:21, AA: Disabled this and started using CtrlP, is much faster
+" nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
 nnoremap <leader>x :Unite -quick-match buffer<CR>
 nnoremap <leader>gg :Unite -start-insert file_rec/git<CR>
 
@@ -791,6 +794,26 @@ autocmd Filetype unite call s:unite_settings()
 
 " not blinking cursor
 set guicursor=n:block-blinkon0-Cursor,v:block-blinkon0-VisualCursor,c-i-ci:ver25-blinkon0-Cursor,r-cr:hor16-blinkon0-Cursor
+
+"""""""""""""""""""""""""""""""""""""""""""""
+" => 2017/01/30 16:28:03, AA: CtrlP stuff, Unite is slow af
+"""""""""""""""""""""""""""""""""""""""""""""
+" nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
+let g:ctrlp_map = '<leader>f'
+let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""
+  \ --ignore .git
+  \ --ignore .svn
+  \ --ignore .hg
+  \ --ignore .DS_Store
+  \ --ignore "**/*.pyc"
+  \ --ignore node_modules'
+let g:ag_prg='ag --nocolor --nogroup --column
+  \ --ignore .git
+  \ --ignore .svn
+  \ --ignore .hg
+  \ --ignore .DS_Store
+  \ --ignore "**/*.pyc"
+  \ --ignore node_modules'
 
 """"""""""""""""""""""""""""""
 " => Vim grep: Falta instalar o grep para o Windows
