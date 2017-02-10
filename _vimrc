@@ -574,7 +574,9 @@ nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank
 
 " NERDTree
 let NERDTreeHijackNetrw=0
-nnoremap <silent> <C-n> :NERDTreeToggle<CR>
+let g:NERDTreeToggled=0
+nnoremap <silent> <C-n>     :NERDTreeFind<CR>
+nnoremap <silent> <leader>n :NERDTreeToggle<CR>
 
 
 """"""""""""""""""""""""""""""
@@ -615,6 +617,21 @@ function! AllFoldsToggle()
         let g:folds_open = 1
     endif
 endfunction
+
+""""""""""""""""""""""""""""""
+" => EasyAlign section
+""""""""""""""""""""""""""""""
+xmap ga <Plug>(EasyAlign)
+
+" call camelcasemotion#CreateMotionMappings('<leader>')
+map <silent> w <Plug>CamelCaseMotion_w
+map <silent> b <Plug>CamelCaseMotion_b
+map <silent> e <Plug>CamelCaseMotion_e
+map <silent> ge <Plug>CamelCaseMotion_ge
+sunmap w
+sunmap b
+sunmap e
+sunmap ge
 
 """"""""""""""""""""""""""""""
 " => Ruby section
@@ -756,9 +773,8 @@ map <leader>bb :cd ..<cr>
 " nnoremap <leader>F :Unite file<CR>
 " 2017/01/30 16:30:21, AA: Disabled this and started using CtrlP, is much faster
 " nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
-nnoremap <leader>x :Unite -quick-match buffer<CR>
+" nnoremap <leader>x :Unite -quick-match buffer<CR>
 nnoremap <leader>gg :Unite -start-insert file_rec/git<CR>
-
 " 2016/11/17 15:25:47, AA: unite-tag (ctags stuff)
 let g:unite_source_tag_max_fname_length = 50
 let g:unite_source_tag_max_name_length = 50
@@ -799,6 +815,9 @@ set guicursor=n:block-blinkon0-Cursor,v:block-blinkon0-VisualCursor,c-i-ci:ver25
 " => 2017/01/30 16:28:03, AA: CtrlP stuff, Unite is slow af
 """""""""""""""""""""""""""""""""""""""""""""
 " nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
+nmap <Space> :CtrlPBuffer<CR>
+let g:ctrlp_match_window_bottom = 0
+let g:ctrlp_match_window_reversed = 0
 let g:ctrlp_map = '<leader>f'
 let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""
   \ --ignore .git
@@ -869,7 +888,7 @@ hi User5 guifg=#eeee40 guibg=#222222
 " 2014-11-04, AA: Vim-sneak, Alternativa ao Easymotion
 let g:sneak#streak = 1
 let g:sneak#s_next = 1
-nmap <Space> <Plug>SneakNext
+nmap <Tab> <Plug>SneakNext
 " 2015/10/09 11:02:36, AA: dummy, replaced by clever-f
 " nmap ;; <Plug>SneakNext
 

@@ -46,3 +46,5 @@ https://github.com/tomasr/molokai
 https://github.com/elixir-lang/vim-elixir
 https://github.com/ahw/vim-pbcopy
 https://github.com/ctrlpvim/ctrlp.vim
+https://github.com/junegunn/vim-easy-align
+https://github.com/bkad/CamelCaseMotion
