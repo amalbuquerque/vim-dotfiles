@@ -1,38 +1,64 @@
 " 2016/01/10, AA: having also vim-pathogen on the bundle directory
 set runtimepath+=~/.vim/
 runtime bundle/vim-pathogen/autoload/pathogen.vim
-" call pathogen#infect() " with this, it will search for packages on '~/.vim/bundle'
-" call pathogen#infect('C:\\dados\\programas\\vim\\vim73\\bundle')
-" 2014-05-30, AA: Removed configs already set on sensible.vim
-" 2014-09-18, AA: Comentei as 3 seguintes linhas para funcar no cygwin
-" source $VIMRUNTIME/vimrc_example.vim
-" source $VIMRUNTIME/mswin.vim
-" behave mswin
 
 " 2014-09-18, AA: Para fazer o autoload do pathogen do lado do windows
 if has('win32') || has('win64')
   set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
 endif
 
-" 2014-09-18, AA: Substitui a path por $HOME . '\\.vim\\bundle'
-if has("win32")
-    call pathogen#infect($HOME . '\vim-dotfiles\bundles\{}', $HOME . '\.vim\bundle\{}')
-    " source $VIMRUNTIME/vimrc_example.vim
-    " source $VIMRUNTIME/mswin.vim
-    " behave mswin
-    " 2015/08/22 18:51:39, AA: a la tmux
-    nnoremap <C-a><C-a> <C-w><C-w>
+call plug#begin('~/.vim/plugged')
 
-else
-    call pathogen#infect($HOME . '/vim-dotfiles/bundles/{}', $HOME . '/.vim/bundle/{}')
-    " 2015/08/15 23:24:27, AA: Only needed
-    " in the terminal to copy to the windows clipboard
-    " if used with gvim breaks the paste in visual mode
-    " unnamed register = windows clipboard
-    " set clipboard=unnamed
-    " 2015/08/27 17:49:41, AA: disabled to use vim-focusclip
+Plug 'https://github.com/Lokaltog/vim-easymotion.git'
+Plug 'https://github.com/Shougo/neomru.vim'
+Plug 'https://github.com/Shougo/unite.vim'
+Plug 'https://github.com/gosukiwi/vim-atom-dark.git'
+Plug 'https://github.com/haya14busa/incsearch.vim.git'
+Plug 'https://github.com/junegunn/goyo.vim.git'
+Plug 'https://github.com/junegunn/limelight.vim'
+Plug 'https://github.com/junegunn/seoul256.vim.git'
+Plug 'https://github.com/junegunn/vim-peekaboo'
+Plug 'https://github.com/justinmk/vim-sneak.git'
+Plug 'https://github.com/ledger/vim-ledger'
+Plug 'https://github.com/tomtom/tlib_vim.git'
+Plug 'https://github.com/MarcWeber/vim-addon-mw-utils.git'
+Plug 'https://github.com/garbas/vim-snipmate'
+Plug 'https://github.com/honza/vim-snippets.git'
+Plug 'https://github.com/sukima/xmledit/'
+Plug 'https://github.com/idbrii/vim-focusclip'
+Plug 'https://github.com/tpope/vim-commentary'
+Plug 'https://github.com/tpope/vim-endwise'
+Plug 'https://github.com/tpope/vim-fugitive'
+Plug 'https://github.com/tpope/vim-repeat.git'
+Plug 'https://github.com/tpope/vim-sensible.git'
+Plug 'https://github.com/tpope/vim-speeddating'
+Plug 'https://github.com/tpope/vim-surround'
+Plug 'https://github.com/tpope/vim-vinegar'
+Plug 'https://github.com/pangloss/vim-javascript'
+Plug 'https://github.com/terryma/vim-expand-region'
+Plug 'https://github.com/Raimondi/delimitMate'
+Plug 'https://github.com/rhysd/clever-f.vim'
+Plug 'https://github.com/ChesleyTan/wordCount.vim'
+Plug 'https://github.com/vim-latex/vim-latex'
+Plug 'https://github.com/tpope/vim-pathogen'
+Plug 'https://github.com/tpope/vim-unimpaired'
+Plug 'https://github.com/tpope/vim-rails'
+Plug 'https://github.com/Shougo/neoyank.vim'
+Plug 'https://github.com/mileszs/ack.vim'
+Plug 'https://github.com/Shougo/vimproc.vim'
+Plug 'https://github.com/scrooloose/nerdtree'
+Plug 'https://github.com/tpope/vim-git'
+Plug 'https://github.com/tsukkee/unite-tag'
+Plug 'https://github.com/Shougo/unite-outline'
+Plug 'https://github.com/christoomey/vim-tmux-navigator'
+Plug 'https://github.com/tomasr/molokai'
+Plug 'https://github.com/elixir-lang/vim-elixir'
+Plug 'https://github.com/ahw/vim-pbcopy'
+Plug 'https://github.com/ctrlpvim/ctrlp.vim'
+Plug 'https://github.com/junegunn/vim-easy-align'
+Plug 'https://github.com/bkad/CamelCaseMotion'
 
-endif
+call plug#end()
 
 set nocompatible
 

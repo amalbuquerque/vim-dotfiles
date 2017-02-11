@@ -24,8 +24,6 @@ https://github.com/tpope/vim-speeddating
 https://github.com/tpope/vim-surround
 https://github.com/tpope/vim-vinegar
 https://github.com/pangloss/vim-javascript
-https://github.com/vim-scripts/L9
-https://github.com/vim-scripts/VOoM
 https://github.com/terryma/vim-expand-region
 https://github.com/Raimondi/delimitMate
 https://github.com/rhysd/clever-f.vim
