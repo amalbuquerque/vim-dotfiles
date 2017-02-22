@@ -1,0 +1,17 @@
+snippet ent
+`date +%y/%m/%d` * ${1:trans}
+	${3:acc_to}    €${4:value}
+	${2:acc_from}
+endsnippet
+
+snippet lev
+`date +%y/%m/%d` * Levantamento €${1:}
+	Assets:Cash:Carteira    €$1
+	Assets:Bank:Conta Caderneta
+endsnippet
+
+snippet gas
+`date +%y/%m/%d` * Gasolina Mota
+	Expenses:Transportes:Gasolina    €${1:}
+	Assets:Bank:Conta Caderneta
+endsnippet

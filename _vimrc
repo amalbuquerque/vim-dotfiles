@@ -22,7 +22,7 @@ Plug 'https://github.com/justinmk/vim-sneak.git'
 Plug 'https://github.com/ledger/vim-ledger'
 Plug 'https://github.com/tomtom/tlib_vim.git'
 Plug 'https://github.com/MarcWeber/vim-addon-mw-utils.git'
-Plug 'https://github.com/garbas/vim-snipmate'
+Plug 'https://github.com/SirVer/ultisnips'
 Plug 'https://github.com/honza/vim-snippets.git'
 Plug 'https://github.com/sukima/xmledit/'
 Plug 'https://github.com/idbrii/vim-focusclip'
@@ -57,8 +57,12 @@ Plug 'https://github.com/ahw/vim-pbcopy'
 Plug 'https://github.com/ctrlpvim/ctrlp.vim'
 Plug 'https://github.com/junegunn/vim-easy-align'
 Plug 'https://github.com/bkad/CamelCaseMotion'
+Plug '~/vim-dotfiles/bundles/random_colorschemes'
 
 call plug#end()
+
+let g:UltiSnipsSnippetsDir=$HOME.'/vim-dotfiles/bundles/mysnippets'
+let g:UltiSnipsSnippetDirectories=['UltiSnips', g:UltiSnipsSnippetsDir]
 
 set nocompatible
 
@@ -155,6 +159,10 @@ set magic "Set magic on, for regular expressions
 
 set showmatch "Show matching bracets when text indicator is over them
 set mat=2 "How many tenths of a second to blink
+
+" 2017/02/21 11:54:48, AA: better split opening
+set splitbelow
+set splitright
 
 " No sound on errors
 set noerrorbells
@@ -559,7 +567,11 @@ au Filetype log set foldmethod=manual
 " 2014-11-04, AA: From http://robots.thoughtbot.com/vim-you-complete-me
 " imap <Tab> <C-P>
 " 2015/08/03 14:40:08, AA: Using snipmate from the actual repository
-imap <Tab> <Plug>snipMateNextOrTrigger
+" imap <Tab> <Plug>snipMateNextOrTrigger
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
+
 imap <C-Tab> <C-X><C-O>
 set complete=.,b,u,]
 set completeopt=menu,preview
