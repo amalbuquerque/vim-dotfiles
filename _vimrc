@@ -951,9 +951,8 @@ hi User5 guifg=#eeee40 guibg=#222222
 " 2014-11-04, AA: Vim-sneak, Alternativa ao Easymotion
 let g:sneak#streak = 1
 let g:sneak#s_next = 1
-nmap <Tab> <Plug>SneakNext
-" 2015/10/09 11:02:36, AA: dummy, replaced by clever-f
-" nmap ;; <Plug>SneakNext
+" 2017/03/07 15:17:16, AA: Only if Sneak is being used
+nmap <expr> <Tab> sneak#is_sneaking() ? '<Plug>Sneak_;' : '<Tab>'
 
 " 2014-11-03, AA: Easymotion plug-in
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
