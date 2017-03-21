@@ -58,6 +58,9 @@ Plug 'https://github.com/ctrlpvim/ctrlp.vim'
 Plug 'https://github.com/junegunn/vim-easy-align'
 Plug 'https://github.com/bkad/CamelCaseMotion'
 Plug '~/vim-dotfiles/bundles/random_colorschemes'
+Plug 'https://github.com/Firef0x/matchit'
+Plug 'https://github.com/kana/vim-textobj-user'
+Plug 'https://github.com/nelstrom/vim-textobj-rubyblock'
 
 call plug#end()
 
@@ -695,6 +698,12 @@ sunmap w
 sunmap b
 sunmap e
 sunmap ge
+
+
+""""""""""""""""""""""""""""""
+" => Refactor stuff
+""""""""""""""""""""""""""""""
+nmap X *Nvar:s///gc<Left><Left><Left>
 
 """"""""""""""""""""""""""""""
 " => Ruby section
