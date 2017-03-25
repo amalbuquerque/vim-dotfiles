@@ -570,10 +570,9 @@ au Filetype log set foldmethod=manual
 " 2014-11-04, AA: From http://robots.thoughtbot.com/vim-you-complete-me
 " imap <Tab> <C-P>
 " 2015/08/03 14:40:08, AA: Using snipmate from the actual repository
-" imap <Tab> <Plug>snipMateNextOrTrigger
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
+let g:UltiSnipsExpandTrigger="<Tab>"
+let g:UltiSnipsJumpForwardTrigger="<Tab>"
+let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 
 imap <C-Tab> <C-X><C-O>
 set complete=.,b,u,]
