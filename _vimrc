@@ -119,12 +119,6 @@ nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 " switch to last buffer, like alt+tab
 nnoremap <Leader><Tab> :b#<CR>
 
-" Teclado PT ` e dificil de usar
-nnoremap \ `
-
-" acabei por nao usar isto
-let vimrc_file_path=expand('<sfile>:p')
-
 " Fast editing of the .vimrc
 map <leader>e :tabnew! $MYVIMRC<cr>
 
@@ -393,10 +387,6 @@ let g:clever_f_smart_case = 1
 
 " 2015/06/17 15:56:51, AA: Map Backspace to Toggle between current file and previous
 nnoremap <BS> <C-^>
-" 2014-11-07, AA: never used it!
-" C-space to ? (backwards search)
-" map <C-space> ?
-" map <silent> <leader><cr> :noh<cr>
 map <silent> <leader><leader> :noh<cr>
 
 " 2016/11/08 11:41:14, AA: From http://tex.stackexchange.com/a/3655/65117
