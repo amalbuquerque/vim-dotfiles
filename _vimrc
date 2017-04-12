@@ -65,6 +65,13 @@ Plug 'https://github.com/nelstrom/vim-textobj-rubyblock'
 
 call plug#end()
 
+" 2017/04/12 09:40:06, AA: Had to force the mapping again here
+" because for some reason it was set (use `:verbose map %` to check)
+" but it didn't work
+" autocmd VimEnter because the _vimrc is parsed before loading the plugins
+" and I want this to run after everything
+autocmd VimEnter * map % <Plug>Matchit-%
+
 let g:UltiSnipsSnippetsDir=$HOME.'/vim-dotfiles/bundles/mysnippets'
 let g:UltiSnipsSnippetDirectories=['UltiSnips', g:UltiSnipsSnippetsDir]
 
