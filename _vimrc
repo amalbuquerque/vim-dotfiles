@@ -55,6 +55,7 @@ Plug 'https://github.com/tomasr/molokai'
 Plug 'https://github.com/elixir-lang/vim-elixir'
 Plug 'https://github.com/ahw/vim-pbcopy'
 Plug 'https://github.com/ctrlpvim/ctrlp.vim'
+Plug 'https://github.com/tacahiroy/ctrlp-funky'
 Plug 'https://github.com/junegunn/vim-easy-align'
 Plug 'https://github.com/bkad/CamelCaseMotion'
 Plug '~/vim-dotfiles/bundles/random_colorschemes'
@@ -113,8 +114,10 @@ inoremap <C-Del> <C-\><C-o>dw
 " expands %% to current file's directory in command-line mode
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
-" visually select the last paste or change
-nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+" 2017/04/11 09:28:57, AA: visually select the last paste or change
+nnoremap <expr> ge '`[' . strpart(getregtype(), 0, 1) . '`]'
+
+nnoremap gp :read !pbpaste<CR>
 
 " switch to last buffer, like alt+tab
 nnoremap <Leader><Tab> :b#<CR>
@@ -285,7 +288,7 @@ vnoremap <silent> # :call VisualSearch('b')<CR>
 " When you press gv you vimgrep after the selected text
 vnoremap <silent> gv :call VisualSearch('gv')<CR>
 " map <leader>g :vimgrep // **/*.<left><left><left><left><left><left><left>
-map <leader>g :Ack! --ruby<Space>
+map <leader>g :Ack! --ruby <c-r>=expand("<cword>")<CR>
 
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
@@ -699,11 +702,11 @@ xmap ga <Plug>(EasyAlign)
 map <silent> w <Plug>CamelCaseMotion_w
 map <silent> b <Plug>CamelCaseMotion_b
 map <silent> e <Plug>CamelCaseMotion_e
-map <silent> ge <Plug>CamelCaseMotion_ge
+" map <silent> ge <Plug>CamelCaseMotion_ge
 sunmap w
 sunmap b
 sunmap e
-sunmap ge
+" sunmap ge
 
 
 """"""""""""""""""""""""""""""
@@ -845,11 +848,12 @@ map <leader>bb :cd ..<cr>
 """""""""""""""""""""""""""""""""""""""""""""
 " => 2015-03-31 22:41:34, AA: Vim Unite Stuff
 """""""""""""""""""""""""""""""""""""""""""""
-" nnoremap <leader>F :Unite file<CR>
 " 2017/01/30 16:30:21, AA: Disabled this and started using CtrlP, is much faster
+" nnoremap <leader>F :Unite file<CR>
 " nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
 " nnoremap <leader>x :Unite -quick-match buffer<CR>
-nnoremap <leader>gg :Unite -start-insert file_rec/git<CR>
+" nnoremap <leader>gg :Unite -start-insert file_rec/git<CR>
+
 " 2016/11/17 15:25:47, AA: unite-tag (ctags stuff)
 let g:unite_source_tag_max_fname_length = 50
 let g:unite_source_tag_max_name_length = 50
@@ -894,20 +898,30 @@ nmap <Space> :CtrlPBuffer<CR>
 let g:ctrlp_match_window_bottom = 0
 let g:ctrlp_match_window_reversed = 0
 let g:ctrlp_map = '<leader>f'
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""
+let g:ctrlp_user_command = 'ag %s -i --nocolor -g ""
+  \ --nogroup --hidden
   \ --ignore .git
   \ --ignore .svn
   \ --ignore .hg
   \ --ignore .DS_Store
   \ --ignore "**/*.pyc"
   \ --ignore node_modules'
-let g:ag_prg='ag --nocolor --nogroup --column
-  \ --ignore .git
-  \ --ignore .svn
-  \ --ignore .hg
-  \ --ignore .DS_Store
-  \ --ignore "**/*.pyc"
-  \ --ignore node_modules'
+
+
+if executable('ag')
+    let g:ackprg ='ag --nocolor --nogroup --column
+      \ --ignore .git
+      \ --ignore .svn
+      \ --ignore .hg
+      \ --ignore .DS_Store
+      \ --ignore "**/*.pyc"
+      \ --ignore node_modules
+      \ --vimgrep'
+endif
+
+nnoremap <Leader>fu :CtrlPFunky<Cr>
+" narrow the list down with a word under cursor
+nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 
 """"""""""""""""""""""""""""""
 " => Vim grep: Falta instalar o grep para o Windows
