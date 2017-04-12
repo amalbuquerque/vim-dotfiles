@@ -295,7 +295,8 @@ vnoremap <silent> # :call VisualSearch('b')<CR>
 " When you press gv you vimgrep after the selected text
 vnoremap <silent> gv :call VisualSearch('gv')<CR>
 " map <leader>g :vimgrep // **/*.<left><left><left><left><left><left><left>
-map <leader>g :Ack! --ruby <c-r>=expand("<cword>")<CR>
+map <leader>G :Ack! --ruby <c-r>=expand("<cword>")<CR>
+map <leader>g :Ack! --ruby<Space>
 
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
