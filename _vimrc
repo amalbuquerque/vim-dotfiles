@@ -640,8 +640,10 @@ nnoremap <leader>go :Git checkout<Space>
 nnoremap <leader>gps :Dispatch! git push<CR>
 nnoremap <leader>gpl :Dispatch! git pull<CR>
 
-nnoremap <leader>> :cnext<CR>
-nnoremap <leader>< :cprevious<CR>
+nnoremap <C-e> :cnext<CR>
+nnoremap <leader>< :cnext<CR>
+nnoremap <C-b> :cprevious<CR>
+nnoremap <leader>> :cprevious<CR>
 
 
 """"""""""""""""""""""""""""""
@@ -914,6 +916,12 @@ let g:ctrlp_user_command = 'ag %s -i --nocolor -g ""
   \ --ignore .DS_Store
   \ --ignore "**/*.pyc"
   \ --ignore node_modules'
+
+" Sane Ignore For ctrlp
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.yardoc\|public\/images\|public\/system\|data\|log\|tmp$',
+  \ 'file': '\.exe$\|\.so$\|\.dat$'
+  \ }
 
 
 if executable('ag')
