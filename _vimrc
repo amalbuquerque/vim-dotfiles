@@ -1,11 +1,5 @@
-" 2016/01/10, AA: having also vim-pathogen on the bundle directory
+" 2017/04/28 22:09:53, AA: Junegunn plug
 set runtimepath+=~/.vim/
-runtime bundle/vim-pathogen/autoload/pathogen.vim
-
-" 2014-09-18, AA: Para fazer o autoload do pathogen do lado do windows
-if has('win32') || has('win64')
-  set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
-endif
 
 call plug#begin('~/.vim/plugged')
 
@@ -21,10 +15,11 @@ Plug 'https://github.com/junegunn/vim-peekaboo'
 Plug 'https://github.com/justinmk/vim-sneak.git'
 Plug 'https://github.com/ledger/vim-ledger'
 Plug 'https://github.com/tomtom/tlib_vim.git'
+Plug 'https://github.com/tomtom/tinykeymap_vim/'
 Plug 'https://github.com/MarcWeber/vim-addon-mw-utils.git'
 Plug 'https://github.com/SirVer/ultisnips'
 Plug 'https://github.com/honza/vim-snippets.git'
-Plug 'https://github.com/sukima/xmledit/'
+" Plug 'https://github.com/sukima/xmledit/'
 Plug 'https://github.com/idbrii/vim-focusclip'
 Plug 'https://github.com/tpope/vim-commentary'
 Plug 'https://github.com/tpope/vim-endwise'
@@ -39,8 +34,7 @@ Plug 'https://github.com/terryma/vim-expand-region'
 Plug 'https://github.com/Raimondi/delimitMate'
 Plug 'https://github.com/rhysd/clever-f.vim'
 Plug 'https://github.com/ChesleyTan/wordCount.vim'
-Plug 'https://github.com/vim-latex/vim-latex'
-Plug 'https://github.com/tpope/vim-pathogen'
+" Plug 'https://github.com/vim-latex/vim-latex'
 Plug 'https://github.com/tpope/vim-unimpaired'
 Plug 'https://github.com/tpope/vim-rails'
 Plug 'https://github.com/Shougo/neoyank.vim'
@@ -90,8 +84,9 @@ let g:mapleader = ","
 let delimitMate_expand_space = 1
 let delimitMate_expand_cr = 1
 let delimitMate_jump_expansion = 1
-" 2016/11/16 13:32:56, AA: Control-, goes to the next closing thing (bracket, parenthesis, quote, etc.)
+" 2016/11/16 13:32:56, AA: Control-b goes to the next closing thing (bracket, parenthesis, quote, etc.)
 imap <C-b> <Plug>delimitMateS-Tab
+imap <expr> <Del> delimitMate#ShouldJump() == 1 ? '<Plug>delimitMateS-Tab' : '<Del>'
 
 " easy xml editing
 let g:xml_syntax_folding = 1
@@ -287,16 +282,16 @@ map g/ <Plug>(incsearch-stay)
 vmap v <Plug>(expand_region_expand)
 vmap <C-v> <Plug>(expand_region_shrink)
 
-" Really useful!
 "  In visual mode when you press * or # to search for the current selection
 vnoremap <silent> * :call VisualSearch('f')<CR>
 vnoremap <silent> # :call VisualSearch('b')<CR>
 
 " When you press gv you vimgrep after the selected text
 vnoremap <silent> gv :call VisualSearch('gv')<CR>
-" map <leader>g :vimgrep // **/*.<left><left><left><left><left><left><left>
+
+" 2017/04/29 12:51:47, AA: Ack stuff (using ag in the backstage)
 map <leader>G :Ack! --ruby <c-r>=expand("<cword>")<CR>
-map <leader>g :Ack! --ruby<Space>
+map <leader>g :Ack! --ruby -Q<Space>
 
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
@@ -595,8 +590,6 @@ au FileType cs set foldlevelstart=2
 " Quickfix mode: command line msbuild error format
 au FileType cs set errorformat=\ %#%f(%l\\\,%c):\ error\ CS%n:\ %m
 
-autocmd BufEnter *.md exe 'noremap <leader>m :!start C:\Users\oiu027\AppData\Local\Google\Chrome\Application\chrome.exe %:p<CR>'
-
 " Colocar o caminho do ficheiro de tags gerado com o Ctags
 set tag=$VIMRUNTIME\ctags\alltags
 
@@ -642,7 +635,7 @@ nnoremap <leader>gpl :Dispatch! git pull<CR>
 
 nnoremap <C-e> :cnext<CR>
 nnoremap <leader>< :cnext<CR>
-nnoremap <C-b> :cprevious<CR>
+nnoremap <C-t> :cprevious<CR>
 nnoremap <leader>> :cprevious<CR>
 
 
@@ -744,7 +737,8 @@ au FileType ruby iabbrev ,,p require "pry"; binding.pry
 autocmd User GoyoEnter Limelight
 autocmd User GoyoEnter set textwidth=80
 autocmd User GoyoLeave Limelight!
-nnoremap <Leader>G :Goyo<CR>
+" 2017/04/29 20:02:47, AA: ,G it's better with Ack current word
+" nnoremap <leader>G :Goyo<CR>
 
 " 2015/07/28 07:53:10, AA: Activate only limelight (highlight current paragraph)
 " From: https://zenbro.github.io/2015/06/09/meditating-on-code.html
@@ -999,16 +993,6 @@ nmap <expr> <Tab> sneak#is_sneaking() ? '<Plug>Sneak_;' : '<Tab>'
 " 2014-11-03, AA: Easymotion plug-in
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 
-" Bi-directional find motion
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-" nmap s <Plug>(easymotion-s)
-" or
-" `s{char}{char}{label}`
-" Need one more keystroke, but on average, it may be more comfortable.
-" 2014-11-04, AA: Substitui pelo Vim-streak
-" nmap s <Plug>(easymotion-s2)
-
 " Turn on case sensitive feature
 let g:EasyMotion_smartcase = 1
 
@@ -1019,16 +1003,6 @@ map <Leader>k <Plug>(easymotion-k)
 
 set number        " always show line numbers
 set list
-
-" 2014-12-07 13:30:20, AA:
-" Define characters to show when you show formatting
-" stolen from https://github.com/tpope/vim-sensible
-if &listchars ==# 'eol:$'
-  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-  if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
-    let &listchars = "tab:\u21e5,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
-  endif
-endif
 
 " 2016/11/29 09:01:23, AA: Toggle zoom
 " From: http://stackoverflow.com/a/26551079/687420
