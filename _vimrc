@@ -56,8 +56,15 @@ Plug '~/vim-dotfiles/bundles/random_colorschemes'
 Plug 'https://github.com/Firef0x/matchit'
 Plug 'https://github.com/kana/vim-textobj-user'
 Plug 'https://github.com/nelstrom/vim-textobj-rubyblock'
+Plug 'https://github.com/jgdavey/tslime.vim'
+Plug 'https://github.com/janko-m/vim-test'
 
 call plug#end()
+
+" 2017/05/09 10:01:45, AA: Tslime + vim-test stuff
+nmap Q <Plug>SetTmuxVars
+let test#strategy = "tslime"
+nmap <silent> <leader>T :TestNearest<CR>
 
 " 2017/04/12 09:40:06, AA: Had to force the mapping again here
 " because for some reason it was set (use `:verbose map %` to check)
@@ -419,9 +426,7 @@ map <left> :bp<cr>
 
 " Tab configuration
 map <leader>tn :tabnew<cr>
-map <leader>te :tabedit
 map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove
 
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
