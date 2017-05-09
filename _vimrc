@@ -61,10 +61,8 @@ Plug 'https://github.com/janko-m/vim-test'
 
 call plug#end()
 
-" 2017/05/09 10:01:45, AA: Tslime + vim-test stuff
-nmap Q <Plug>SetTmuxVars
-let test#strategy = "tslime"
-nmap <silent> <leader>T :TestNearest<CR>
+" 2017/05/09 18:09:58, AA: Neovim needs this
+let g:python_host_prog="C:/Python27/python.exe"
 
 " 2017/04/12 09:40:06, AA: Had to force the mapping again here
 " because for some reason it was set (use `:verbose map %` to check)
@@ -86,6 +84,12 @@ noremap 0 ^
 " like <leader>w saves the current file
 let mapleader = ","
 let g:mapleader = ","
+
+" 2017/05/09 10:01:45, AA: Tslime + vim-test stuff
+nmap Q <Plug>SetTmuxVars
+let test#strategy = "tslime"
+nmap  <leader>T :TestNearest<CR>
+let test#ruby#rspec#executable = 'bundle exec rspec'
 
 " 2015/09/12 17:44:38, AA:
 let delimitMate_expand_space = 1
@@ -142,6 +146,9 @@ autocmd! bufwritepost _vimrc source $MYVIMRC
 
 " Set 7 lines to the cursors - when moving vertical..
 set scrolloff=7
+
+" Keep some spacing.
+set sidescrolloff=1
 
 " 2015/08/19 10:01:29, AA: To toggle the editing line to be always
 " centered on the screen
@@ -470,7 +477,7 @@ set laststatus=2
 
 " composicao da status line
 set statusline=
-set statusline +=%1*\ %n\ %*            "buffer number
+set statusline +=%6*%{getcwd()}\ %*     "current directory
 set statusline +=%5*%{&ff}%*            "file format
 set statusline +=%3*%y%*                "file type
 set statusline +=%1*\ %{strlen(&fenc)?&fenc:&enc}%* " encoding
@@ -482,7 +489,7 @@ set statusline +=%2*/%L%*               "total lines
 set statusline +=%6*%4v\ %*             "virtual column number
 set statusline +=%2*0x%04B\ %*          "character under cursor
 " 2015/10/27 16:45:02, AA: wordcount
-set statusline+=%6*w:%{wordCount#WordCount()}%*
+set statusline +=%6*w:%{wordCount#WordCount()}%*
 
 function! CurDir()
     " tinha isto mas tirei o substitute:
@@ -578,6 +585,8 @@ let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 imap <C-Tab> <C-X><C-O>
 set complete=.,b,u,]
 set completeopt=menu,preview
+" set complete=k,.,w,b,u,U,i,d,t
+" set completeopt=menu,longest
 
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
