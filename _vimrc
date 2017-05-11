@@ -58,6 +58,7 @@ Plug 'https://github.com/kana/vim-textobj-user'
 Plug 'https://github.com/nelstrom/vim-textobj-rubyblock'
 Plug 'https://github.com/jgdavey/tslime.vim'
 Plug 'https://github.com/janko-m/vim-test'
+Plug 'https://github.com/nielsmadan/harlequin'
 
 call plug#end()
 
@@ -233,6 +234,15 @@ endfunction
 au BufRead let b:fenc_at_read=&fileencoding
 au BufWinEnter call CheckFileEncoding()
 
+function! ChangeSchemeWithIndex(index)
+    let l:favourite_schemes = ["molokai", "harlequin", "atom-dark-256", "railscasts"]
+    let l:to_use = l:favourite_schemes[a:index % len(l:favourite_schemes)]
+    execute "colorscheme " . l:to_use
+    if l:to_use == "railscasts"
+        highlight ColorColumn term=reverse ctermbg=236 guibg=#232526
+    endif
+endfunction
+
 " 2014-11-04, AA: using seoul256
 " instead of molokai
 if has("gui_running")
@@ -246,13 +256,15 @@ if has("gui_running")
   " colorscheme ir_black
   " set background=dark
 else
-  " colorscheme zellner
-  colorscheme molokai
+  " 2017/05/11 10:11:09, AA: Rotates among a few cool colorschemes
+  let colorscheme_index = reltimestr(reltime())[-2:]
+  call ChangeSchemeWithIndex(colorscheme_index)
+
   " Cool colors of seoul256
   hi TabLine term=underline cterm=underline ctermfg=245 ctermbg=237 gui=underline guibg=#4B4B4B
   hi TabLineFill term=reverse cterm=reverse ctermfg=235 gui=reverse guifg=#333233
   hi TabLineSel term=bold cterm=bold ctermfg=187 ctermbg=23 gui=bold guifg=#DFDEBD guibg=#007173
-  " colorscheme atom-dark-256
+
   " let g:seoul256_background = 233
   " colorscheme seoul256
 endif
@@ -315,13 +327,20 @@ endfunction
 
 map <C-f><C-f> :call ChangeFont()<CR>
 
-" 12/25/04 15:29:34: funcao que percorre fonts que eu gosto
+" 12/25/04 15:29:34, AA: font changer
 let g:font_index_to_use = 0
 function! ChangeFont()
     let l:favourite_fonts = ["Raize:h12", "Courier_New:h12", "Envy\\ Code\\ R:h10"]
     let g:font_index_to_use += 1
     let l:to_use = l:favourite_fonts[g:font_index_to_use % len(l:favourite_fonts)]
     execute "set guifont=" . l:to_use
+endfunction
+
+" Choosing a different scheme
+let g:scheme_index_to_use = 0
+function! ChangeScheme()
+    let g:scheme_index_to_use += 1
+    call ChangeSchemeWithIndex(g:scheme_index_to_use)
 endfunction
 
 " 2016/08/18 18:55:36: function to clean esttab .csv output from stata
