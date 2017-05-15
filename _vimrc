@@ -59,6 +59,7 @@ Plug 'https://github.com/nelstrom/vim-textobj-rubyblock'
 Plug 'https://github.com/jgdavey/tslime.vim'
 Plug 'https://github.com/janko-m/vim-test'
 Plug 'https://github.com/nielsmadan/harlequin'
+Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 
 call plug#end()
 
@@ -639,6 +640,10 @@ let g:unite_source_history_yank_file = $HOME.'/.vim/yankring.txt'
 let g:unite_source_rec_async_command = [ 'ag', '-l', '-g', '', '--nocolor'  ]
 nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank<cr>
 
+" 2017/05/11 14:56:53, AA: easier usage of the black hole register
+" See http://blog.dreasgrech.com/2010/06/vims-black-hole-register.html
+map _ "_
+
 " NERDTree
 let NERDTreeHijackNetrw=0
 let g:NERDTreeToggled=0
@@ -929,27 +934,33 @@ set guicursor=n:block-blinkon0-Cursor,v:block-blinkon0-VisualCursor,c-i-ci:ver25
 
 """""""""""""""""""""""""""""""""""""""""""""
 " => 2017/01/30 16:28:03, AA: CtrlP stuff, Unite is slow af
+" => 2017/05/15 14:25:58, AA: Disabled CtrlP for files, fzf is the real deal
 """""""""""""""""""""""""""""""""""""""""""""
 " nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
-nmap <Space> :CtrlPBuffer<CR>
+nmap <silent> <Space> :CtrlPBuffer<CR>
 let g:ctrlp_match_window_bottom = 0
 let g:ctrlp_match_window_reversed = 0
-let g:ctrlp_map = '<leader>f'
-let g:ctrlp_user_command = 'ag %s -i --nocolor -g ""
-  \ --nogroup --hidden
-  \ --ignore .git
-  \ --ignore .svn
-  \ --ignore .hg
-  \ --ignore .DS_Store
-  \ --ignore "**/*.pyc"
-  \ --ignore node_modules'
+" let g:ctrlp_map = '<leader>F'
+" let g:ctrlp_user_command = 'ag %s -i --nocolor -g ""
+"   \ --nogroup --hidden
+"   \ --ignore .git
+"   \ --ignore .svn
+"   \ --ignore .hg
+"   \ --ignore .DS_Store
+"   \ --ignore "**/*.pyc"
+"   \ --ignore node_modules'
 
-" Sane Ignore For ctrlp
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.yardoc\|public\/images\|public\/system\|data\|log\|tmp$',
-  \ 'file': '\.exe$\|\.so$\|\.dat$'
-  \ }
+" " Sane Ignore For ctrlp
+" let g:ctrlp_custom_ignore = {
+"   \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.yardoc\|public\/images\|public\/system\|data\|log\|tmp$',
+"   \ 'file': '\.exe$\|\.so$\|\.dat$'
+"   \ }
 
+"""""""""""""""""""""""""""""""""""""""""""""
+" => 2017/05/15 14:25:58, AA: FZF is the real deal
+"""""""""""""""""""""""""""""""""""""""""""""
+let g:fzf_command_prefix = 'Fzf'
+nmap <silent> <leader>f :FzfFiles<CR>
 
 if executable('ag')
     let g:ackprg ='ag --nocolor --nogroup --column
