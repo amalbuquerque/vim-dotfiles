@@ -38,7 +38,7 @@ Plug 'https://github.com/ChesleyTan/wordCount.vim'
 Plug 'https://github.com/tpope/vim-unimpaired'
 Plug 'https://github.com/tpope/vim-rails'
 Plug 'https://github.com/Shougo/neoyank.vim'
-Plug 'https://github.com/mileszs/ack.vim'
+" Plug 'https://github.com/mileszs/ack.vim'
 Plug 'https://github.com/Shougo/vimproc.vim'
 Plug 'https://github.com/scrooloose/nerdtree'
 Plug 'https://github.com/tpope/vim-git'
@@ -90,7 +90,8 @@ let g:mapleader = ","
 " 2017/05/09 10:01:45, AA: Tslime + vim-test stuff
 nmap Q <Plug>SetTmuxVars
 let test#strategy = "tslime"
-nmap  <leader>T :TestNearest<CR>
+nmap <silent> <leader>T :TestNearest<CR>
+nmap <silent> <F8> :TestLast<CR>
 let test#ruby#rspec#executable = 'bundle exec rspec'
 
 " 2015/09/12 17:44:38, AA:
@@ -317,8 +318,9 @@ vnoremap <silent> # :call VisualSearch('b')<CR>
 vnoremap <silent> gv :call VisualSearch('gv')<CR>
 
 " 2017/04/29 12:51:47, AA: Ack stuff (using ag in the backstage)
-map <leader>G :Ack! --ruby <c-r>=expand("<cword>")<CR>
-map <leader>g :Ack! --ruby -Q<Space>
+" 2017/05/17 09:58:31, AA: Replaced by FzfAg
+" map <leader>G :Ack! --ruby <c-r>=expand("<cword>")<CR>
+" map <leader>g :Ack! --ruby -Q<Space>
 
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
@@ -903,7 +905,8 @@ let g:unite_source_tag_max_name_length = 50
 
 nnoremap <F10> :Unite -vertical -winwidth=50 outline<CR>
 nnoremap <F7> :UniteWithCursorWord -immediately tag<CR>
-nnoremap <F8> :<C-w>}
+" 2017/05/17 10:00:59, AA: wut is thiz? replaced by F8 to run the last test
+" nnoremap <F8> :<C-w>}
 
 function! s:unite_settings() "{
     " C-c to exit Unite
@@ -962,11 +965,15 @@ let g:ctrlp_match_window_reversed = 0
 let g:fzf_command_prefix = 'Fzf'
 nmap <silent> <leader>f :FzfFiles<CR>
 
+map <leader>G :FzfAg <c-r>=expand("<cword>")<CR>
+map <leader>g :FzfAg<Space>
+
 if executable('ag')
     let g:ackprg ='ag --nocolor --nogroup --column
       \ --ignore .git
       \ --ignore .svn
       \ --ignore .hg
+      \ --ignore .log
       \ --ignore .DS_Store
       \ --ignore "**/*.pyc"
       \ --ignore node_modules
