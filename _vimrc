@@ -57,8 +57,10 @@ Plug 'https://github.com/Firef0x/matchit'
 Plug 'https://github.com/kana/vim-textobj-user'
 Plug 'https://github.com/nelstrom/vim-textobj-rubyblock'
 Plug 'https://github.com/jgdavey/tslime.vim'
-Plug 'https://github.com/janko-m/vim-test'
+Plug 'https://github.com/lejboua/vim-test'
 Plug 'https://github.com/nielsmadan/harlequin'
+Plug 'https://github.com/svermeulen/vim-easyclip'
+Plug 'https://github.com/Konfekt/FastFold'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 
 call plug#end()
@@ -645,6 +647,10 @@ nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank
 " 2017/05/11 14:56:53, AA: easier usage of the black hole register
 " See http://blog.dreasgrech.com/2010/06/vims-black-hole-register.html
 map _ "_
+
+" 2017/05/22 10:24:29, AA: We now have `m` on normal mode to cut, so
+" we map `set mark` to `gm`
+nnoremap gm m
 
 " NERDTree
 let NERDTreeHijackNetrw=0
