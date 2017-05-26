@@ -102,6 +102,29 @@ nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <F8> :TestLast<CR>
 let test#ruby#rspec#executable = 'bundle exec rspec'
 
+nmap <silent> <F4> :call ToggleBetweenSpecCode()<CR>
+
+function! ToggleBetweenSpecCode()
+    let l:current_file = expand('%:r')
+    let l:next_file = ""
+
+    if (l:current_file =~ "^spec/")
+        let l:next_file = substitute(l:current_file, "spec/", "app/", "")
+        let l:next_file = substitute(l:next_file, "_spec", "", "")
+        let l:next_file = l:next_file . '.rb'
+    elseif (l:current_file =~ "^app/")
+        let l:next_file = substitute(l:current_file, "app/", "spec/", "")
+        let l:next_file = l:next_file . '_spec.rb'
+    endif
+
+    if filereadable(l:next_file)
+        execute "e " . l:next_file
+    else
+        echo "Couldn't find " . l:next_file
+    endif
+endfunction
+
+
 " 2015/09/12 17:44:38, AA:
 let delimitMate_expand_space = 1
 let delimitMate_expand_cr = 1
