@@ -135,6 +135,8 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 " 2017/04/11 09:28:57, AA: visually select the last paste or change
 nnoremap <expr> ge '`[' . strpart(getregtype(), 0, 1) . '`]'
 
+" 2017/05/26 11:08:17, AA: paste from pb above and below
+nnoremap gP k:read !pbpaste<CR>
 nnoremap gp :read !pbpaste<CR>
 
 " switch to last buffer, like alt+tab
@@ -318,11 +320,6 @@ vnoremap <silent> # :call VisualSearch('b')<CR>
 
 " When you press gv you vimgrep after the selected text
 vnoremap <silent> gv :call VisualSearch('gv')<CR>
-
-" 2017/04/29 12:51:47, AA: Ack stuff (using ag in the backstage)
-" 2017/05/17 09:58:31, AA: Replaced by FzfAg
-" map <leader>G :Ack! --ruby <c-r>=expand("<cword>")<CR>
-" map <leader>g :Ack! --ruby -Q<Space>
 
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
@@ -651,6 +648,9 @@ map _ "_
 " 2017/05/22 10:24:29, AA: We now have `m` on normal mode to cut, so
 " we map `set mark` to `gm`
 nnoremap gm m
+" similar to what D does and what I'm used to Y doing
+map M m$
+map Y yy
 
 " NERDTree
 let NERDTreeHijackNetrw=0
@@ -722,7 +722,7 @@ endfunction
 " => EasyAlign section
 """"""""""""""""""""""""""""""
 let g:easy_align_delimiters = {
-\ '>': { 'pattern': '>>\|=>\|>' },
+\ '>': { 'pattern': '->\|>>\|=>\|>' },
 \ '/': {
 \     'pattern':         '//\+\|/\*\|\*/',
 \     'delimiter_align': 'l',
@@ -770,9 +770,8 @@ nmap X *Nvar:s///gc<Left><Left><Left>
 au FileType ruby set omnifunc=rubycomplete#Complete
 au FileType ruby set shiftwidth=2
 " 2016/11/18 12:12:35, AA: Too slow
-" au FileType ruby iabbrev ,,p require "pry"; Pry.commands.alias_command "c", "continue"; Pry.commands.alias_command "s", "step"; Pry.commands.alias_command "n", "next"; Pry.commands.alias_command "x", "exit"; binding.pry
-au FileType ruby iabbrev ,,p require "pry"; binding.pry
-
+au FileType ruby nmap <Leader>P o,,p <Esc>
+au FileType ruby iabbrev ,,p require "pry"; ["continue", "step", "next", "exit"].each do \|c\| Pry.commands.alias_command c[0], c end; binding.pry
 " au FileType ruby let g:rubycomplete_buffer_loading = 1
 " au FileType ruby let g:rubycomplete_classes_in_global = 1
 
@@ -891,8 +890,6 @@ endif
 "Quickly open a buffer for scribble
 map <leader>q :e ~/Dropbox/etc/scratchpad.txt<cr>
 au BufRead,BufNewFile ~/Dropbox/etc/scratchpad.txt iab <buffer> xh1 ============================ <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr> ========
-
-map <leader>pp :setlocal paste! paste?<cr>
 
 map <leader>bb :cd ..<cr>
 
