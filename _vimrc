@@ -1,3 +1,8 @@
+" TODO 2017/05/26 14:29:41, AA:
+" 1. Create a mode 'gw' to open windows: quickfix, location window, etc.
+" 2. Create a mode 'gl' to run git commands
+" 3. Create a function to open FzfFiles with the spec for the current file
+
 " 2017/04/28 22:09:53, AA: Junegunn plug
 set runtimepath+=~/.vim/
 
@@ -92,7 +97,8 @@ let g:mapleader = ","
 " 2017/05/09 10:01:45, AA: Tslime + vim-test stuff
 nmap Q <Plug>SetTmuxVars
 let test#strategy = "tslime"
-nmap <silent> <leader>T :TestNearest<CR>
+nmap <silent> <leader>T :TestSuite<CR>
+nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <F8> :TestLast<CR>
 let test#ruby#rspec#executable = 'bundle exec rspec'
 
@@ -112,6 +118,7 @@ set foldlevelstart=20
 
 " Fast saving
 nmap <leader>w :w!<cr>
+
 " 2016/11/11 18:01:42, AA: copy the contents of the file to the clipboard (OSX)
 " nmap <leader>c :%w !pbcopy<cr>
 " now using vim-pbcopy, normal mode: cy{motion}, visual mode: cy
@@ -451,10 +458,6 @@ map <leader>ba :1,300 bd!<cr>
 " Use the arrows to something useful
 map <right> :bn<cr>
 map <left> :bp<cr>
-
-" Tab configuration
-map <leader>tn :tabnew<cr>
-map <leader>tc :tabclose<cr>
 
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
