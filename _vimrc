@@ -392,27 +392,15 @@ function! VisualSearch(direction) range
 endfunction
 
 " Smart mappings on the command line
-cno $h e ~\
-cno $d e ~\Desktop\
-cno $j e .\
-cno $c e <C-\>eCurrentFileDir("e")<cr>
+cno $h ~/
+cno $d ~/Desktop/
+cno $j ./
+cno $c <C-R>=expand("%:h")<cr>
+cno $p <C-R>=expand("%:p")<cr>
 
 func! Cwd()
   let cwd = getcwd()
-  return "e " . cwd 
-endfunc
-
-func! DeleteTillSlash()
-  let g:cmd = getcmdline()
-  let g:cmd_edited = substitute(g:cmd, "\\(.*\[\\\\]\\).*", "\\1", "")
-  if g:cmd == g:cmd_edited
-      let g:cmd_edited = substitute(g:cmd, "\\(.*\[\\\\\]\\).*\[\\\\\]", "\\1", "")
-  endif   
-  return g:cmd_edited
-endfunc
-
-func! CurrentFileDir(cmd)
-  return a:cmd . " " . expand("%:p:h") . "/"
+  return "e " . cwd
 endfunc
 
 " 2014-12-08 12:28:07, AA: Center screen on next/prev search:
