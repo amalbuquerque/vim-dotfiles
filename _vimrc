@@ -66,6 +66,8 @@ Plug 'https://github.com/lejboua/vim-test'
 Plug 'https://github.com/nielsmadan/harlequin'
 Plug 'https://github.com/svermeulen/vim-easyclip'
 Plug 'https://github.com/Konfekt/FastFold'
+Plug 'https://github.com/ajmwagar/vim-deus'
+Plug 'https://github.com/bluz71/vim-moonfly-colors'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 
 call plug#end()
@@ -271,7 +273,7 @@ au BufRead let b:fenc_at_read=&fileencoding
 au BufWinEnter call CheckFileEncoding()
 
 function! ChangeSchemeWithIndex(index)
-    let l:favourite_schemes = ["molokai", "harlequin", "atom-dark-256", "railscasts"]
+    let l:favourite_schemes = ["molokai", "harlequin", "atom-dark-256", "railscasts", "deus", "moonfly"]
     let l:to_use = l:favourite_schemes[a:index % len(l:favourite_schemes)]
     execute "colorscheme " . l:to_use
     if l:to_use == "railscasts"
@@ -784,8 +786,8 @@ nmap X *Nvar:s///gc<Left><Left><Left>
 au FileType ruby set omnifunc=rubycomplete#Complete
 au FileType ruby set shiftwidth=2
 " 2016/11/18 12:12:35, AA: Too slow
-au FileType ruby nmap <Leader>P o,,p <Esc>
-au FileType ruby iabbrev ,,p require "pry"; ["continue", "step", "next", "exit"].each do \|c\| Pry.commands.alias_command c[0], c end; binding.pry
+" au FileType ruby nmap <Leader>P o,,p <Esc>
+au FileType ruby iabbrev ,,p require "pry"; ["continue", "step", "next"].each do \|c\| Pry.commands.alias_command c[0], c end; binding.pry
 " au FileType ruby let g:rubycomplete_buffer_loading = 1
 " au FileType ruby let g:rubycomplete_classes_in_global = 1
 
