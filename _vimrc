@@ -738,7 +738,8 @@ endfunction
 " => EasyAlign section
 """"""""""""""""""""""""""""""
 let g:easy_align_delimiters = {
-\ '>': { 'pattern': '->\|>>\|=>\|>' },
+\ 'x': { 'pattern': '->' },
+\ '>': { 'pattern': '>>\|=>\|>' },
 \ '/': {
 \     'pattern':         '//\+\|/\*\|\*/',
 \     'delimiter_align': 'l',
