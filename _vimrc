@@ -102,6 +102,7 @@ let test#strategy = "tslime"
 nmap <silent> <leader>T :TestSuite<CR>
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <F8> :TestLast<CR>
+nmap <silent> <F6> :Tmux !!<CR>
 let test#ruby#rspec#executable = 'bundle exec rspec'
 
 nmap <silent> <F4> :call ToggleBetweenSpecCode()<CR>
@@ -307,7 +308,6 @@ else
   " colorscheme seoul256
 endif
 
-set nonu
 set colorcolumn=81
 
 " Turn backup off, since most stuff is in SVN, git anyway...
@@ -359,7 +359,7 @@ function! CmdLine(str)
     unmenu Foo
 endfunction 
 
-map <C-f><C-f> :call ChangeFont()<CR>
+map <C-f><C-f> :call ChangeScheme()<CR>
 
 " 12/25/04 15:29:34, AA: font changer
 let g:font_index_to_use = 0
@@ -679,7 +679,7 @@ nnoremap <silent> <leader>n :NERDTreeToggle<CR>
 " => Git stuff
 """"""""""""""""""""""""""""""
 
-nnoremap <leader>gs :Gstatus<CR>
+nnoremap <leader>gs :Gstatus<CR><C-W>T<C-N>
 nnoremap <leader>gc :Gcommit -v -q<CR>
 nnoremap <leader>ga :Gcommit --amend<CR>
 nnoremap <leader>gt :Gcommit -v -q %<CR>
@@ -738,7 +738,7 @@ endfunction
 " => EasyAlign section
 """"""""""""""""""""""""""""""
 let g:easy_align_delimiters = {
-\ 'x': { 'pattern': '->' },
+\ 'x': { 'pattern': '->\|<-' },
 \ '>': { 'pattern': '>>\|=>\|>' },
 \ '/': {
 \     'pattern':         '//\+\|/\*\|\*/',
