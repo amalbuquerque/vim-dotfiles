@@ -287,7 +287,6 @@ function! ChangeSchemeWithIndex(index)
 
     " 2017/07/28, AA: After activating TrueColor, weird text background appeared, different from the 'real' background
     hi Normal guibg=NONE ctermbg=NONE
-    echo "Current " . l:to_use
 endfunction
 
 " 2014-11-04, AA: using seoul256
