@@ -276,7 +276,7 @@ au BufRead let b:fenc_at_read=&fileencoding
 au BufWinEnter call CheckFileEncoding()
 
 function! ChangeSchemeWithIndex(index)
-    let l:favourite_schemes = ["molokai", "harlequin", "atom-dark-256", "railscasts", "deus", "moonfly", "neodark"]
+    let l:favourite_schemes = ["molokai", "harlequin", "atom-dark", "railscasts", "deus", "moonfly", "neodark"]
     let l:to_use = l:favourite_schemes[a:index % len(l:favourite_schemes)]
     if l:to_use == "deus"
         set background=dark
@@ -288,6 +288,8 @@ function! ChangeSchemeWithIndex(index)
 
     " 2017/07/28, AA: After activating TrueColor, weird text background appeared, different from the 'real' background
     hi Normal guibg=NONE ctermbg=NONE
+    " TODO: For now, keep this as is, since it's screwing the colorschemes which don't support Truecolor
+    set notermguicolors
 endfunction
 
 " 2014-11-04, AA: using seoul256
