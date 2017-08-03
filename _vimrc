@@ -1103,3 +1103,6 @@ function! s:ZoomToggle() abort
 endfunction
 command! ZoomToggle call s:ZoomToggle()
 nnoremap \| :ZoomToggle<CR>
+
+" 2017/08/03 08:17:30, AA: Disable repeated hjkl motions
+source ~/vim-dotfiles/disable_repeated_hjkl_motions.vim
