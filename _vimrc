@@ -70,12 +70,18 @@ Plug 'https://github.com/Konfekt/FastFold'
 Plug 'https://github.com/ajmwagar/vim-deus'
 Plug 'https://github.com/bluz71/vim-moonfly-colors'
 Plug 'https://github.com/KeitaNakamura/neodark.vim'
+Plug 'https://github.com/romainl/vim-qf'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 
 call plug#end()
 
 " 2017/05/09 18:09:58, AA: Neovim needs this
-let g:python_host_prog="C:/Python27/python.exe"
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+if has("gui_win32")
+  let g:python_host_prog="C:/Python27/python.exe"
+elseif has("macunix")
+  let g:python_host_prog="/usr/local/bin/python"
+endif
 
 " 2017/04/12 09:40:06, AA: Had to force the mapping again here
 " because for some reason it was set (use `:verbose map %` to check)
@@ -321,19 +327,31 @@ endif
 set colorcolumn=81
 
 " Turn backup off, since most stuff is in SVN, git anyway...
-set directory=%TMP%
-set backupdir=%TMP%
+if has("gui_win32")
+  set directory=%TMP%
+  set backupdir=%TMP%
+
+  "Persistent undo
+  try
+      set undodir=%TMP%
+      set undofile
+  catch
+  endtry
+
+elseif has("macunix")
+  set directory=$TMPDIR
+  set backupdir=$TMPDIR
+  "Persistent undo
+  try
+      set undodir=$TMPDIR
+      set undofile
+  catch
+  endtry
+endif
+
 set nobackup
 set nowb
 set noswapfile
-
-"Persistent undo
-try
-    " set undodir=C:\Windows\Temp
-    set undodir=%TMP%
-    set undofile
-catch
-endtry
 
 " spaces instead of tabs
 set expandtab
