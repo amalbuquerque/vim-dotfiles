@@ -292,10 +292,15 @@ function! ChangeSchemeWithIndex(index)
         highlight ColorColumn term=reverse ctermbg=236 guibg=#232526
     endif
 
+    if l:to_use == "moonfly"
+        highlight Visual ctermbg=237
+    endif
+
     " 2017/07/28, AA: After activating TrueColor, weird text background appeared, different from the 'real' background
-    hi Normal guibg=NONE ctermbg=NONE
+    " hi Normal guibg=NONE ctermbg=NONE
+    " 2017/08/09, AA: Uncommented this since w/ Neovim it works well :O
     " TODO: For now, keep this as is, since it's screwing the colorschemes which don't support Truecolor
-    set notermguicolors
+    " set notermguicolors
 endfunction
 
 " 2014-11-04, AA: using seoul256
