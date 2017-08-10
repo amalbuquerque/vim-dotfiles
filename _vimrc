@@ -72,11 +72,10 @@ Plug 'https://github.com/bluz71/vim-moonfly-colors'
 Plug 'https://github.com/KeitaNakamura/neodark.vim'
 Plug 'https://github.com/romainl/vim-qf'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+Plug 'https://github.com/tpope/tpope-vim-abolish'
 
 call plug#end()
 
-" 2017/05/09 18:09:58, AA: Neovim needs this
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 if has("gui_win32")
   let g:python_host_prog="C:/Python27/python.exe"
 elseif has("macunix")
@@ -216,6 +215,9 @@ set ignorecase "Ignore case when searching
 set smartcase
 
 set hlsearch "Highlight search things
+
+" 2017/08/10, AA: Neovim search wrap
+set wrapscan
 
 set nolazyredraw "Don't redraw while executing macros 
 
@@ -385,6 +387,9 @@ vnoremap <silent> # :call VisualSearch('b')<CR>
 
 " When you press gv you vimgrep after the selected text
 vnoremap <silent> gv :call VisualSearch('gv')<CR>
+
+" 2017/08/10, AA: visual $ doesn't select the newline
+vmap v $ g_
 
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
@@ -947,7 +952,6 @@ map <leader>bb :cd ..<cr>
 " => 2015-03-31 22:41:34, AA: Vim Unite Stuff
 """""""""""""""""""""""""""""""""""""""""""""
 " 2017/01/30 16:30:21, AA: Disabled this and started using CtrlP, is much faster
-" nnoremap <leader>F :Unite file<CR>
 " nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
 " nnoremap <leader>x :Unite -quick-match buffer<CR>
 " nnoremap <leader>gg :Unite -start-insert file_rec/git<CR>
@@ -993,32 +997,13 @@ set guicursor=n:block-blinkon0-Cursor,v:block-blinkon0-VisualCursor,c-i-ci:ver25
 " => 2017/01/30 16:28:03, AA: CtrlP stuff, Unite is slow af
 " => 2017/05/15 14:25:58, AA: Disabled CtrlP for files, fzf is the real deal
 """""""""""""""""""""""""""""""""""""""""""""
-" nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
 nmap <silent> <Space> :CtrlPBuffer<CR>
 let g:ctrlp_match_window_bottom = 0
 let g:ctrlp_match_window_reversed = 0
-" let g:ctrlp_map = '<leader>F'
-" let g:ctrlp_user_command = 'ag %s -i --nocolor -g ""
-"   \ --nogroup --hidden
-"   \ --ignore .git
-"   \ --ignore .svn
-"   \ --ignore .hg
-"   \ --ignore .DS_Store
-"   \ --ignore "**/*.pyc"
-"   \ --ignore node_modules'
-
-" " Sane Ignore For ctrlp
-" let g:ctrlp_custom_ignore = {
-"   \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.yardoc\|public\/images\|public\/system\|data\|log\|tmp$',
-"   \ 'file': '\.exe$\|\.so$\|\.dat$'
-"   \ }
 
 """""""""""""""""""""""""""""""""""""""""""""
 " => 2017/05/15 14:25:58, AA: FZF is the real deal
 """""""""""""""""""""""""""""""""""""""""""""
-let g:fzf_command_prefix = 'Fzf'
-nmap <silent> <leader>f :FzfFiles<CR>
-
 function! s:ag_to_qf(line)
   let parts = split(a:line, ':')
   return {'filename': parts[0], 'lnum': parts[1], 'col': parts[2],
@@ -1045,30 +1030,78 @@ function! s:ag_handler(lines)
   endif
 endfunction
 
+function! s:rg_to_qf(line)
+  let parts = split(a:line, '/')
+  let filename_idx = len(parts) - 1
+  return {'filename': a:line, 'lnum': '1', 'col': '1',
+        \ 'text': parts[filename_idx]}
+endfunction
+
+function! s:rg_handler(lines)
+  if len(a:lines) < 2 | return | endif
+
+  let cmd = get({'ctrl-x': 'split',
+               \ 'ctrl-v': 'vertical split',
+               \ 'ctrl-t': 'tabe'}, a:lines[0], 'e')
+  let list = map(a:lines[1:], 's:rg_to_qf(v:val)')
+
+  let first = list[0]
+  execute cmd escape(first.filename, ' %#\')
+  execute first.lnum
+  execute 'normal!' first.col.'|zz'
+
+  if len(list) > 1
+    call setqflist(list)
+    copen
+    wincmd p
+  endif
+endfunction
+
+let g:fzf_command_prefix = 'Fzf'
+command! FzfFiles call fzf#run({
+\ 'source':  'rg --files --no-ignore --hidden --follow --glob "!.git/*"',
+\ 'sink*':   function('<sid>rg_handler'),
+\ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x '.
+\            '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
+\            '--color hl:68,hl+:110',
+\ 'down':    '50%'
+\ })
+
+command! FzfFilesCWord call fzf#run({
+\ 'source':  'rg --files --no-ignore --hidden --follow --glob "!.git/*"',
+\ 'sink*':   function('<sid>rg_handler'),
+\ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x '.
+\            '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all -q '.SnakecaseCurrentWord().
+\            ' --color hl:68,hl+:110',
+\ 'down':    '50%'
+\ })
+
+nmap <silent> <leader>f :FzfFiles<CR>
+nmap <silent> <leader>F :FzfFilesCWord<CR>
+
 command! -nargs=* FzfAg call fzf#run({
-\ 'source':  printf('ag --nogroup --column --color --ignore log --ignore git "%s"',
+\ 'source':  printf('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" "%s"',
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-\ 'sink*':    function('<sid>ag_handler'),
+\ 'sink*':   function('<sid>ag_handler'),
 \ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x --delimiter : --nth 4.. '.
 \            '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
 \            '--color hl:68,hl+:110',
 \ 'down':    '50%'
 \ })
 
-map <leader>G :FzfAg <c-r>=expand("<cword>")<CR>
-map <leader>g :FzfAg<Space>
+nmap <leader>G :FzfAg <c-r>=expand("<cword>")<CR>
+nmap <leader>g :FzfAg<Space>
 
-if executable('ag')
-    let g:ackprg ='ag --nocolor --nogroup --column
-      \ --ignore .git
-      \ --ignore .svn
-      \ --ignore .hg
-      \ --ignore .log
-      \ --ignore .DS_Store
-      \ --ignore "**/*.pyc"
-      \ --ignore node_modules
-      \ --vimgrep'
-endif
+" 2017/08/10, AA: Copied from tpope abolish.vim
+function! SnakecaseCurrentWord()
+  let word = expand('<cword>')
+  let word = substitute(word,'::','/','g')
+  let word = substitute(word,'\(\u\+\)\(\u\l\)','\1_\2','g')
+  let word = substitute(word,'\(\l\|\d\)\(\u\)','\1_\2','g')
+  let word = substitute(word,'[.-]','_','g')
+  let word = tolower(word)
+  return word
+endfunction
 
 nnoremap <Leader>fu :CtrlPFunky<Cr>
 " narrow the list down with a word under cursor
@@ -1165,3 +1198,6 @@ nnoremap \| :ZoomToggle<CR>
 
 " 2017/08/03 08:17:30, AA: Disable repeated hjkl motions
 " source ~/vim-dotfiles/disable_repeated_hjkl_motions.vim
+
+" 2017/05/09 18:09:58, AA: Neovim needs this
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
