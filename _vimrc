@@ -389,7 +389,7 @@ vnoremap <silent> # :call VisualSearch('b')<CR>
 vnoremap <silent> gv :call VisualSearch('gv')<CR>
 
 " 2017/08/10, AA: visual $ doesn't select the newline
-vmap v $ g_
+vmap $ g_
 
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
