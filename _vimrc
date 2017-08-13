@@ -74,6 +74,7 @@ Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'https://github.com/tpope/tpope-vim-abolish'
 Plug 'https://github.com/jnurmine/Zenburn'
 Plug 'https://github.com/dracula/vim'
+Plug 'https://github.com/bling/vim-airline'
 
 call plug#end()
 
@@ -545,28 +546,18 @@ try
 catch
 endtry
 
-" Always show the statusline
-set laststatus=2
-
-" Format the statusline
-" set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{CurDir()}%h\ \ \ Line:\ %l/%L:%c
-" 2014-03-19, AA: Status line nova
-
-" composicao da status line
-set statusline=
-set statusline +=%6*%{getcwd()}\ %*     "current directory
-set statusline +=%5*%{&ff}%*            "file format
-set statusline +=%3*%y%*                "file type
-set statusline +=%1*\ %{strlen(&fenc)?&fenc:&enc}%* " encoding
-set statusline +=%4*\ %<%F%*            "full path
-set statusline +=%2*%m%*                "modified flag
-set statusline +=%1*%=%5P%*             "percentage thru file
-set statusline +=%1*%=%5l%*             "current line
-set statusline +=%2*/%L%*               "total lines
-set statusline +=%6*%4v\ %*             "virtual column number
-set statusline +=%2*0x%04B\ %*          "character under cursor
-" 2015/10/27 16:45:02, AA: wordcount
-set statusline +=%6*w:%{wordCount#WordCount()}%*
+" 2017/08/13, AA: using airline
+let g:airline#extensions#tabline#enabled = 2
+let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#right_sep = ' '
+let g:airline#extensions#tabline#right_alt_sep = '|'
+let g:airline_left_sep = ' '
+let g:airline_left_alt_sep = '|'
+let g:airline_right_sep = ' '
+let g:airline_right_alt_sep = '|'
+" let g:airline_theme= 'gruvbox'
 
 function! CurDir()
     " tinha isto mas tirei o substitute:
@@ -582,26 +573,6 @@ function! HasPaste()
         return ''
     endif
 endfunction
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Parenthesis/bracket expanding
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" 2014-11-03, AA: surround.vim faz isto com o S", ou S{, etc.
-" vnoremap ?1 <esc>`>a)<esc>`<i(<esc>
-" vnoremap ?2 <esc>`>a]<esc>`<i[<esc>
-" vnoremap ?3 <esc>`>a}<esc>`<i{<esc>
-" vnoremap ?$ <esc>`>a"<esc>`<i"<esc>
-" vnoremap ?q <esc>`>a'<esc>`<i'<esc>
-" vnoremap ?e <esc>`>a"<esc>`<i"<esc>
-
-" Map auto complete of (, ", ', [
-inoremap ;a ()<esc>i
-inoremap ;s []<esc>i
-inoremap ;d {}<esc>i
-inoremap ;f {<esc>o}<esc>O<tab>
-inoremap ;q ''<esc>i
-inoremap ;w ""<esc>i
-inoremap ;e <><esc>i
 
 " 2014-11-03, AA: From http://stackoverflow.com/a/4952200/687420
 " mapping to make movements operate on 1 screen line in wrap mode
@@ -1162,13 +1133,6 @@ nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
   "endif
   "silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
 "endfunction
-
-" cores para a status line
-hi User1 guifg=#eea040 guibg=#222222
-hi User2 guifg=#dd3333 guibg=#222222
-hi User3 guifg=#ff66ff guibg=#222222
-hi User4 guifg=#a0ee40 guibg=#222222
-hi User5 guifg=#eeee40 guibg=#222222
 
 " 2014-11-04, AA: Vim-sneak, Alternativa ao Easymotion
 let g:sneak#streak = 1
