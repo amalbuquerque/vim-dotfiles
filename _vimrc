@@ -43,7 +43,6 @@ Plug 'https://github.com/ChesleyTan/wordCount.vim'
 Plug 'https://github.com/tpope/vim-unimpaired'
 Plug 'https://github.com/tpope/vim-rails'
 Plug 'https://github.com/Shougo/neoyank.vim'
-" Plug 'https://github.com/mileszs/ack.vim'
 Plug 'https://github.com/Shougo/vimproc.vim'
 Plug 'https://github.com/scrooloose/nerdtree'
 Plug 'https://github.com/tpope/vim-git'
@@ -73,6 +72,8 @@ Plug 'https://github.com/KeitaNakamura/neodark.vim'
 Plug 'https://github.com/romainl/vim-qf'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'https://github.com/tpope/tpope-vim-abolish'
+Plug 'https://github.com/jnurmine/Zenburn'
+Plug 'https://github.com/dracula/vim'
 
 call plug#end()
 
@@ -219,7 +220,9 @@ set hlsearch "Highlight search things
 " 2017/08/10, AA: Neovim search wrap
 set wrapscan
 
-set nolazyredraw "Don't redraw while executing macros 
+set lazyredraw "Don't redraw while executing macros
+
+set cursorline
 
 set magic "Set magic on, for regular expressions
 
@@ -283,26 +286,38 @@ endfunction
 au BufRead let b:fenc_at_read=&fileencoding
 au BufWinEnter call CheckFileEncoding()
 
+function! ChangeScheme()
+  let g:colorscheme_index = get(g:, 'colorscheme_index', reltimestr(reltime())[-2:])
+  call ChangeSchemeWithIndex(g:colorscheme_index)
+endfunction
+
 function! ChangeSchemeWithIndex(index)
-    let l:favourite_schemes = ["molokai", "harlequin", "atom-dark", "railscasts", "deus", "moonfly", "neodark"]
+    let g:colorscheme_index = g:colorscheme_index + 1
+    let l:favourite_schemes = ["molokai", "harlequin", "atom-dark-256", "railscasts", "deus", "moonfly", "neodark", "zenburn", "dracula", "seoul256"]
     let l:to_use = l:favourite_schemes[a:index % len(l:favourite_schemes)]
     if l:to_use == "deus"
         set background=dark
     endif
+    if l:to_use == "zenburn"
+        let g:zenburn_high_Contrast=1
+    endif
+    if l:to_use == "seoul256"
+        let g:seoul256_background=233
+
+        " Cool colors of seoul256 tabline
+        " hi TabLine term=underline cterm=underline ctermfg=245 ctermbg=237 gui=underline guibg=#4B4B4B
+        " hi TabLineFill term=reverse cterm=reverse ctermfg=235 gui=reverse guifg=#333233
+        " hi TabLineSel term=bold cterm=bold ctermfg=187 ctermbg=23 gui=bold guifg=#DFDEBD guibg=#007173
+    endif
+
     execute "colorscheme " . l:to_use
+
     if l:to_use == "railscasts"
         highlight ColorColumn term=reverse ctermbg=236 guibg=#232526
     endif
-
     if l:to_use == "moonfly"
         highlight Visual ctermbg=237
     endif
-
-    " 2017/07/28, AA: After activating TrueColor, weird text background appeared, different from the 'real' background
-    " hi Normal guibg=NONE ctermbg=NONE
-    " 2017/08/09, AA: Uncommented this since w/ Neovim it works well :O
-    " TODO: For now, keep this as is, since it's screwing the colorschemes which don't support Truecolor
-    " set notermguicolors
 endfunction
 
 " 2014-11-04, AA: using seoul256
@@ -311,24 +326,11 @@ if has("gui_running")
   " 2015/06/17 15:43:49 AA:
   set guioptions=a
   set t_Co=256
-  " colorscheme molokai
-  " colorscheme seoul256
+  set background=dark
   colorscheme atom-dark
-  " colorscheme peaksea
-  " colorscheme ir_black
-  " set background=dark
 else
   " 2017/05/11 10:11:09, AA: Rotates among a few cool colorschemes
-  let colorscheme_index = reltimestr(reltime())[-2:]
-  call ChangeSchemeWithIndex(colorscheme_index)
-
-  " Cool colors of seoul256
-  hi TabLine term=underline cterm=underline ctermfg=245 ctermbg=237 gui=underline guibg=#4B4B4B
-  hi TabLineFill term=reverse cterm=reverse ctermfg=235 gui=reverse guifg=#333233
-  hi TabLineSel term=bold cterm=bold ctermfg=187 ctermbg=23 gui=bold guifg=#DFDEBD guibg=#007173
-
-  " let g:seoul256_background = 233
-  " colorscheme seoul256
+  call ChangeScheme()
 endif
 
 set colorcolumn=81
