@@ -75,6 +75,7 @@ Plug 'https://github.com/tpope/tpope-vim-abolish'
 Plug 'https://github.com/jnurmine/Zenburn'
 Plug 'https://github.com/dracula/vim'
 Plug 'https://github.com/bling/vim-airline'
+Plug 'https://github.com/vim-airline/vim-airline-themes'
 
 call plug#end()
 
@@ -241,7 +242,7 @@ set t_vb=
 set tm=500
 
 " Set font according to system
-" set guifont=Courier_New:h12 " :cANSI 
+" set guifont=Courier_New:h12 " :cANSI
 if has ("gui_running")
     " 2014-12-08 10:59:50, AA: latex config for Gvim
     " let g:Tex_ViewRule_pdf='C:/Program\ Files\ (x86)/SumatraPDF/SumatraPDF.exe'
@@ -319,6 +320,8 @@ function! ChangeSchemeWithIndex(index)
     if l:to_use == "moonfly"
         highlight Visual ctermbg=237
     endif
+
+    let g:airline_theme='minimalist'
 endfunction
 
 " 2014-11-04, AA: using seoul256
@@ -398,7 +401,7 @@ function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
     emenu Foo.Bar
     unmenu Foo
-endfunction 
+endfunction
 
 map <C-f><C-f> :call ChangeScheme()<CR>
 
@@ -539,7 +542,7 @@ function! <SID>BufcloseCloseIt()
    endif
 endfunction
 
-" Specify the behavior when switching between buffers 
+" Specify the behavior when switching between buffers
 try
   set switchbuf=usetab
   set stal=2
@@ -639,7 +642,7 @@ set completeopt=menu,preview
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
 """""""""""""""""""""""""""""""""""""""""""""""""""
-" C# stuff added by me, 31/07/11 12:04:47, 
+" C# stuff added by me, 31/07/11 12:04:47,
 " http://arun.wordpress.com/2009/04/10/c-and-vim/
 " use za to toggle open/close fold under cursor
 """""""""""""""""""""""""""""""""""""""""""""""""""
@@ -831,14 +834,14 @@ au FileType python syn keyword pythonDecorator True None False self
 au BufNewFile,BufRead *.jinja set syntax=htmljinja
 au BufNewFile,BufRead *.mako set ft=mako
 
-au FileType python inoremap <buffer> $r return 
-au FileType python inoremap <buffer> $i import 
-au FileType python inoremap <buffer> $p print 
+au FileType python inoremap <buffer> $r return
+au FileType python inoremap <buffer> $i import
+au FileType python inoremap <buffer> $p print
 au FileType python inoremap <buffer> $f #--- PH ----------------------------------------------<esc>FP2xi
-au FileType python map <buffer> <leader>1 /class 
-au FileType python map <buffer> <leader>2 /def 
-au FileType python map <buffer> <leader>C ?class 
-au FileType python map <buffer> <leader>D ?def 
+au FileType python map <buffer> <leader>1 /class
+au FileType python map <buffer> <leader>2 /def
+au FileType python map <buffer> <leader>C ?class
+au FileType python map <buffer> <leader>D ?def
 
 
 """"""""""""""""""""""""""""""
@@ -863,12 +866,12 @@ function! LatexEn()
   " C:\Users\lejboua\.vim\bundle\vim-latex\ftplugin\latex-suite\brackets.vim
   " * 2015/12/27 22:24:03, AA: Commented this and replaced by the imap lines
   " according to: http://vim-latex.sourceforge.net/faq.shtml#faq-euro-symbols
-	" call Tex_MakeMap('<M-b>', '<Plug>Tex_MathBF', 'i', '<buffer> <silent>')
-	" call Tex_MakeMap('<M-c>', '<Plug>Tex_MathCal', 'i', '<buffer> <silent>')
-	" call Tex_MakeMap('<M-l>', '<Plug>Tex_LeftRight', 'i', '<buffer> <silent>')
-	" call Tex_MakeMap('<M-b>', '<Plug>Tex_MathBF', 'v', '<buffer> <silent>')
-	" call Tex_MakeMap('<M-c>', '<Plug>Tex_MathCal', 'v', '<buffer> <silent>')
-	" call Tex_MakeMap('<M-l>', '<Plug>Tex_LeftRight', 'n', '<buffer> <silent>')
+  " call Tex_MakeMap('<M-b>', '<Plug>Tex_MathBF', 'i', '<buffer> <silent>')
+  " call Tex_MakeMap('<M-c>', '<Plug>Tex_MathCal', 'i', '<buffer> <silent>')
+  " call Tex_MakeMap('<M-l>', '<Plug>Tex_LeftRight', 'i', '<buffer> <silent>')
+  " call Tex_MakeMap('<M-b>', '<Plug>Tex_MathBF', 'v', '<buffer> <silent>')
+  " call Tex_MakeMap('<M-c>', '<Plug>Tex_MathCal', 'v', '<buffer> <silent>')
+  " call Tex_MakeMap('<M-l>', '<Plug>Tex_LeftRight', 'n', '<buffer> <silent>')
     imap <C-b> <Plug>Tex_MathBF
     imap <C-c> <Plug>Tex_MathCal
     imap <C-l> <Plug>Tex_LeftRight
@@ -886,7 +889,7 @@ au FileType javascript setl nocindent
 au FileType javascript imap <c-t> AJS.log();<esc>hi
 au FileType javascript imap <c-a> alert();<esc>hi
 
-au FileType javascript inoremap <buffer> $r return 
+au FileType javascript inoremap <buffer> $r return
 au FileType javascript inoremap <buffer> $f //--- PH ----------------------------------------------<esc>FP2xi
 
 function! JavaScriptFold()
