@@ -696,10 +696,10 @@ nnoremap <leader>ga :Gcommit --amend<CR>
 nnoremap <leader>gt :Gcommit -v -q %<CR>
 nnoremap <leader>gd :Gdiff<CR>
 nnoremap <leader>ge :Gedit<CR>
-nnoremap <leader>gr :Gread<CR>
-nnoremap <leader>gw :Gwrite<CR><CR>
+" nnoremap <leader>gr :Gread<CR>
+" nnoremap <leader>gw :Gwrite<CR><CR>
 nnoremap <leader>gl :Glog<CR>
-nnoremap <leader>gp :Git pl<CR>
+nnoremap <leader>gp :FzfCommits<CR>
 " nnoremap <leader>gp :Ggrep<Space>
 " nnoremap <leader>gm :Gmove<Space>
 " nnoremap <leader>gb :Git branch<Space>
