@@ -76,6 +76,7 @@ Plug 'https://github.com/jnurmine/Zenburn'
 Plug 'https://github.com/dracula/vim'
 Plug 'https://github.com/bling/vim-airline'
 Plug 'https://github.com/vim-airline/vim-airline-themes'
+Plug 'https://github.com/vim-syntastic/syntastic'
 
 call plug#end()
 
@@ -710,10 +711,42 @@ nnoremap <leader>go :Git checkout<Space>
 " nnoremap <leader>gps :Dispatch! git push<CR>
 " nnoremap <leader>gpl :Dispatch! git pull<CR>
 
-nnoremap <C-e> :cnext<CR>
-nnoremap <leader>< :cnext<CR>
-nnoremap <C-t> :cprevious<CR>
-nnoremap <leader>> :cprevious<CR>
+nnoremap <silent> <C-e> :call QuickFixOrLocationNext()<CR>
+nnoremap <silent> <leader>< :call QuickFixOrLocationNext()<CR>
+nnoremap <silent> <C-t> :call QuickFixOrLocationPrev()<CR>
+nnoremap <silent> <leader>> :call QuickFixOrLocationPrev()<CR>
+
+function! QuickFixOrLocationNext()
+    if len(getqflist())==0
+        try
+            execute "lnext"
+        catch
+            execute "lfirst"
+        endtry
+    else
+        try
+            execute "cnext"
+        catch
+            execute "cfirst"
+        endtry
+    endif
+endfunction
+
+function! QuickFixOrLocationPrev()
+    if len(getqflist())==0
+        try
+            execute "lprev"
+        catch
+            execute "llast"
+        endtry
+    else
+        try
+            execute "cprev"
+        catch
+            execute "clast"
+        endtry
+    endif
+endfunction
 
 
 """"""""""""""""""""""""""""""
@@ -1174,6 +1207,19 @@ function! s:ZoomToggle() abort
 endfunction
 command! ZoomToggle call s:ZoomToggle()
 nnoremap \| :ZoomToggle<CR>
+
+" 2017/08/15, AA: Syntastic or Elixir and Ruby (via Rubocop)
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_enable_elixir_checker = 1
+let g:syntastic_enable_ruby_checker = 1
+let g:syntastic_ruby_checkers = ['rubocop']
+
+nnoremap <silent> <leader>S :SyntasticCheck<CR>:lw<CR>
+
 
 " 2017/08/03 08:17:30, AA: Disable repeated hjkl motions
 " source ~/vim-dotfiles/disable_repeated_hjkl_motions.vim
