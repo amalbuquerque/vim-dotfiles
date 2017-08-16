@@ -493,7 +493,7 @@ let g:clever_f_smart_case = 1
 
 " 2015/06/17 15:56:51, AA: Map Backspace to Toggle between current file and previous
 nnoremap <BS> <C-^>
-map <silent> <leader><leader> :noh<cr>
+map <silent> <leader><leader> :noh<cr>:SyntasticReset<cr>
 
 " 2016/11/08 11:41:14, AA: From http://tex.stackexchange.com/a/3655/65117
 " Because IMAP_JumpForward was taking the C-j mapping
