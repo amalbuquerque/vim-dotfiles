@@ -1,6 +1,5 @@
 " TODO 2017/05/26 14:29:41, AA:
 " 1. Create a mode 'gw' to open windows: quickfix, location window, etc.
-" 2. Create a mode 'gl' to run git commands
 " 3. Create a function to open FzfFiles with the spec for the current file
 
 " 2017/04/28 22:09:53, AA: Junegunn plug
@@ -684,8 +683,9 @@ map M m$
 map Y yy
 
 " NERDTree
+let NERDTreeQuitOnOpen=1
 let NERDTreeHijackNetrw=0
-let g:NERDTreeToggled=0
+let NERDTreeToggled=0
 nnoremap <silent> <C-n>     :NERDTreeFind<CR>
 nnoremap <silent> <leader>n :NERDTreeToggle<CR>
 
@@ -1228,6 +1228,26 @@ let g:syntastic_ruby_checkers = ['rubocop']
 
 nnoremap <silent> <leader>S :SyntasticCheck<CR>:lw<CR>
 
+function! GitCurrentBranch()
+  let l:branch = fugitive#statusline()
+  return substitute(l:branch, '\c\v\[?GIT\(([a-z0-9\-_\./:]+)\)\]?', $BRANCH.' \1', 'g')
+endfunction
+
+function! GitPushToOrigin(...)
+  let l:branch = GitCurrentBranch()
+  let l:suggested_command = "Git push origin" . l:branch
+  let l:suggested_command = exists('a:1') ? l:suggested_command . " " . a:1 : l:suggested_command
+
+  let l:full_command = input("[default:". l:suggested_command ."] ", l:suggested_command)
+
+  exe ":". l:full_command
+endfunction
+
+call tinykeymap#EnterMap('git', '<leader><space>', {'name': 'Git mode'})
+call tinykeymap#Map('git', '<space>', 'Gstatus')
+call tinykeymap#Map('git', 'p', 'call GitPushToOrigin("")')
+call tinykeymap#Map('git', 'f', 'call GitPushToOrigin("--force-with-lease")')
+call tinykeymap#Map('git', 'F', 'call GitPushToOrigin("--force")')
 
 " 2017/08/03 08:17:30, AA: Disable repeated hjkl motions
 " source ~/vim-dotfiles/disable_repeated_hjkl_motions.vim
