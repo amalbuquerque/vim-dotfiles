@@ -694,7 +694,8 @@ nnoremap <silent> <leader>n :NERDTreeToggle<CR>
 " => Git stuff
 """"""""""""""""""""""""""""""
 
-nnoremap <leader>gs :Gstatus<CR><C-W>T<C-N>
+" nnoremap <leader>gs :Gstatus<CR><C-W>T<C-N>
+nnoremap <leader>gs :Gstatus<CR>
 nnoremap <leader>gc :Gcommit -v -q<CR>
 nnoremap <leader>ga :Gcommit --amend<CR>
 nnoremap <leader>gt :Gcommit -v -q %<CR>
@@ -1007,6 +1008,8 @@ if has("nvim")
 
     " 2017/05/09 18:09:58, AA: Neovim needs this
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+
+    tnoremap jk <C-\><C-n>
 endif
 
 " not blinking cursor
@@ -1212,7 +1215,12 @@ nnoremap \| :ZoomToggle<CR>
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_write = 0
 let g:syntastic_check_on_wq = 0
+
+let g:syntastic_mode_map = { 'mode': 'passive',
+                            \ 'active_filetypes': [],
+                            \ 'passive_filetypes': ['ruby', 'elixir'] }
 
 let g:syntastic_enable_elixir_checker = 1
 let g:syntastic_enable_ruby_checker = 1
