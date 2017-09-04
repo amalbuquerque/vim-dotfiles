@@ -695,20 +695,20 @@ nnoremap <silent> <leader>n :NERDTreeToggle<CR>
 """"""""""""""""""""""""""""""
 
 " nnoremap <leader>gs :Gstatus<CR><C-W>T<C-N>
-nnoremap <leader>gs :Gstatus<CR>
-nnoremap <leader>gc :Gcommit -v -q<CR>
-nnoremap <leader>ga :Gcommit --amend<CR>
-nnoremap <leader>gt :Gcommit -v -q %<CR>
-nnoremap <leader>gd :Gdiff<CR>
-nnoremap <leader>ge :Gedit<CR>
+" nnoremap <leader>gs :Gstatus<CR>
+" nnoremap <leader>gc :Gcommit -v -q<CR>
+" nnoremap <leader>ga :Gcommit --amend<CR>
+" nnoremap <leader>gt :Gcommit -v -q %<CR>
+" nnoremap <leader>gd :Gdiff<CR>
+" nnoremap <leader>ge :Gedit<CR>
 " nnoremap <leader>gr :Gread<CR>
 " nnoremap <leader>gw :Gwrite<CR><CR>
-nnoremap <leader>gl :Glog<CR>
-nnoremap <leader>gp :FzfCommits<CR>
+" nnoremap <leader>gl :Glog<CR>
+" nnoremap <leader>gp :FzfCommits<CR>
 " nnoremap <leader>gp :Ggrep<Space>
 " nnoremap <leader>gm :Gmove<Space>
 " nnoremap <leader>gb :Git branch<Space>
-nnoremap <leader>go :Git checkout<Space>
+" nnoremap <leader>go :Git checkout<Space>
 " nnoremap <leader>gps :Dispatch! git push<CR>
 " nnoremap <leader>gpl :Dispatch! git pull<CR>
 
@@ -1228,6 +1228,14 @@ let g:syntastic_ruby_checkers = ['rubocop']
 
 nnoremap <silent> <leader>S :SyntasticCheck<CR>:lw<CR>
 
+function! AskCommandWithSuggestion(suggestion, ...)
+  let l:suggested_command = exists('a:1') ? a:suggestion . " " . a:1 : a:suggestion
+
+  let l:full_command = input("[default:". l:suggested_command ."] ", l:suggested_command)
+
+  exe ":". l:full_command
+endfunction
+
 function! GitCurrentBranch()
   let l:branch = fugitive#statusline()
   return substitute(l:branch, '\c\v\[?GIT\(([a-z0-9\-_\./:]+)\)\]?', $BRANCH.' \1', 'g')
@@ -1236,18 +1244,32 @@ endfunction
 function! GitPushToOrigin(...)
   let l:branch = GitCurrentBranch()
   let l:suggested_command = "Git push origin" . l:branch
-  let l:suggested_command = exists('a:1') ? l:suggested_command . " " . a:1 : l:suggested_command
 
-  let l:full_command = input("[default:". l:suggested_command ."] ", l:suggested_command)
-
-  exe ":". l:full_command
+  if exists('a:1')
+      call AskCommandWithSuggestion(l:suggested_command, a:1)
+  else
+      call AskCommandWithSuggestion(l:suggested_command)
+  endif
 endfunction
 
 call tinykeymap#EnterMap('git', '<leader><space>', {'name': 'Git mode'})
 call tinykeymap#Map('git', '<space>', 'Gstatus')
-call tinykeymap#Map('git', 'p', 'call GitPushToOrigin("")')
-call tinykeymap#Map('git', 'f', 'call GitPushToOrigin("--force-with-lease")')
-call tinykeymap#Map('git', 'F', 'call GitPushToOrigin("--force")')
+call tinykeymap#Map('git', 'pu', 'call GitPushToOrigin()')
+call tinykeymap#Map('git', 'pf', 'call GitPushToOrigin("--force-with-lease")')
+call tinykeymap#Map('git', 'po', 'call GitPushToOrigin("--force")')
+call tinykeymap#Map('git', 'ri', 'call AskCommandWithSuggestion("Git rebase -i HEAD~")')
+call tinykeymap#Map('git', 'rd', 'call AskCommandWithSuggestion("Git rebase development")')
+call tinykeymap#Map('git', 'rf', 'call AskCommandWithSuggestion("Git rebase feature/ID-")')
+call tinykeymap#Map('git', 'br', 'call AskCommandWithSuggestion("Git branch -b feature/ID-")')
+call tinykeymap#Map('git', 'cd', 'call AskCommandWithSuggestion("Git checkout development")')
+call tinykeymap#Map('git', 'cf', 'call AskCommandWithSuggestion("Git checkout feature/ID-")')
+call tinykeymap#Map('git', 'l', 'Glog')
+call tinykeymap#Map('git', 'e', 'Gedit')
+call tinykeymap#Map('git', 'st', 'Git stash')
+call tinykeymap#Map('git', 'sp', 'Git stash pop')
+call tinykeymap#Map('git', 'bl', 'Gblame')
+call tinykeymap#Map('git', 'pp', 'FzfCommits')
+call tinykeymap#Map('git', 'd', 'Gdiff')
 
 " 2017/08/03 08:17:30, AA: Disable repeated hjkl motions
 " source ~/vim-dotfiles/disable_repeated_hjkl_motions.vim
