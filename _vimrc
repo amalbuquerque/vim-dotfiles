@@ -476,19 +476,8 @@ endfunc
 nmap n nzz
 nmap N Nzz
 
-" 2015-03-31 22:40:16, AA: Map space to / (command)
-" 2015/08/14 14:37:01, AA: Removed to be used for SneakNext
-" nnoremap <space> /
 " 2015-03-31 14:12:30, AA: Map ; to : (command)
 nnoremap ; :
-" 2015/09/21 17:20:11, AA: Map ;; to ;
-" nnoremap ;; ;
-" vnoremap ;; ;
-" 2015/10/09 10:58:19, AA: Replaced ; functionality with f
-" using clever-f plugin
-" f; matches all signs (like ., (, :, %, {, ), etc.)
-let g:clever_f_chars_match_any_signs = ';'
-let g:clever_f_smart_case = 1
 
 " 2015/06/17 15:56:51, AA: Map Backspace to Toggle between current file and previous
 nnoremap <BS> <C-^>
@@ -832,11 +821,15 @@ nmap X *Nvar:s///gc<Left><Left><Left>
 """"""""""""""""""""""""""""""
 " => Ruby section
 """"""""""""""""""""""""""""""
+au Filetype elixir nmap <Leader>p orequire IEx; IEx.pry<Esc>
+
+""""""""""""""""""""""""""""""
+" => Ruby section
+""""""""""""""""""""""""""""""
 au FileType ruby set omnifunc=rubycomplete#Complete
 au FileType ruby set shiftwidth=2
-" 2016/11/18 12:12:35, AA: Too slow
-" au FileType ruby nmap <Leader>P o,,p <Esc>
-au FileType ruby iabbrev ,,p require "pry"; ["continue", "step", "next"].each do \|c\| Pry.commands.alias_command c[0], c end; binding.pry
+au Filetype ruby nmap <Leader>p orequire "pry"; binding.pry<Esc>
+au FileType ruby iabbrev ,,P require "pry"; ["continue", "step", "next"].each do \|c\| Pry.commands.alias_command c[0], c end; binding.pry
 " au FileType ruby let g:rubycomplete_buffer_loading = 1
 " au FileType ruby let g:rubycomplete_classes_in_global = 1
 
