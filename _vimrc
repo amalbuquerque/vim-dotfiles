@@ -1264,5 +1264,15 @@ call tinykeymap#Map('git', 'bl', 'Gblame')
 call tinykeymap#Map('git', 'pp', 'FzfCommits')
 call tinykeymap#Map('git', 'd', 'Gdiff')
 
+command! -nargs=0 -bar Qargs execute 'args ' . QuickfixFilenames()
+function! QuickfixFilenames()
+  " Building a hash ensures we get each buffer only once
+  let buffer_numbers = {}
+  for quickfix_item in getqflist()
+    let buffer_numbers[quickfix_item['bufnr']] = bufname(quickfix_item['bufnr'])
+  endfor
+  return join(values(buffer_numbers))
+endfunction
+
 " 2017/08/03 08:17:30, AA: Disable repeated hjkl motions
 " source ~/vim-dotfiles/disable_repeated_hjkl_motions.vim
