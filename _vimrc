@@ -74,7 +74,7 @@ Plug 'https://github.com/jnurmine/Zenburn'
 Plug 'https://github.com/dracula/vim'
 Plug 'https://github.com/bling/vim-airline'
 Plug 'https://github.com/vim-airline/vim-airline-themes'
-Plug 'https://github.com/vim-syntastic/syntastic'
+Plug 'w0rp/ale'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -489,7 +489,7 @@ nnoremap ; :
 
 " 2015/06/17 15:56:51, AA: Map Backspace to Toggle between current file and previous
 nnoremap <BS> <C-^>
-map <silent> <leader><leader> :noh<cr>:SyntasticReset<cr>
+map <silent> <leader><leader> :noh<cr>
 
 " 2016/11/08 11:41:14, AA: From http://tex.stackexchange.com/a/3655/65117
 " Because IMAP_JumpForward was taking the C-j mapping
@@ -1211,23 +1211,6 @@ function! s:ZoomToggle() abort
 endfunction
 command! ZoomToggle call s:ZoomToggle()
 nnoremap \| :ZoomToggle<CR>
-
-" 2017/08/15, AA: Syntastic or Elixir and Ruby (via Rubocop)
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_write = 0
-let g:syntastic_check_on_wq = 0
-
-let g:syntastic_mode_map = { 'mode': 'passive',
-                            \ 'active_filetypes': [],
-                            \ 'passive_filetypes': ['ruby', 'elixir'] }
-
-let g:syntastic_enable_elixir_checker = 1
-let g:syntastic_enable_ruby_checker = 1
-let g:syntastic_ruby_checkers = ['rubocop']
-
-nnoremap <silent> <leader>S :SyntasticCheck<CR>:lw<CR>
 
 function! AskCommandWithSuggestion(suggestion, ...)
   let l:suggested_command = exists('a:1') ? a:suggestion . " " . a:1 : a:suggestion
