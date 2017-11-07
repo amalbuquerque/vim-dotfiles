@@ -69,7 +69,6 @@ Plug 'https://github.com/ajmwagar/vim-deus'
 Plug 'https://github.com/bluz71/vim-moonfly-colors'
 Plug 'https://github.com/KeitaNakamura/neodark.vim'
 Plug 'https://github.com/romainl/vim-qf'
-Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'https://github.com/tpope/tpope-vim-abolish'
 Plug 'https://github.com/jnurmine/Zenburn'
 Plug 'https://github.com/dracula/vim'
@@ -77,12 +76,21 @@ Plug 'https://github.com/bling/vim-airline'
 Plug 'https://github.com/vim-airline/vim-airline-themes'
 Plug 'https://github.com/vim-syntastic/syntastic'
 
+if has("macunix")
+  Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+elseif has("unix")
+  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': '.install --all' }
+  Plug 'junegunn/fzf.vim'
+endif
+
 call plug#end()
 
 if has("gui_win32")
   let g:python_host_prog="C:/Python27/python.exe"
 elseif has("macunix")
   let g:python_host_prog="/usr/local/bin/python"
+elseif has("unix")
+  let g:python_host_prog="/usr/bin/python"
 endif
 
 " 2017/04/12 09:40:06, AA: Had to force the mapping again here
