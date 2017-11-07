@@ -1,5 +1,4 @@
 " TODO 2017/05/26 14:29:41, AA:
-" 1. Create a mode 'gw' to open windows: quickfix, location window, etc.
 " 3. Create a function to open FzfFiles with the spec for the current file
 
 " 2017/04/28 22:09:53, AA: Junegunn plug
@@ -715,34 +714,38 @@ nnoremap <silent> <C-t> :call QuickFixOrLocationPrev()<CR>
 nnoremap <silent> <leader>> :call QuickFixOrLocationPrev()<CR>
 
 function! QuickFixOrLocationNext()
-    if len(getqflist())==0
+    if len(getloclist(0))>0
         try
             execute "lnext"
         catch
             execute "lfirst"
         endtry
-    else
+    elsif len(getqflist())>0
         try
             execute "cnext"
         catch
             execute "cfirst"
         endtry
+    else
+        echo "No Locations or Errors"
     endif
 endfunction
 
 function! QuickFixOrLocationPrev()
-    if len(getqflist())==0
+    if len(getloclist(0))>0
         try
             execute "lprev"
         catch
             execute "llast"
         endtry
-    else
+    elsif len(getqflist())>0
         try
             execute "cprev"
         catch
             execute "clast"
         endtry
+    else
+        echo "No Locations or Errors"
     endif
 endfunction
 
@@ -1254,6 +1257,10 @@ call tinykeymap#Map('git', 'sp', 'Git stash pop')
 call tinykeymap#Map('git', 'bl', 'Gblame')
 call tinykeymap#Map('git', 'pp', 'FzfCommits')
 call tinykeymap#Map('git', 'd', 'Gdiff')
+
+call tinykeymap#EnterMap('window', 'gw', {'name': 'Window mode'})
+call tinykeymap#Map('window', 'l', 'lopen')
+call tinykeymap#Map('window', 'q', 'copen')
 
 " 2017/08/03 08:17:30, AA: Disable repeated hjkl motions
 " source ~/vim-dotfiles/disable_repeated_hjkl_motions.vim
