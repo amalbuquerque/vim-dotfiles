@@ -1076,6 +1076,7 @@ command! FzfFilesCWord call fzf#run({
 
 nmap <silent> <leader>f :FzfFiles<CR>
 nmap <silent> <leader>F :FzfFilesCWord<CR>
+nmap <silent> l :FzfLines<CR>
 
 command! -nargs=* FzfAg call fzf#run({
 \ 'source':  printf('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" "%s"',
