@@ -655,6 +655,11 @@ au FileType cs set errorformat=\ %#%f(%l\\\,%c):\ error\ CS%n:\ %m
 set tag=$VIMRUNTIME\ctags\alltags
 
 """"""""""""""""""""""""""""""
+" => peekaboo
+""""""""""""""""""""""""""""""
+let g:peekaboo_window = "vert bo 50new"
+
+""""""""""""""""""""""""""""""
 " => yankRing with Unite
 """"""""""""""""""""""""""""""
 " 2015/07/27 13:04:49, AA: replaced YankRing with Unite
@@ -684,29 +689,6 @@ let NERDTreeHijackNetrw=0
 let NERDTreeToggled=0
 nnoremap <silent> <C-n>     :NERDTreeFind<CR>
 nnoremap <silent> <leader>n :NERDTreeToggle<CR>
-
-
-""""""""""""""""""""""""""""""
-" => Git stuff
-""""""""""""""""""""""""""""""
-
-" nnoremap <leader>gs :Gstatus<CR><C-W>T<C-N>
-" nnoremap <leader>gs :Gstatus<CR>
-" nnoremap <leader>gc :Gcommit -v -q<CR>
-" nnoremap <leader>ga :Gcommit --amend<CR>
-" nnoremap <leader>gt :Gcommit -v -q %<CR>
-" nnoremap <leader>gd :Gdiff<CR>
-" nnoremap <leader>ge :Gedit<CR>
-" nnoremap <leader>gr :Gread<CR>
-" nnoremap <leader>gw :Gwrite<CR><CR>
-" nnoremap <leader>gl :Glog<CR>
-" nnoremap <leader>gp :FzfCommits<CR>
-" nnoremap <leader>gp :Ggrep<Space>
-" nnoremap <leader>gm :Gmove<Space>
-" nnoremap <leader>gb :Git branch<Space>
-" nnoremap <leader>go :Git checkout<Space>
-" nnoremap <leader>gps :Dispatch! git push<CR>
-" nnoremap <leader>gpl :Dispatch! git pull<CR>
 
 nnoremap <silent> <C-e> :call QuickFixOrLocationNext()<CR>
 nnoremap <silent> <leader>< :call QuickFixOrLocationNext()<CR>
@@ -942,12 +924,9 @@ function! JavaScriptFold()
 endfunction
 
 """"""""""""""""""""""""""""""
-" => MRU plugin
+" => MRU
 """"""""""""""""""""""""""""""
-" let MRU_Max_Entries = 400
-" map <leader>r :MRU<CR>
-" 2015/07/27 11:27:03, AA: Replaced by Unite MRU
-nnoremap <silent> <leader>r :<C-u>Unite file_mru<CR>
+nnoremap <silent> <leader>r :FzfHistory<CR>
 
 " 2015-03-24 08:48:43, AA: Em casa
 if filereadable(expand("~/Dropbox/etc/2015.ledger"))
@@ -965,11 +944,6 @@ map <leader>bb :cd ..<cr>
 """""""""""""""""""""""""""""""""""""""""""""
 " => 2015-03-31 22:41:34, AA: Vim Unite Stuff
 """""""""""""""""""""""""""""""""""""""""""""
-" 2017/01/30 16:30:21, AA: Disabled this and started using CtrlP, is much faster
-" nnoremap <leader>f :Unite -start-insert file_rec/async<CR>
-" nnoremap <leader>x :Unite -quick-match buffer<CR>
-" nnoremap <leader>gg :Unite -start-insert file_rec/git<CR>
-
 " 2016/11/17 15:25:47, AA: unite-tag (ctags stuff)
 let g:unite_source_tag_max_fname_length = 50
 let g:unite_source_tag_max_name_length = 50
@@ -1023,9 +997,7 @@ set guicursor=n:block-blinkon0-Cursor,v:block-blinkon0-VisualCursor,c-i-ci:ver25
 " => 2017/01/30 16:28:03, AA: CtrlP stuff, Unite is slow af
 " => 2017/05/15 14:25:58, AA: Disabled CtrlP for files, fzf is the real deal
 """""""""""""""""""""""""""""""""""""""""""""
-nmap <silent> <Space> :CtrlPBuffer<CR>
-let g:ctrlp_match_window_bottom = 0
-let g:ctrlp_match_window_reversed = 0
+nmap <silent> <Space> :FzfBuffers<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""
 " => 2017/05/15 14:25:58, AA: FZF is the real deal
@@ -1133,50 +1105,6 @@ nnoremap <Leader>fu :CtrlPFunky<Cr>
 " narrow the list down with a word under cursor
 nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 
-""""""""""""""""""""""""""""""
-" => Vim grep: Falta instalar o grep para o Windows
-""""""""""""""""""""""""""""""
-" let Grep_Skip_Dirs = 'RCS CVS SCCS .svn generated'
-" set grepprg=/bin/grep\ -nH
-
-""""""""""""""""""""""""""""""
-" => Command-T: Plug-in giro
-" para abrir ficheiros com um
-" search rapido, mas precisa
-" de ruby instalado, etc.
-""""""""""""""""""""""""""""""
-" let g:CommandTMaxHeight = 15
-" set wildignore+=*.o,*.obj,.git,*.pyc
-" noremap <leader>j :CommandT<cr>
-" noremap <leader>y :CommandTFlush<cr>
-
-" FIM cenas copiadas do amix_ultimate_vimrc
-
-"set diffexpr=MyDiff()
-"function MyDiff()
-  "let opt = '-a --binary '
-  "if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-  "if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  "let arg1 = v:fname_in
-  "if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  "let arg2 = v:fname_new
-  "if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  "let arg3 = v:fname_out
-  "if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  "let eq = ''
-  "if $VIMRUNTIME =~ ' '
-    "if &sh =~ '\<cmd'
-      "let cmd = '""' . $VIMRUNTIME . '\diff"'
-      "let eq = '"'
-    "else
-      "let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-    "endif
-  "else
-    "let cmd = $VIMRUNTIME . '\diff'
-  "endif
-  "silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
-"endfunction
-
 " 2014-11-04, AA: Vim-sneak, Alternativa ao Easymotion
 let g:sneak#streak = 1
 let g:sneak#s_next = 1
@@ -1241,21 +1169,31 @@ endfunction
 
 call tinykeymap#EnterMap('git', '<leader><space>', {'name': 'Git mode'})
 call tinykeymap#Map('git', '<space>', 'Gstatus')
-call tinykeymap#Map('git', 'pu', 'call GitPushToOrigin()')
+" pushes
+call tinykeymap#Map('git', 'ps', 'call GitPushToOrigin()')
 call tinykeymap#Map('git', 'pf', 'call GitPushToOrigin("--force-with-lease")')
 call tinykeymap#Map('git', 'po', 'call GitPushToOrigin("--force")')
+" rebases
 call tinykeymap#Map('git', 'ri', 'call AskCommandWithSuggestion("Git rebase -i HEAD~")')
 call tinykeymap#Map('git', 'rd', 'call AskCommandWithSuggestion("Git rebase development")')
 call tinykeymap#Map('git', 'rf', 'call AskCommandWithSuggestion("Git rebase feature/ID-")')
+call tinykeymap#Map('git', 'rr', 'call AskCommandWithSuggestion("Git rebase ")')
+" branches
 call tinykeymap#Map('git', 'bf', 'call AskCommandWithSuggestion("Git checkout -b feature/ID-")')
+call tinykeymap#Map('git', 'bb', 'call AskCommandWithSuggestion("Git checkout -b ")')
+" checkouts
 call tinykeymap#Map('git', 'cd', 'call AskCommandWithSuggestion("Git checkout development")')
 call tinykeymap#Map('git', 'cf', 'call AskCommandWithSuggestion("Git checkout feature/ID-")')
+call tinykeymap#Map('git', 'cc', 'call AskCommandWithSuggestion("Git checkout ")')
+" logs
+call tinykeymap#Map('git', 'pp', 'FzfCommits')
+call tinykeymap#Map('git', 'pb', 'FzfBCommits')
+
 call tinykeymap#Map('git', 'l', 'Glog')
 call tinykeymap#Map('git', 'e', 'Gedit')
 call tinykeymap#Map('git', 'st', 'Git stash')
 call tinykeymap#Map('git', 'sp', 'Git stash pop')
 call tinykeymap#Map('git', 'bl', 'Gblame')
-call tinykeymap#Map('git', 'pp', 'FzfCommits')
 call tinykeymap#Map('git', 'd', 'Gdiff')
 
 call tinykeymap#EnterMap('window', 'gw', {'name': 'Window mode'})
