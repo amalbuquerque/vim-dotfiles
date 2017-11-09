@@ -488,7 +488,7 @@ nnoremap ; :
 
 " 2015/06/17 15:56:51, AA: Map Backspace to Toggle between current file and previous
 nnoremap <BS> <C-^>
-map <silent> <leader><leader> :noh<cr>
+map <silent> <leader><leader> :noh<cr>:ALEToggle<cr>
 
 " 2016/11/08 11:41:14, AA: From http://tex.stackexchange.com/a/3655/65117
 " Because IMAP_JumpForward was taking the C-j mapping
@@ -702,7 +702,7 @@ function! QuickFixOrLocationNext()
         catch
             execute "lfirst"
         endtry
-    elsif len(getqflist())>0
+      elseif len(getqflist())>0
         try
             execute "cnext"
         catch
@@ -720,7 +720,7 @@ function! QuickFixOrLocationPrev()
         catch
             execute "llast"
         endtry
-    elsif len(getqflist())>0
+      elseif len(getqflist())>0
         try
             execute "cprev"
         catch
