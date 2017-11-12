@@ -211,6 +211,7 @@ set sidescrolloff=1
 " centered on the screen
 nnoremap <Leader>ss :let &scrolloff=999-&scrolloff<CR>
 
+set wildmenu
 set wildmode=list:longest
 
 set cmdheight=2 "The commandbar height
@@ -229,7 +230,15 @@ set hlsearch "Highlight search things
 " 2017/08/10, AA: Neovim search wrap
 set wrapscan
 
+set ttyfast
 set lazyredraw "Don't redraw while executing macros
+
+" 2017/11/12 16:09:24, AA: From https://github.com/jessfraz/.vim/blob/master/vimrc#L84
+" Time out on key codes but not mappings.
+" Basically this makes terminal Vim work sanely.
+set notimeout
+set ttimeout
+set ttimeoutlen=10
 
 set cursorline
 
@@ -480,8 +489,8 @@ func! Cwd()
 endfunc
 
 " 2014-12-08 12:28:07, AA: Center screen on next/prev search:
-nmap n nzz
-nmap N Nzz
+nmap n nzzzv
+nmap N Nzzzv
 
 " 2015-03-31 14:12:30, AA: Map ; to : (command)
 nnoremap ; :
@@ -630,10 +639,8 @@ let g:UltiSnipsJumpForwardTrigger="<Tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 
 imap <C-Tab> <C-X><C-O>
-set complete=.,b,u,]
-set completeopt=menu,preview
-" set complete=k,.,w,b,u,U,i,d,t
-" set completeopt=menu,longest
+set complete=.,w,b,u,t,]
+set completeopt=longest,menuone
 
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
@@ -1196,6 +1203,8 @@ call tinykeymap#Map('git', 'st', 'Git stash')
 call tinykeymap#Map('git', 'sp', 'Git stash pop')
 call tinykeymap#Map('git', 'bl', 'Gblame')
 call tinykeymap#Map('git', 'd', 'Gdiff')
+
+autocmd FileType gitcommit setlocal spell
 
 call tinykeymap#EnterMap('window', 'gw', {'name': 'Window mode'})
 call tinykeymap#Map('window', 'l', 'lopen')
