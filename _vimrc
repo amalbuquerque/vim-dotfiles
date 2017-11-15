@@ -212,7 +212,7 @@ set sidescrolloff=1
 nnoremap <Leader>ss :let &scrolloff=999-&scrolloff<CR>
 
 set wildmenu
-set wildmode=list:longest
+set wildmode=list:longest,full
 
 set cmdheight=2 "The commandbar height
 
@@ -1175,7 +1175,7 @@ function! GitPushToOrigin(...)
   endif
 endfunction
 
-call tinykeymap#EnterMap('git', '<leader><space>', {'name': 'Git mode'})
+call tinykeymap#EnterMap('git', 'gj', {'name': 'Git mode'})
 call tinykeymap#Map('git', '<space>', 'Gstatus')
 " pushes
 call tinykeymap#Map('git', 'ps', 'call GitPushToOrigin()')
