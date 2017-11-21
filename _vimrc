@@ -50,8 +50,6 @@ Plug 'https://github.com/christoomey/vim-tmux-navigator'
 Plug 'https://github.com/tomasr/molokai'
 Plug 'https://github.com/elixir-lang/vim-elixir'
 Plug 'https://github.com/ahw/vim-pbcopy'
-Plug 'https://github.com/ctrlpvim/ctrlp.vim'
-Plug 'https://github.com/tacahiroy/ctrlp-funky'
 Plug 'https://github.com/junegunn/vim-easy-align'
 Plug 'https://github.com/bkad/CamelCaseMotion'
 Plug '~/vim-dotfiles/bundles/random_colorschemes'
@@ -165,6 +163,7 @@ nmap <leader>w :w!<cr>
 " 2016/11/11 18:01:42, AA: copy the contents of the file to the clipboard (OSX)
 " nmap <leader>c :%w !pbcopy<cr>
 " now using vim-pbcopy, normal mode: cy{motion}, visual mode: cy
+let g:vim_pbcopy_local_cmd = "pbcopy"
 let g:vim_pbcopy_escape_backslashes = 1
 
 " 2014-03-20, AA: http://approache.com/blog/increase-your-productivity-with-vim-and-terminal/
@@ -1108,10 +1107,6 @@ function! SnakecaseCurrentWord()
   let word = tolower(word)
   return word
 endfunction
-
-nnoremap <Leader>fu :CtrlPFunky<Cr>
-" narrow the list down with a word under cursor
-nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 
 " 2014-11-04, AA: Vim-sneak, Alternativa ao Easymotion
 let g:sneak#streak = 1
