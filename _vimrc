@@ -72,6 +72,7 @@ Plug 'https://github.com/dracula/vim'
 Plug 'https://github.com/bling/vim-airline'
 Plug 'https://github.com/vim-airline/vim-airline-themes'
 Plug 'w0rp/ale'
+Plug 'moll/vim-bbye'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -192,7 +193,7 @@ nnoremap gp :read !pbpaste<CR>
 nnoremap <Leader><Tab> :b#<CR>
 
 " Fast editing of the .vimrc
-map <leader>e :tabnew! $MYVIMRC<cr>
+map <leader>e :tabnew! $MYVIMRC<cr>$gf
 
 " * 2015/12/16 10:31:16, AA: Fast closing of window
 map <leader>z :close<cr>
@@ -510,8 +511,8 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-" Close the current buffer (utiliza a function Bclose)
-map <leader>bd :Bclose<cr>
+" Close the current buffer (uses Bdelete from bbye)
+map <leader>bd :Bdelete<cr>
 
 " Close all the buffers
 map <leader>ba :1,300 bd!<cr>
@@ -525,26 +526,6 @@ map <leader>cd :cd %:p:h<cr>
 
 " When <leader>P copia a path do ficheiro actual para o clipboard
 map <leader>P :let @+=expand("%:p")<cr>
-
-command! Bclose call <SID>BufcloseCloseIt()
-function! <SID>BufcloseCloseIt()
-   let l:currentBufNum = bufnr("%")
-   let l:alternateBufNum = bufnr("#")
-
-   if buflisted(l:alternateBufNum)
-     buffer #
-   else
-     bnext
-   endif
-
-   if bufnr("%") == l:currentBufNum
-     new
-   endif
-
-   if buflisted(l:currentBufNum)
-     execute("bdelete! ".l:currentBufNum)
-   endif
-endfunction
 
 " Specify the behavior when switching between buffers
 try
