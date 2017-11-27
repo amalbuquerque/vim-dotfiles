@@ -11,7 +11,6 @@ Plug 'https://github.com/Shougo/neomru.vim'
 Plug 'https://github.com/Shougo/unite.vim'
 Plug 'https://github.com/gosukiwi/vim-atom-dark.git'
 Plug 'https://github.com/haya14busa/incsearch.vim.git'
-Plug 'https://github.com/junegunn/goyo.vim.git'
 Plug 'https://github.com/junegunn/limelight.vim'
 Plug 'https://github.com/junegunn/seoul256.vim.git'
 Plug 'https://github.com/junegunn/vim-peekaboo'
@@ -57,6 +56,8 @@ Plug 'https://github.com/Firef0x/matchit'
 Plug 'https://github.com/kana/vim-textobj-user'
 Plug 'https://github.com/nelstrom/vim-textobj-rubyblock'
 Plug 'https://github.com/andyl/vim-textobj-elixir'
+Plug 'reedes/vim-textobj-sentence'
+Plug 'reedes/vim-textobj-quote'
 Plug 'https://github.com/jgdavey/tslime.vim'
 Plug 'https://github.com/lejboua/vim-test'
 Plug 'https://github.com/nielsmadan/harlequin'
@@ -73,6 +74,9 @@ Plug 'https://github.com/bling/vim-airline'
 Plug 'https://github.com/vim-airline/vim-airline-themes'
 Plug 'w0rp/ale'
 Plug 'moll/vim-bbye'
+Plug 'reedes/vim-pencil'
+Plug 'reedes/vim-lexical'
+Plug 'junegunn/goyo.vim'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -170,7 +174,8 @@ let g:vim_pbcopy_escape_backslashes = 1
 " 2014-03-20, AA: http://approache.com/blog/increase-your-productivity-with-vim-and-terminal/
 " 2014-12-18, AA: Updated from http://www.reddit.com/r/vim/comments/2po023/which_key_do_you_bind_to_esc/
 " jk => nao ter de ir ao Esc
-imap jk <Esc>
+inoremap jk <Esc>
+vnoremap jk <Esc>
 
 " 2014-06-19, AA: http://vim.wikia.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
 " Ctrl+BS Apaga previous word
@@ -819,7 +824,7 @@ au FileType ruby iabbrev ,,P require "pry"; ["continue", "step", "next"].each do
 """"""""""""""""""""""""""""""
 " 2014-11-10, AA: From https://github.com/junegunn/limelight.vim
 autocmd User GoyoEnter Limelight
-autocmd User GoyoEnter set textwidth=80
+autocmd User GoyoEnter colorscheme neodark
 autocmd User GoyoLeave Limelight!
 " 2017/04/29 20:02:47, AA: ,G it's better with Ack current word
 " nnoremap <leader>G :Goyo<CR>
@@ -831,6 +836,24 @@ xmap <leader>L <Plug>(Limelight)
 
 autocmd Filetype text set nocindent
 autocmd Filetype text set formatoptions=tcqjn
+
+let g:pencil#map#suspend_af = 'K'
+let g:pencil#wrapModeDefault = 'soft'
+
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,mkd let g:lexical#thesaurus_key = '<leader>t'
+                            \ | call pencil#init()
+                            \ | call lexical#init()
+                            \ | call textobj#quote#init()
+                            \ | call textobj#sentence#init()
+                            \ | iabbrev <buffer> -- –
+                            \ | iabbrev <buffer> --- —
+                            \ | iabbrev <buffer> << «
+                            \ | iabbrev <buffer> >> »
+                            \ | setl spell spl=en_us fdl=4 noru nonu nornu
+                            \ | setl fdo+=search
+augroup END
 
 """"""""""""""""""""""""""""""
 " => Python section
