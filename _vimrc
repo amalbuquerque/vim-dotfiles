@@ -245,7 +245,7 @@ set notimeout
 set ttimeout
 set ttimeoutlen=10
 
-set cursorline
+set nocursorline
 
 set magic "Set magic on, for regular expressions
 
