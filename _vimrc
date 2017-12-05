@@ -847,6 +847,8 @@ augroup pencil
                             \ | call lexical#init()
                             \ | call textobj#quote#init()
                             \ | call textobj#sentence#init()
+                            \ | syn match UrlNoSpell '\w\+:\/\/[^[:space:]]\+' contains=@NoSpell
+                            \ | syn match AcronymNoSpell '\<\(\u\|\d\)\{3,}s\?\>' contains=@NoSpell
                             \ | iabbrev <buffer> -- –
                             \ | iabbrev <buffer> --- —
                             \ | iabbrev <buffer> << «
