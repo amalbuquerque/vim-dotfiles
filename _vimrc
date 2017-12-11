@@ -175,7 +175,6 @@ let g:vim_pbcopy_escape_backslashes = 1
 " 2014-12-18, AA: Updated from http://www.reddit.com/r/vim/comments/2po023/which_key_do_you_bind_to_esc/
 " jk => nao ter de ir ao Esc
 inoremap jk <Esc>
-vnoremap jk <Esc>
 
 " 2014-06-19, AA: http://vim.wikia.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
 " Ctrl+BS Apaga previous word
@@ -663,10 +662,6 @@ let g:unite_source_history_yank_file = $HOME.'/.vim/yankring.txt'
 " 2016/11/10 10:38:08, AA: From https://github.com/Shougo/unite.vim/issues/986
 let g:unite_source_rec_async_command = [ 'ag', '-l', '-g', '', '--nocolor'  ]
 nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank<cr>
-
-" 2017/05/11 14:56:53, AA: easier usage of the black hole register
-" See http://blog.dreasgrech.com/2010/06/vims-black-hole-register.html
-map _ "_
 
 " 2017/05/22 10:24:29, AA: We now have `m` on normal mode to cut, so
 " we map `set mark` to `gm`
