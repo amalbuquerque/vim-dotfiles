@@ -1083,7 +1083,17 @@ command! FzfFilesCWord call fzf#run({
 
 nmap <silent> <leader>f :FzfFiles<CR>
 nmap <silent> <leader>F :FzfFilesCWord<CR>
-nmap <silent> l :FzfLines<CR>
+
+if has("macunix")
+  nnoremap <silent> ¬ :FzfLines<CR>
+elseif has("gui_win32")
+  " TODO: Check
+  nnoremap <silent> l :FzfLines<CR>
+elseif has("unix")
+  let g:python_host_prog="/usr/bin/python"
+  nnoremap <silent> l :FzfLines<CR>
+endif
+
 
 command! -nargs=* FzfAg call fzf#run({
 \ 'source':  printf('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" "%s"',
