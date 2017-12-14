@@ -77,6 +77,7 @@ Plug 'moll/vim-bbye'
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-lexical'
 Plug 'junegunn/goyo.vim'
+Plug 'beloglazov/vim-online-thesaurus'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -837,7 +838,7 @@ let g:pencil#wrapModeDefault = 'soft'
 
 augroup pencil
   autocmd!
-  autocmd FileType markdown,mkd let g:lexical#thesaurus_key = '<leader>t'
+  autocmd FileType markdown,mkd nnoremap <silent> <leader>t :OnlineThesaurusCurrentWord<CR>
                             \ | call pencil#init()
                             \ | call lexical#init()
                             \ | call textobj#quote#init()
@@ -1062,9 +1063,10 @@ function! s:rg_handler(lines)
   endif
 endfunction
 
+let fzf_source_command = 'rg --files --hidden --follow --glob "!.git/*"'
 let g:fzf_command_prefix = 'Fzf'
 command! FzfFiles call fzf#run({
-\ 'source':  'rg --files --no-ignore --hidden --follow --glob "!.git/*"',
+\ 'source':  fzf_source_command,
 \ 'sink*':   function('<sid>rg_handler'),
 \ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x '.
 \            '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
@@ -1073,7 +1075,7 @@ command! FzfFiles call fzf#run({
 \ })
 
 command! FzfFilesCWord call fzf#run({
-\ 'source':  'rg --files --no-ignore --hidden --follow --glob "!.git/*"',
+\ 'source':  fzf_source_command,
 \ 'sink*':   function('<sid>rg_handler'),
 \ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x '.
 \            '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all -q '.SnakecaseCurrentWord().
