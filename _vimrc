@@ -118,7 +118,8 @@ let mapleader = ","
 let g:mapleader = ","
 
 " 2017/05/09 10:01:45, AA: Tslime + vim-test stuff
-nmap Q <Plug>SetTmuxVars
+nmap <silent> Q <Plug>SetTmuxVars
+vmap <silent> Q <Plug>SendSelectionToTmux
 let test#strategy = "tslime"
 nmap <silent> <leader>T :TestSuite<CR>
 nmap <silent> <leader>t :TestNearest<CR>
