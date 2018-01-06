@@ -349,8 +349,6 @@ endfunction
 " 2014-11-04, AA: using seoul256
 " instead of molokai
 if has("gui_running")
-  " 2015/06/17 15:43:49 AA:
-  set guioptions=a
   set t_Co=256
   set background=dark
   colorscheme atom-dark
