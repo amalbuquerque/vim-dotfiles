@@ -257,6 +257,9 @@ set mat=2 "How many tenths of a second to blink
 set splitbelow
 set splitright
 
+" 2018/01/15 14:28:07, AA: Prettier vertical split
+set fillchars+=vert:│
+
 " No sound on errors
 set noerrorbells
 set novisualbell
