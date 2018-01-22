@@ -119,6 +119,7 @@ let g:mapleader = ","
 
 " 2017/05/09 10:01:45, AA: Tslime + vim-test stuff
 nmap <silent> Q <Plug>SetTmuxVars
+nmap <silent> qq V<Plug>SendSelectionToTmux
 vmap <silent> Q <Plug>SendSelectionToTmux
 let test#strategy = "tslime"
 nmap <silent> <leader>T :TestSuite<CR>
