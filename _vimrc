@@ -155,8 +155,7 @@ endfunction
 let delimitMate_expand_space = 1
 let delimitMate_expand_cr = 1
 let delimitMate_jump_expansion = 1
-" 2016/11/16 13:32:56, AA: Control-b goes to the next closing thing (bracket, parenthesis, quote, etc.)
-imap <C-b> <Plug>delimitMateS-Tab
+" 2018/01/28 21:29:17, AA: Delete goes to the next closing thing (bracket, parenthesis, quote, etc.)
 imap <expr> <Del> delimitMate#ShouldJump() == 1 ? '<Plug>delimitMateS-Tab' : '<Del>'
 
 " easy xml editing
@@ -824,6 +823,12 @@ au FileType ruby iabbrev ,,P require "pry"; ["continue", "step", "next"].each do
 " 2014-11-10, AA: From https://github.com/junegunn/limelight.vim
 autocmd User GoyoEnter Limelight
 autocmd User GoyoEnter colorscheme neodark
+autocmd User GoyoEnter set guifont=Ubuntu\ Mono\ Regular\ 15
+autocmd User GoyoEnter set guioptions-=m
+autocmd User GoyoEnter set guioptions-=L
+autocmd User GoyoEnter set guioptions-=r
+autocmd User GoyoEnter set guioptions-=tT
+autocmd User GoyoEnter set guioptions-=a
 autocmd User GoyoLeave Limelight!
 " 2017/04/29 20:02:47, AA: ,G it's better with Ack current word
 " nnoremap <leader>G :Goyo<CR>
@@ -838,6 +843,7 @@ autocmd Filetype text set formatoptions=tcqjn
 
 let g:pencil#map#suspend_af = 'K'
 let g:pencil#wrapModeDefault = 'soft'
+let g:textobj#quote#educate = 0
 
 augroup pencil
   autocmd!
