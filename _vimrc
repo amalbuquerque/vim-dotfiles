@@ -78,6 +78,7 @@ Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-lexical'
 Plug 'junegunn/goyo.vim'
 Plug 'beloglazov/vim-online-thesaurus'
+Plug 'NLKNguyen/papercolor-theme'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -320,7 +321,7 @@ endfunction
 
 function! ChangeSchemeWithIndex(index)
     let g:colorscheme_index = g:colorscheme_index + 1
-    let l:favourite_schemes = ["molokai", "harlequin", "atom-dark-256", "railscasts", "deus", "moonfly", "neodark", "zenburn", "dracula", "seoul256"]
+    let l:favourite_schemes = ["molokai", "harlequin", "atom-dark-256", "railscasts", "deus", "moonfly", "neodark", "zenburn", "dracula", "seoul256", "PaperColor"]
     let l:to_use = l:favourite_schemes[a:index % len(l:favourite_schemes)]
     if l:to_use == "deus"
         set background=dark
@@ -346,7 +347,37 @@ function! ChangeSchemeWithIndex(index)
         highlight Visual ctermbg=237
     endif
 
+    if !exists('g:airline_symbols')
+        let g:airline_symbols = {}
+    endif
+
+    " air-line
+    let g:airline_powerline_fonts = 1
+    " unicode symbols
+    let g:airline_left_sep = '»'
+    let g:airline_left_sep = '▶'
+    let g:airline_right_sep = '«'
+    let g:airline_right_sep = '◀'
+    let g:airline_symbols.linenr = '␊'
+    let g:airline_symbols.linenr = '␤'
+    let g:airline_symbols.linenr = '¶'
+    let g:airline_symbols.branch = '⎇'
+    let g:airline_symbols.paste = 'ρ'
+    let g:airline_symbols.paste = 'Þ'
+    let g:airline_symbols.paste = '∥'
+    let g:airline_symbols.whitespace = 'Ξ'
+
+    " airline symbols
+    let g:airline_left_sep = ''
+    let g:airline_left_alt_sep = ''
+    let g:airline_right_sep = ''
+    let g:airline_right_alt_sep = ''
+    let g:airline_symbols.branch = ''
+    let g:airline_symbols.readonly = ''
+    let g:airline_symbols.linenr = ''
+
     let g:airline_theme='minimalist'
+    " let g:airline_theme='papercolor'
 endfunction
 
 " 2014-11-04, AA: using seoul256
@@ -548,11 +579,6 @@ let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#tabline#right_sep = ' '
 let g:airline#extensions#tabline#right_alt_sep = '|'
-let g:airline_left_sep = ' '
-let g:airline_left_alt_sep = '|'
-let g:airline_right_sep = ' '
-let g:airline_right_alt_sep = '|'
-" let g:airline_theme= 'gruvbox'
 
 function! CurDir()
     " tinha isto mas tirei o substitute:
