@@ -692,11 +692,14 @@ let g:unite_source_history_yank_file = $HOME.'/.vim/yankring.txt'
 let g:unite_source_rec_async_command = [ 'ag', '-l', '-g', '', '--nocolor'  ]
 nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank<cr>
 
+""""""""""""""""""""""""""""""
+" => Easyclip stuff
+""""""""""""""""""""""""""""""
 " 2017/05/22 10:24:29, AA: We now have `m` on normal mode to cut, so
 " we map `set mark` to `gm`
 nnoremap gm m
 " similar to what D does and what I'm used to Y doing
-map M m$
+nmap M <Plug>MoveMotionEndOfLinePlug
 map Y yy
 
 " NERDTree
