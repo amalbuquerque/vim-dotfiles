@@ -314,16 +314,12 @@ endfunction
 au BufRead let b:fenc_at_read=&fileencoding
 au BufWinEnter call CheckFileEncoding()
 
-function! ChangeScheme()
-  let g:colorscheme_index = get(g:, 'colorscheme_index', reltimestr(reltime())[-2:])
-  call ChangeSchemeWithIndex(g:colorscheme_index)
-endfunction
-
 function! ChangeSchemeWithIndex(index)
     let g:colorscheme_index = g:colorscheme_index + 1
     let l:favourite_schemes = ["molokai", "harlequin", "atom-dark-256", "railscasts", "deus", "moonfly", "neodark", "zenburn", "dracula", "seoul256", "PaperColor"]
     let l:to_use = l:favourite_schemes[a:index % len(l:favourite_schemes)]
-    if l:to_use == "deus"
+
+    if l:to_use == "deus" || l:to_use == "PaperColor"
         set background=dark
     endif
     if l:to_use == "zenburn"
@@ -388,7 +384,8 @@ if has("gui_running")
   colorscheme atom-dark
 else
   " 2017/05/11 10:11:09, AA: Rotates among a few cool colorschemes
-  call ChangeScheme()
+  let colorscheme_index = reltimestr(reltime())[-2:]
+  call ChangeSchemeWithIndex(colorscheme_index)
 endif
 
 set colorcolumn=81
