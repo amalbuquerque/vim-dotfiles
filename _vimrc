@@ -79,6 +79,7 @@ Plug 'reedes/vim-lexical'
 Plug 'junegunn/goyo.vim'
 Plug 'beloglazov/vim-online-thesaurus'
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'aquach/vim-http-client'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -1263,9 +1264,12 @@ function! QuickfixFilenames()
   return join(values(buffer_numbers))
 endfunction
 
+" 2018/03/19 10:31:00, AA: Disable the default hotkey
+let g:http_client_bind_hotkey=0
+nmap <silent> <leader>x :HTTPClientDoRequest<CR>
+
 " 2017/08/03 08:17:30, AA: Disable repeated hjkl motions
 " source ~/vim-dotfiles/disable_repeated_hjkl_motions.vim
-"
 
 " 2017/11/17 07:58:48, AA: Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
