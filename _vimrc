@@ -80,6 +80,7 @@ Plug 'junegunn/goyo.vim'
 Plug 'beloglazov/vim-online-thesaurus'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'aquach/vim-http-client'
+Plug 'airblade/vim-gitgutter'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -533,7 +534,7 @@ nnoremap ; :
 
 " 2015/06/17 15:56:51, AA: Map Backspace to Toggle between current file and previous
 nnoremap <BS> <C-^>
-map <silent> <leader><leader> :noh<cr>:ALEToggle<cr>
+map <silent> <leader><leader> :noh<cr>:ALEToggle<cr>:GitGutterAll<cr>
 
 " 2016/11/08 11:41:14, AA: From http://tex.stackexchange.com/a/3655/65117
 " Because IMAP_JumpForward was taking the C-j mapping
@@ -1240,6 +1241,9 @@ call tinykeymap#Map('git', 'cc', 'call AskCommandWithSuggestion("Git checkout ")
 " logs
 call tinykeymap#Map('git', 'pp', 'FzfCommits')
 call tinykeymap#Map('git', 'pb', 'FzfBCommits')
+" hunks
+call tinykeymap#Map('git', 'N', 'GitGutterPrevHunk')
+call tinykeymap#Map('git', 'n', 'GitGutterNextHunk')
 
 call tinykeymap#Map('git', 'l', 'Glog')
 call tinykeymap#Map('git', 'e', 'Gedit')
