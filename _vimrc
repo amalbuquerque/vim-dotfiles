@@ -81,6 +81,10 @@ Plug 'beloglazov/vim-online-thesaurus'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'aquach/vim-http-client'
 Plug 'airblade/vim-gitgutter'
+Plug 'ryanoasis/vim-devicons'
+Plug 'ludovicchabant/vim-gutentags'
+
+let g:gutentags_cache_dir = '~/.tags_cache'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -1122,6 +1126,7 @@ command! FzfFilesCWord call fzf#run({
 
 nmap <silent> <leader>f :FzfFiles<CR>
 nmap <silent> <leader>F :FzfFilesCWord<CR>
+nnoremap <leader>d :call fzf#vim#tags(expand('<cWORD>'), {'options': '--exact --select-1 --exit-0'})<CR>
 
 if has("macunix")
   nnoremap <silent> ¬ :FzfLines<CR>
