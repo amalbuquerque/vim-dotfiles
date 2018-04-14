@@ -547,10 +547,11 @@ imap <C-g> <Plug>IMAP_JumpForward
 nmap <C-g> <Plug>IMAP_JumpForward
 
 " Smart way to move btw. windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+" 2018/04/14 22:15:55, AA: Done by tmux-navigator
+" map <C-j> <C-W>j
+" map <C-k> <C-W>k
+" map <C-h> <C-W>h
+" map <C-l> <C-W>l
 
 " Close the current buffer (uses Bdelete from bbye)
 map <leader>bd :Bdelete<cr>
@@ -716,6 +717,9 @@ nnoremap <silent> <C-e> :call QuickFixOrLocationNext()<CR>
 nnoremap <silent> <leader>< :call QuickFixOrLocationNext()<CR>
 nnoremap <silent> <C-t> :call QuickFixOrLocationPrev()<CR>
 nnoremap <silent> <leader>> :call QuickFixOrLocationPrev()<CR>
+
+nnoremap σ :GitGutterPrevHunk<CR>
+nnoremap δ :GitGutterNextHunk<CR>
 
 function! QuickFixOrLocationNext()
     if len(getloclist(0))>0
