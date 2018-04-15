@@ -838,9 +838,10 @@ sunmap e
 nmap X *Nvar:s///gc<Left><Left><Left>
 
 """"""""""""""""""""""""""""""
-" => Ruby section
+" => Elixir section
 """"""""""""""""""""""""""""""
 au Filetype elixir nmap <Leader>p orequire IEx; IEx.pry<Esc>
+au Filetype elixir nmap <silent> <F5> :Tmux recompile<CR>
 
 """"""""""""""""""""""""""""""
 " => Ruby section
