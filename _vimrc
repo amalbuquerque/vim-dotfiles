@@ -710,8 +710,17 @@ map Y yy
 let NERDTreeQuitOnOpen=1
 let NERDTreeHijackNetrw=0
 let NERDTreeToggled=0
-nnoremap <silent> <C-n>     :NERDTreeFind<CR>
+nnoremap <silent> <C-n> :call MaybeNERDTreeFind()<CR>
 nnoremap <silent> <leader>n :NERDTreeToggle<CR>
+
+" from https://dnlserrano.github.io/2018/04/03/bit-by-bit.html
+function! MaybeNERDTreeFind()
+  if bufname('%') == ''
+    :NERDTreeToggle
+  else
+    :NERDTreeFind
+  endif
+endfunction
 
 nnoremap <silent> <C-e> :call QuickFixOrLocationNext()<CR>
 nnoremap <silent> <leader>< :call QuickFixOrLocationNext()<CR>
