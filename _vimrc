@@ -284,9 +284,9 @@ if has ("gui_running")
     let g:Tex_ViewRule_pdf='sumatrapdf'
 
     if has("gui_gtk2")
-        set guifont=Envy\ Code\ R\ 10
+        set guifont=Envy\ Code\ R\ for\ Powerline\ 10
     elseif has("gui_win32")
-        set guifont=Envy\ Code\ R:h10:cANSI
+        set guifont=Envy\ Code\ R\ for\ Powerline:h10:cANSI
     elseif has("macunix")
         set guifont=Envy\ Code\ R\ for\ Powerline:h13
     endif
