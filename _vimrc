@@ -83,6 +83,7 @@ Plug 'aquach/vim-http-client'
 Plug 'airblade/vim-gitgutter'
 Plug 'ryanoasis/vim-devicons'
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'vim-utils/vim-husk'
 
 let g:gutentags_cache_dir = '~/.tags_cache'
 
