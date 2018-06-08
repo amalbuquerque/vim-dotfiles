@@ -84,6 +84,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'ryanoasis/vim-devicons'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'vim-utils/vim-husk'
+Plug 'gregsexton/gitv'
 
 let g:gutentags_cache_dir = '~/.tags_cache'
 
@@ -322,8 +323,7 @@ au BufRead let b:fenc_at_read=&fileencoding
 au BufWinEnter call CheckFileEncoding()
 
 function! ChangeSchemeWithIndex(index)
-    let g:colorscheme_index = g:colorscheme_index + 1
-    let l:favourite_schemes = ["molokai", "harlequin", "atom-dark-256", "railscasts", "deus", "moonfly", "neodark", "zenburn", "dracula", "seoul256", "PaperColor"]
+    let l:favourite_schemes = ["PaperColor", "molokai", "harlequin", "atom-dark-256", "railscasts", "deus", "moonfly", "neodark", "zenburn", "dracula", "seoul256"]
     let l:to_use = l:favourite_schemes[a:index % len(l:favourite_schemes)]
 
     if l:to_use == "deus" || l:to_use == "PaperColor"
@@ -391,8 +391,10 @@ if has("gui_running")
   colorscheme atom-dark
 else
   " 2017/05/11 10:11:09, AA: Rotates among a few cool colorschemes
-  let colorscheme_index = reltimestr(reltime())[-2:]
-  call ChangeSchemeWithIndex(colorscheme_index)
+  " let colorscheme_index = reltimestr(reltime())[-2:]
+  " call ChangeSchemeWithIndex(colorscheme_index)
+  " setting always PaperColer by default
+  call ChangeSchemeWithIndex(0)
 endif
 
 set colorcolumn=81
@@ -728,6 +730,8 @@ nnoremap <silent> <leader>< :call QuickFixOrLocationNext()<CR>
 nnoremap <silent> <C-t> :call QuickFixOrLocationPrev()<CR>
 nnoremap <silent> <leader>> :call QuickFixOrLocationPrev()<CR>
 
+" σ = AltGr + S
+" δ = AltGr + D
 nnoremap σ :GitGutterPrevHunk<CR>
 nnoremap δ :GitGutterNextHunk<CR>
 
@@ -877,8 +881,6 @@ autocmd User GoyoEnter set guioptions-=r
 autocmd User GoyoEnter set guioptions-=tT
 autocmd User GoyoEnter set guioptions-=a
 autocmd User GoyoLeave Limelight!
-" 2017/04/29 20:02:47, AA: ,G it's better with Ack current word
-" nnoremap <leader>G :Goyo<CR>
 
 " 2015/07/28 07:53:10, AA: Activate only limelight (highlight current paragraph)
 " From: https://zenbro.github.io/2015/06/09/meditating-on-code.html
@@ -991,13 +993,6 @@ endfunction
 " => MRU
 """"""""""""""""""""""""""""""
 nnoremap <silent> <leader>r :FzfHistory<CR>
-
-" 2015-03-24 08:48:43, AA: Em casa
-if filereadable(expand("~/Dropbox/etc/2015.ledger"))
-    map <leader>l :e ~/Dropbox/etc/2015.ledger<cr>Go<CR>
-else
-    map <leader>l :e Z:/Dropbox/etc/2015.ledger<cr>Go<CR>
-endif
 
 "Quickly open a buffer for scribble
 map <leader>q :e ~/Dropbox/etc/scratchpad.txt<cr>
@@ -1143,16 +1138,7 @@ nmap <silent> <leader>f :FzfFiles<CR>
 nmap <silent> <leader>F :FzfFilesCWord<CR>
 nnoremap <leader>d :call fzf#vim#tags(expand('<cWORD>'), {'options': '--exact --select-1 --exit-0'})<CR>
 
-if has("macunix")
-  nnoremap <silent> ¬ :FzfLines<CR>
-elseif has("gui_win32")
-  " TODO: Check
-  nnoremap <silent> l :FzfLines<CR>
-elseif has("unix")
-  let g:python_host_prog="/usr/bin/python"
-  nnoremap <silent> l :FzfLines<CR>
-endif
-
+nnoremap <silent> <leader>l :FzfLines<CR>
 
 command! -nargs=* FzfAg call fzf#run({
 \ 'source':  printf('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" "%s"',
@@ -1240,23 +1226,24 @@ function! GitPushToOrigin(...)
   endif
 endfunction
 
-call tinykeymap#EnterMap('git', 'gj', {'name': 'Git mode'})
+call tinykeymap#EnterMap('git', 'K', {'name': 'Git mode'})
 call tinykeymap#Map('git', '<space>', 'Gstatus')
 " pushes
 call tinykeymap#Map('git', 'ps', 'call GitPushToOrigin()')
 call tinykeymap#Map('git', 'pf', 'call GitPushToOrigin("--force-with-lease")')
 call tinykeymap#Map('git', 'po', 'call GitPushToOrigin("--force")')
 " rebases
-call tinykeymap#Map('git', 'ri', 'call AskCommandWithSuggestion("Git rebase -i HEAD~")')
+call tinykeymap#Map('git', 'ri', 'call AskCommandWithSuggestion("Git rebase -i ")')
 call tinykeymap#Map('git', 'rd', 'call AskCommandWithSuggestion("Git rebase development")')
-call tinykeymap#Map('git', 'rf', 'call AskCommandWithSuggestion("Git rebase feature/ID-")')
+call tinykeymap#Map('git', 'rf', 'call AskCommandWithSuggestion("Git rebase feature/")')
 call tinykeymap#Map('git', 'rr', 'call AskCommandWithSuggestion("Git rebase ")')
 " branches
-call tinykeymap#Map('git', 'bf', 'call AskCommandWithSuggestion("Git checkout -b feature/ID-")')
+call tinykeymap#Map('git', 'bf', 'call AskCommandWithSuggestion("Git checkout -b feature/")')
+call tinykeymap#Map('git', 'bh', 'call AskCommandWithSuggestion("Git checkout -b hotfix/")')
 call tinykeymap#Map('git', 'bb', 'call AskCommandWithSuggestion("Git checkout -b ")')
 " checkouts
 call tinykeymap#Map('git', 'cd', 'call AskCommandWithSuggestion("Git checkout development")')
-call tinykeymap#Map('git', 'cf', 'call AskCommandWithSuggestion("Git checkout feature/ID-")')
+call tinykeymap#Map('git', 'cf', 'call AskCommandWithSuggestion("Git checkout feature/")')
 call tinykeymap#Map('git', 'cc', 'call AskCommandWithSuggestion("Git checkout ")')
 " logs
 call tinykeymap#Map('git', 'pp', 'FzfCommits')
