@@ -165,6 +165,8 @@ let delimitMate_expand_space = 1
 let delimitMate_expand_cr = 1
 let delimitMate_jump_expansion = 1
 " 2018/01/28 21:29:17, AA: Delete goes to the next closing thing (bracket, parenthesis, quote, etc.)
+" AltGr + x = ξ
+imap ξ <Plug>delimitMateS-Tab
 imap <expr> <Del> delimitMate#ShouldJump() == 1 ? '<Plug>delimitMateS-Tab' : '<Del>'
 
 " easy xml editing
@@ -1251,6 +1253,7 @@ call tinykeymap#Map('git', 'pb', 'FzfBCommits')
 " hunks
 call tinykeymap#Map('git', 'N', 'GitGutterPrevHunk')
 call tinykeymap#Map('git', 'n', 'GitGutterNextHunk')
+call tinykeymap#Map('git', 'v', 'GitGutterPreviewHunk')
 
 call tinykeymap#Map('git', 'l', 'Glog')
 call tinykeymap#Map('git', 'e', 'Gedit')
