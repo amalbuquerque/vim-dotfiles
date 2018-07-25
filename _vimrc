@@ -1228,7 +1228,7 @@ function! GitPushToOrigin(...)
   endif
 endfunction
 
-call tinykeymap#EnterMap('git', 'K', {'name': 'Git mode'})
+call tinykeymap#EnterMap('git', 'gj', {'name': 'Git mode'})
 call tinykeymap#Map('git', '<space>', 'Gstatus')
 " pushes
 call tinykeymap#Map('git', 'ps', 'call GitPushToOrigin()')
@@ -1263,6 +1263,7 @@ call tinykeymap#Map('git', 'bl', 'Gblame')
 call tinykeymap#Map('git', 'd', 'Gdiff')
 
 autocmd FileType gitcommit setlocal spell
+autocmd FileType gitcommit map <C-j> /On branch<CR>f/ly$ggoJIRA <ESC>pggO
 
 call tinykeymap#EnterMap('window', 'gw', {'name': 'Window mode'})
 call tinykeymap#Map('window', 'l', 'lopen')
