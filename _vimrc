@@ -1263,6 +1263,7 @@ call tinykeymap#Map('git', 'pb', 'FzfBCommits')
 call tinykeymap#Map('git', 'N', 'GitGutterPrevHunk')
 call tinykeymap#Map('git', 'n', 'GitGutterNextHunk')
 call tinykeymap#Map('git', 'v', 'GitGutterPreviewHunk')
+call tinykeymap#Map('git', 'g', 'GitGutterStageHunk')
 
 call tinykeymap#Map('git', 'l', 'Glog')
 call tinykeymap#Map('git', 'e', 'Gedit')
@@ -1272,7 +1273,7 @@ call tinykeymap#Map('git', 'bl', 'Gblame')
 call tinykeymap#Map('git', 'd', 'Gdiff')
 
 autocmd FileType gitcommit setlocal spell
-autocmd FileType gitcommit map <C-j> /On branch<CR>f/ly$ggoJIRA <ESC>pggO
+" autocmd FileType gitcommit /On branch<CR>f/ly$ggoJIRA <ESC>pggO
 
 call tinykeymap#EnterMap('window', 'gw', {'name': 'Window mode'})
 call tinykeymap#Map('window', 'l', 'lopen')
