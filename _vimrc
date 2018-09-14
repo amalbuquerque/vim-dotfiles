@@ -1205,12 +1205,12 @@ endfunction
 
 function! GitCurrentBranch()
   let l:branch = fugitive#statusline()
-  return substitute(l:branch, '\c\v\[?GIT\(([a-z0-9\-_\./:]+)\)\]?', $BRANCH.' \1', 'g')
+  return substitute(l:branch, '\c\v\[?GIT\(([a-z0-9\-_\./:]+)\)\]?', $BRANCH.'\1', 'g')
 endfunction
 
 function! GitPushToOrigin(...)
   let l:branch = GitCurrentBranch()
-  let l:suggested_command = "Git push origin" . l:branch
+  let l:suggested_command = "Git push origin " . l:branch
 
   if exists('a:1')
       call AskCommandWithSuggestion(l:suggested_command, a:1)
