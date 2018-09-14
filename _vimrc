@@ -1219,6 +1219,23 @@ function! GitPushToOrigin(...)
   endif
 endfunction
 
+function! GetOnfidoBitbucketPullRequestURL()
+  let l:project_command = "git remote -v | grep -Po 'git@bitbucket.org:onfido/\\K[^.]+' | uniq | tr -d '\n'"
+  let l:project = system(l:project_command)
+
+  let l:current_branch = GitCurrentBranch()
+
+  let l:url_template = "https://bitbucket.org/onfido/%s/pull-requests/new?source=%s&t=1"
+  return printf(l:url_template, l:project, l:current_branch)
+endfunction
+
+function! OpenOnfidoBitbucketPR()
+    let l:bb_pr_url = GetOnfidoBitbucketPullRequestURL()
+    silent execute '! xdg-open "' . l:bb_pr_url . '"'
+
+    redraw!
+endfunction
+
 call tinykeymap#EnterMap('git', 'gj', {'name': 'Git mode'})
 call tinykeymap#Map('git', '<space>', 'Gstatus')
 " pushes
@@ -1233,7 +1250,8 @@ call tinykeymap#Map('git', 'rr', 'call AskCommandWithSuggestion("Git rebase ")')
 " branches
 call tinykeymap#Map('git', 'bf', 'call AskCommandWithSuggestion("Git checkout -b feature/")')
 call tinykeymap#Map('git', 'bh', 'call AskCommandWithSuggestion("Git checkout -b hotfix/")')
-call tinykeymap#Map('git', 'bb', 'call AskCommandWithSuggestion("Git checkout -b ")')
+call tinykeymap#Map('git', 'br', 'call AskCommandWithSuggestion("Git checkout -b ")')
+call tinykeymap#Map('git', 'bb', 'call OpenOnfidoBitbucketPR()')
 " checkouts
 call tinykeymap#Map('git', 'cd', 'call AskCommandWithSuggestion("Git checkout development")')
 call tinykeymap#Map('git', 'cf', 'call AskCommandWithSuggestion("Git checkout feature/")')
