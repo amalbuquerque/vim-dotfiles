@@ -85,6 +85,7 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'vim-utils/vim-husk'
 Plug 'gregsexton/gitv'
+Plug 'mhinz/vim-mix-format'
 
 let g:gutentags_cache_dir = '~/.tags_cache'
 
@@ -857,6 +858,7 @@ nmap X *Nvar:s///gc<Left><Left><Left>
 " => Elixir section
 """"""""""""""""""""""""""""""
 au Filetype elixir nmap <Leader>p orequire IEx; IEx.pry<Esc>
+au Filetype elixir nmap <silent> <leader>L :MixFormat<CR>
 au Filetype elixir nmap <silent> <F5> :Tmux recompile<CR>
 
 """"""""""""""""""""""""""""""
