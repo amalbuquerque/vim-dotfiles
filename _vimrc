@@ -59,7 +59,7 @@ Plug 'https://github.com/andyl/vim-textobj-elixir'
 Plug 'reedes/vim-textobj-sentence'
 Plug 'reedes/vim-textobj-quote'
 Plug 'https://github.com/jgdavey/tslime.vim'
-Plug 'https://github.com/lejboua/vim-test'
+Plug 'https://github.com/janko-m/vim-test'
 Plug 'https://github.com/nielsmadan/harlequin'
 Plug 'https://github.com/svermeulen/vim-easyclip'
 Plug 'https://github.com/Konfekt/FastFold'
@@ -130,9 +130,11 @@ let g:mapleader = ","
 " 2017/05/09 10:01:45, AA: Tslime + vim-test stuff
 nmap <silent> Q <Plug>SetTmuxVars
 nmap <silent> qq V<Plug>SendSelectionToTmux
+nmap <silent> qa ggVG<Plug>SendSelectionToTmux<C-o>
 vmap <silent> Q <Plug>SendSelectionToTmux
 let test#strategy = "tslime"
-nmap <silent> <leader>T :TestSuite<CR>
+nmap <silent> <leader>Ts :TestSuite<CR>
+nmap <silent> <leader>Tf :TestFile<CR>
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <F8> :TestLast<CR>
 nmap <silent> <F6> :Tmux !!<CR>
