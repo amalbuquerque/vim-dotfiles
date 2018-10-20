@@ -1283,16 +1283,6 @@ call tinykeymap#EnterMap('window', 'gw', {'name': 'Window mode'})
 call tinykeymap#Map('window', 'l', 'lopen')
 call tinykeymap#Map('window', 'q', 'copen')
 
-command! -nargs=0 -bar Qargs execute 'args ' . QuickfixFilenames()
-function! QuickfixFilenames()
-  " Building a hash ensures we get each buffer only once
-  let buffer_numbers = {}
-  for quickfix_item in getqflist()
-    let buffer_numbers[quickfix_item['bufnr']] = bufname(quickfix_item['bufnr'])
-  endfor
-  return join(values(buffer_numbers))
-endfunction
-
 " 2018/03/19 10:31:00, AA: Disable the default hotkey
 let g:http_client_bind_hotkey=0
 nmap <silent> <leader>x :HTTPClientDoRequest<CR>
