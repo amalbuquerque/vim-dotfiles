@@ -288,6 +288,7 @@ if has ("gui_running")
     " 2015/11/08 23:19:26, AA: The full path didn't work, had to put
     " the sumatrapdf folder in the $PATH
     let g:Tex_ViewRule_pdf='sumatrapdf'
+    set guioptions=
 
     if has("gui_gtk2")
         set guifont=Envy\ Code\ R\ for\ Powerline\ 10
@@ -547,6 +548,38 @@ nnoremap ; :
 " 2015/06/17 15:56:51, AA: Map Backspace to Toggle between current file and previous
 nnoremap <BS> <C-^>
 map <silent> <leader><leader> :noh<cr>:ALEToggle<cr>:GitGutterAll<cr>
+
+" This way the elixir-ls build is stored in _build/vim, not touching the _build/dev|test
+" From https://elixirforum.com/t/vim-interfering-with-phoenix-recompile-after-saving/10039/20
+let $MIX_ENV = 'vim'
+
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '--'
+let g:ale_elixir_elixir_ls_release = '/home/andre/projs/personal/elixir-ls/rel'
+let g:ale_completion_enabled = 0
+let g:ale_linters_explicit = 1
+let g:ale_lint_on_enter = 1
+let g:ale_set_quickfix = 1
+let g:ale_linters = {
+\    'elixir': ['mix', 'elixir-ls']
+\ }
+
+let g:ale_fixers = {
+\    'ruby': ['rubocop', 'remove_trailing_lines', 'trim_whitespace'],
+\    'elixir': ['mix_format', 'remove_trailing_lines', 'trim_whitespace']
+\ }
+
+" nnoremap Kl :ALELint<CR>
+" nnoremap Kf :ALEFix<CR>
+" nnoremap Kd :ALEGoToDefinition<CR>
+" nnoremap Kr :ALEFindReferences<CR>
+
+call tinykeymap#EnterMap('ale', 'K', {'name': 'ALE mode'})
+call tinykeymap#Map('ale', 'l', 'ALELint')
+call tinykeymap#Map('ale', 'f', 'ALEFix')
+call tinykeymap#Map('ale', 'd', 'ALEGoToDefinition')
+call tinykeymap#Map('ale', 'r', 'ALEFindReferences')
+call tinykeymap#Map('ale', 'i', 'ALEInfo')
 
 " 2016/11/08 11:41:14, AA: From http://tex.stackexchange.com/a/3655/65117
 " Because IMAP_JumpForward was taking the C-j mapping
@@ -880,12 +913,8 @@ au FileType ruby iabbrev ,,P require "pry"; ["continue", "step", "next"].each do
 " 2014-11-10, AA: From https://github.com/junegunn/limelight.vim
 autocmd User GoyoEnter Limelight
 autocmd User GoyoEnter colorscheme neodark
-autocmd User GoyoEnter set guifont=Ubuntu\ Mono\ Regular\ 15
-autocmd User GoyoEnter set guioptions-=m
-autocmd User GoyoEnter set guioptions-=L
-autocmd User GoyoEnter set guioptions-=r
-autocmd User GoyoEnter set guioptions-=tT
-autocmd User GoyoEnter set guioptions-=a
+autocmd User GoyoEnter set guifont=Ubuntu\ Mono\ Regular\ 16
+autocmd User GoyoEnter set guioptions=
 autocmd User GoyoLeave Limelight!
 
 " 2015/07/28 07:53:10, AA: Activate only limelight (highlight current paragraph)
