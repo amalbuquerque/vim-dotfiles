@@ -137,7 +137,7 @@ nmap <silent> <leader>Ts :TestSuite<CR>
 nmap <silent> <leader>Tf :TestFile<CR>
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <F8> :TestLast<CR>
-nmap <silent> <F6> :Tmux !!<CR>
+nmap <silent> <F6> :Tmux !!<space><CR>
 let test#ruby#rspec#executable = 'bundle exec rspec'
 
 nmap <silent> <F4> :call ToggleBetweenSpecCode()<CR>
@@ -559,7 +559,8 @@ let g:ale_elixir_elixir_ls_release = '/home/andre/projs/personal/elixir-ls/rel'
 let g:ale_completion_enabled = 0
 let g:ale_linters_explicit = 1
 let g:ale_lint_on_enter = 1
-let g:ale_set_quickfix = 1
+let g:ale_set_quickfix = 0
+let g:ale_set_loclist = 1
 let g:ale_linters = {
 \    'elixir': ['mix', 'elixir-ls']
 \ }
