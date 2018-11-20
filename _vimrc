@@ -549,9 +549,8 @@ nnoremap ; :
 nnoremap <BS> <C-^>
 map <silent> <leader><leader> :noh<cr>:ALEToggle<cr>:GitGutterAll<cr>
 
-" This way the elixir-ls build is stored in _build/vim, not touching the _build/dev|test
 " From https://elixirforum.com/t/vim-interfering-with-phoenix-recompile-after-saving/10039/20
-let $MIX_ENV = 'vim'
+let $MIX_ENV = 'test'
 
 let g:ale_sign_error = '>>'
 let g:ale_sign_warning = '--'
