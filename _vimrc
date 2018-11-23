@@ -1160,6 +1160,16 @@ command! FzfFilesCWord call fzf#run({
 \ 'down':    '50%'
 \ })
 
+command! FzfAllFiles call fzf#run({
+\ 'source':  'rg --files --no-ignore --hidden --follow --glob "!.git/*"',
+\ 'sink*':   function('<sid>rg_handler'),
+\ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x '.
+\            '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
+\            '--color hl:68,hl+:110',
+\ 'down':    '50%'
+\ })
+
+nmap <silent> <leader>a :FzfAllFiles<CR>
 nmap <silent> <leader>f :FzfFiles<CR>
 nmap <silent> <leader>F :FzfFilesCWord<CR>
 nnoremap <leader>d :call fzf#vim#tags(expand('<cWORD>'), {'options': '--exact --select-1 --exit-0'})<CR>
