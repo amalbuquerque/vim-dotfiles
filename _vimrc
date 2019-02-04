@@ -574,6 +574,9 @@ let g:ale_fixers = {
 " nnoremap Kd :ALEGoToDefinition<CR>
 " nnoremap Kr :ALEFindReferences<CR>
 
+" Tinykeymap now associates by default the windows mode with <mapleader>W
+let g:tinykeymap#map#windows#map = "<C-W>"
+
 call tinykeymap#EnterMap('ale', 'K', {'name': 'ALE mode'})
 call tinykeymap#Map('ale', 'l', 'ALELint')
 call tinykeymap#Map('ale', 'f', 'ALEFix')
