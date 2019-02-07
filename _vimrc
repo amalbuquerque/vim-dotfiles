@@ -561,12 +561,14 @@ let g:ale_lint_on_enter = 1
 let g:ale_set_quickfix = 0
 let g:ale_set_loclist = 1
 let g:ale_linters = {
-\    'elixir': ['mix', 'elixir-ls']
+\    'elixir': ['mix', 'elixir-ls'],
+\    'javascript': ['prettier', 'eslint'],
 \ }
 
 let g:ale_fixers = {
 \    'ruby': ['rubocop', 'remove_trailing_lines', 'trim_whitespace'],
-\    'elixir': ['mix_format', 'remove_trailing_lines', 'trim_whitespace']
+\    'elixir': ['mix_format', 'remove_trailing_lines', 'trim_whitespace'],
+\    'javascript': ['eslint'],
 \ }
 
 " nnoremap Kl :ALELint<CR>
@@ -997,7 +999,8 @@ endfunction
 """"""""""""""""""""""""""""""
 " => JavaScript section
 """""""""""""""""""""""""""""""
-au FileType javascript call JavaScriptFold()
+au FileType javascript setl shiftwidth=2
+au FileType javascript setl tabstop=2
 au FileType javascript setl fen
 au FileType javascript setl nocindent
 
