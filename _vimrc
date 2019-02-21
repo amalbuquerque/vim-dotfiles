@@ -1171,7 +1171,7 @@ nnoremap <leader>d :call fzf#vim#tags(expand('<cWORD>'), {'options': '--exact --
 nnoremap <silent> <leader>l :FzfLines<CR>
 
 command! -nargs=* FzfAg call fzf#run({
-\ 'source':  printf('rg --column --line-number --no-heading --fixed-strings --smart-case --hidden --follow --color "always" "%s"',
+\ 'source':  printf('rg --column --line-number --no-heading --fixed-strings --smart-case --hidden --follow --color "always" --glob "!.git/*" "%s"',
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
 \ 'sink*':   function('<sid>ag_handler'),
 \ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x --delimiter : --nth 4.. '.
