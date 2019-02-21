@@ -563,6 +563,7 @@ let g:ale_set_loclist = 1
 let g:ale_linters = {
 \    'elixir': ['mix', 'elixir-ls'],
 \    'javascript': ['prettier', 'eslint'],
+\    'ruby': ['rubocop'],
 \ }
 
 let g:ale_fixers = {
