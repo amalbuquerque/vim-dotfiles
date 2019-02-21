@@ -756,6 +756,16 @@ map Y yy
 let g:netrw_liststyle=3
 map <silent> <C-n> <Plug>VinegarUp
 
+function! NetrwBuf()
+  nmap <buffer> M R
+  nmap <buffer> h -
+  nmap <buffer> l <CR>
+endfunction
+
+augroup FILETYPES
+  autocmd FileType netrw call NetrwBuf()
+augroup END
+
 nnoremap <silent> <C-e> :call QuickFixOrLocationNext()<CR>
 nnoremap <silent> <leader>< :call QuickFixOrLocationNext()<CR>
 nnoremap <silent> <C-t> :call QuickFixOrLocationPrev()<CR>
