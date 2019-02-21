@@ -41,7 +41,6 @@ Plug 'https://github.com/tpope/vim-unimpaired'
 Plug 'https://github.com/tpope/vim-rails'
 Plug 'https://github.com/Shougo/neoyank.vim'
 Plug 'https://github.com/Shougo/vimproc.vim'
-Plug 'https://github.com/scrooloose/nerdtree'
 Plug 'https://github.com/tpope/vim-git'
 Plug 'https://github.com/tsukkee/unite-tag'
 Plug 'https://github.com/Shougo/unite-outline'
@@ -753,21 +752,9 @@ nnoremap gm m
 nmap M <Plug>MoveMotionEndOfLinePlug
 map Y yy
 
-" NERDTree
-let NERDTreeQuitOnOpen=1
-let NERDTreeHijackNetrw=0
-let NERDTreeToggled=0
-nnoremap <silent> <C-n> :call MaybeNERDTreeFind()<CR>
-nnoremap <silent> <leader>n :NERDTreeToggle<CR>
-
-" from https://dnlserrano.github.io/2018/04/03/bit-by-bit.html
-function! MaybeNERDTreeFind()
-  if bufname('%') == ''
-    :NERDTreeToggle
-  else
-    :NERDTreeFind
-  endif
-endfunction
+" Trying to properly use NetRw with vinegar instead of NERDTree
+let g:netrw_liststyle=3
+map <silent> <C-n> <Plug>VinegarUp
 
 nnoremap <silent> <C-e> :call QuickFixOrLocationNext()<CR>
 nnoremap <silent> <leader>< :call QuickFixOrLocationNext()<CR>
