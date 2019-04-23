@@ -95,9 +95,6 @@ let g:nnn#set_default_mappings = 0
 
 map <silent> <leader>n <Plug>VinegarUp
 
-" Y inside Netrw allows to easily duplicate the current file
-autocmd FileType netrw map Y 0"zy$:! cp <C-R>z <C-R>z
-
 let g:gutentags_cache_dir = '~/.tags_cache'
 
 if has("macunix")
@@ -557,7 +554,7 @@ let g:ale_lint_on_enter = 1
 let g:ale_set_quickfix = 0
 let g:ale_set_loclist = 1
 let g:ale_linters = {
-\    'elixir': ['mix', 'elixir-ls'],
+\    'elixir': ['mix'],
 \    'javascript': ['prettier', 'eslint'],
 \    'ruby': ['rubocop'],
 \ }
@@ -752,9 +749,12 @@ map Y yy
 map <silent> <C-n> :NnnPicker %:p:h<CR>
 
 function! NetrwBuf()
+  nmap <buffer> <C-N> -
   nmap <buffer> M R
   nmap <buffer> h -
   nmap <buffer> l <CR>
+  " Y inside Netrw allows to easily duplicate the current file
+  nmap <buffer> Y 0"zy$:! cp <C-R>z <C-R>z
 endfunction
 
 augroup FILETYPES
