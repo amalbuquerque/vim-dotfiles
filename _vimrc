@@ -743,9 +743,7 @@ nnoremap gm m
 nmap M <Plug>MoveMotionEndOfLinePlug
 map Y yy
 
-" Trying to properly use NetRw with vinegar instead of NERDTree
-let g:netrw_liststyle=3
-map <silent> <C-n> <Plug>VinegarUp
+map <silent> <C-n> :NnnPicker %:p:h<CR>
 
 function! NetrwBuf()
   nmap <buffer> M R
