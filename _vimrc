@@ -81,6 +81,12 @@ Plug 'vim-utils/vim-husk'
 Plug 'gregsexton/gitv'
 Plug 'mhinz/vim-mix-format'
 Plug 'mcchrish/nnn.vim'
+Plug 'fsharp/vim-fsharp', { 'for': 'fsharp', 'do':  'make fsautocomplete' }
+
+let g:fsharp_interactive_bin = '/usr/bin/fsharpi'
+let g:fsharp_xbuild_bin = '/usr/bin/xbuild'
+
+let g:fsharp_only_check_errors_on_write = 1
 
 let mapleader = ","
 let g:mapleader = ","
