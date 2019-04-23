@@ -82,6 +82,16 @@ Plug 'gregsexton/gitv'
 Plug 'mhinz/vim-mix-format'
 Plug 'mcchrish/nnn.vim'
 
+let mapleader = ","
+let g:mapleader = ","
+
+let g:nnn#set_default_mappings = 0
+
+map <silent> <leader>n <Plug>VinegarUp
+
+" Y inside Netrw allows to easily duplicate the current file
+autocmd FileType netrw map Y 0"zy$:! cp <C-R>z <C-R>z
+
 let g:gutentags_cache_dir = '~/.tags_cache'
 
 if has("macunix")
@@ -116,11 +126,6 @@ set nocompatible
 " Remap VIM 0 to first non-blank character
 " 2015/08/03 14:43:50, AA: 0 equals ^ only in normal mode
 noremap 0 ^
-
-" With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file
-let mapleader = ","
-let g:mapleader = ","
 
 " 2017/05/09 10:01:45, AA: Tslime + vim-test stuff
 nmap <silent> Q <Plug>SetTmuxVars
