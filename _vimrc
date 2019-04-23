@@ -213,7 +213,7 @@ nnoremap gp :read !pbpaste<CR>
 nnoremap <Leader><Tab> :b#<CR>
 
 " Fast editing of the .vimrc
-map <leader>e :tabnew! $MYVIMRC<cr>$gf
+map <leader>e :tabnew! ~/vim-dotfiles/_vimrc<cr>
 
 " * 2015/12/16 10:31:16, AA: Fast closing of window
 map <leader>z :close<cr>
@@ -362,19 +362,6 @@ function! ChangeSchemeWithIndex(index)
 
     " air-line
     let g:airline_powerline_fonts = 1
-    " unicode symbols
-    let g:airline_left_sep = '»'
-    let g:airline_left_sep = '▶'
-    let g:airline_right_sep = '«'
-    let g:airline_right_sep = '◀'
-    let g:airline_symbols.linenr = '␊'
-    let g:airline_symbols.linenr = '␤'
-    let g:airline_symbols.linenr = '¶'
-    let g:airline_symbols.branch = '⎇'
-    let g:airline_symbols.paste = 'ρ'
-    let g:airline_symbols.paste = 'Þ'
-    let g:airline_symbols.paste = '∥'
-    let g:airline_symbols.whitespace = 'Ξ'
 
     " airline symbols
     let g:airline_left_sep = ''
@@ -384,6 +371,9 @@ function! ChangeSchemeWithIndex(index)
     let g:airline_symbols.branch = ''
     let g:airline_symbols.readonly = ''
     let g:airline_symbols.linenr = ''
+    let g:airline_symbols.paste = 'ρ'
+    let g:airline_symbols.whitespace = 'Ξ'
+    let g:airline_symbols.space = "\ua0"
 
     let g:airline_theme='minimalist'
     " let g:airline_theme='papercolor'
