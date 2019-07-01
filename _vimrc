@@ -71,7 +71,6 @@ Plug 'moll/vim-bbye'
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-lexical'
 Plug 'junegunn/goyo.vim'
-Plug 'beloglazov/vim-online-thesaurus'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'aquach/vim-http-client'
 Plug 'airblade/vim-gitgutter'
@@ -82,6 +81,7 @@ Plug 'gregsexton/gitv'
 Plug 'mhinz/vim-mix-format'
 Plug 'mcchrish/nnn.vim'
 Plug 'fsharp/vim-fsharp', { 'for': 'fsharp', 'do':  'make fsautocomplete' }
+Plug 'tpope/vim-projectionist'
 
 let g:fsharp_interactive_bin = '/usr/bin/fsharpi'
 let g:fsharp_xbuild_bin = '/usr/bin/xbuild'
@@ -105,6 +105,44 @@ elseif has("unix")
 endif
 
 call plug#end()
+
+let g:projectionist_heuristics = {}
+let g:projectionist_heuristics['mix.exs'] = {
+            \ 'apps/*/mix.exs': { 'type': 'app' },
+            \ 'lib/*.ex': {
+            \     'type': 'lib',
+            \     'alternate': 'test/{}_test.exs',
+            \     'template': ['defmodule {camelcase|capitalize|dot} do', 'end'],
+            \ },
+            \ 'lib/*_controller.ex': {
+            \     'type': 'controller',
+            \     'alternate': 'test/{}_controller_test.exs',
+            \     'template': ['defmodule {camelcase|capitalize|dot} do', '  use ReplacemeWeb, :controller', '', 'end'],
+            \ },
+            \ 'test/*_test.exs': {
+            \   'type': 'test',
+            \   'alternate': 'lib/{}.ex',
+            \   'template': ['defmodule {camelcase|capitalize|dot}Test do', '  use ExUnit.Case', '', '  alias {camelcase|capitalize|dot}, as: Subject', '', 'end'],
+            \ },
+            \ 'mix.exs': { 'type': 'mix' },
+            \ 'config/*.exs': { 'type': 'config' },
+            \ '*.ex': {
+            \   'makery': {
+            \     'lint': { 'compiler': 'credo' },
+            \     'test': { 'compiler': 'exunit' },
+            \     'build': { 'compiler': 'mix' }
+            \   }
+            \ },
+            \ '*.exs': {
+            \   'makery': {
+            \     'lint': { 'compiler': 'credo' },
+            \     'test': { 'compiler': 'exunit' },
+            \     'build': { 'compiler': 'mix' }
+            \   }
+            \ }
+            \ }
+
+nmap <silent> <leader>a :A<CR>
 
 if has("gui_win32")
   let g:python_host_prog="C:/Python27/python.exe"
@@ -201,9 +239,11 @@ inoremap jk <Esc>
 inoremap <C-BS> <C-\><C-o>db
 inoremap <C-Del> <C-\><C-o>dw
 
-" 2015-02-03, AA:
 " expands %% to current file's directory in command-line mode
-cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
+cnoremap %% <C-R>=fnameescape(expand('%'))<CR>
+cnoremap %p <C-R>=fnameescape(expand('%:h')).'/'<CR>
+
+cnoremap CC ! cp <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
 " 2017/04/11 09:28:57, AA: visually select the last paste or change
 nnoremap <expr> ge '`[' . strpart(getregtype(), 0, 1) . '`]'
@@ -1168,7 +1208,6 @@ command! FzfAllFiles call fzf#run({
 \ 'down':    '50%'
 \ })
 
-nmap <silent> <leader>a :FzfAllFiles<CR>
 nmap <silent> <leader>f :FzfFiles<CR>
 nmap <silent> <leader>F :FzfFilesCWord<CR>
 nnoremap <leader>d :call fzf#vim#tags(expand('<cWORD>'), {'options': '--exact --select-1 --exit-0'})<CR>
