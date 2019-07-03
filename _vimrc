@@ -232,6 +232,7 @@ let g:vim_pbcopy_escape_backslashes = 1
 " 2014-12-18, AA: Updated from http://www.reddit.com/r/vim/comments/2po023/which_key_do_you_bind_to_esc/
 " jk => nao ter de ir ao Esc
 inoremap jk <Esc>
+tnoremap jk <C-\><C-n>
 
 " 2014-06-19, AA: http://vim.wikia.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
 " Ctrl+BS Apaga previous word
@@ -242,7 +243,6 @@ inoremap <C-Del> <C-\><C-o>dw
 " expands %% to current file's directory in command-line mode
 cnoremap %% <C-R>=fnameescape(expand('%'))<CR>
 cnoremap %p <C-R>=fnameescape(expand('%:h')).'/'<CR>
-
 cnoremap CC ! cp <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
 " 2017/04/11 09:28:57, AA: visually select the last paste or change
@@ -1110,8 +1110,6 @@ if has("nvim")
 
     " 2017/05/09 18:09:58, AA: Neovim needs this
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-
-    tnoremap jk <C-\><C-n>
 endif
 
 " not blinking cursor
