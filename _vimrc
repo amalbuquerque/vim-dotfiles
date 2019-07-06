@@ -164,6 +164,8 @@ let g:UltiSnipsSnippetDirectories=['UltiSnips', g:UltiSnipsSnippetsDir]
 
 set nocompatible
 
+set noshowmode
+
 " Remap VIM 0 to first non-blank character
 " 2015/08/03 14:43:50, AA: 0 equals ^ only in normal mode
 noremap 0 ^
@@ -228,11 +230,8 @@ nmap <leader>w :w!<cr>
 let g:vim_pbcopy_local_cmd = "pbcopy"
 let g:vim_pbcopy_escape_backslashes = 1
 
-" 2014-03-20, AA: http://approache.com/blog/increase-your-productivity-with-vim-and-terminal/
-" 2014-12-18, AA: Updated from http://www.reddit.com/r/vim/comments/2po023/which_key_do_you_bind_to_esc/
-" jk => nao ter de ir ao Esc
 inoremap jk <Esc>
-tnoremap jk <C-\><C-n>
+tnoremap <C-\> <C-\><C-n>
 
 " 2014-06-19, AA: http://vim.wikia.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
 " Ctrl+BS Apaga previous word
@@ -334,7 +333,10 @@ if has ("gui_running")
     set guioptions=
 
     if has("gui_gtk2")
-        set guifont=Envy\ Code\ R\ for\ Powerline\ 10
+        set guifont=Envy\ Code\ R\ for\ Powerline\ 14
+        let g:airline_powerline_fonts = 1
+        let g:airline_symbols = {}
+        let g:airline_symbols.space = "\ua0"
     elseif has("gui_win32")
         set guifont=Envy\ Code\ R\ for\ Powerline:h10:cANSI
     elseif has("macunix")
@@ -418,8 +420,15 @@ function! ChangeSchemeWithIndex(index)
     let g:airline_symbols.whitespace = 'Ξ'
     let g:airline_symbols.space = "\ua0"
 
-    let g:airline_theme='minimalist'
-    " let g:airline_theme='papercolor'
+    let g:airline#extensions#tabline#enabled = 2
+    let g:airline#extensions#tabline#fnamemod = ':t'
+    let g:airline#extensions#tabline#left_sep = ''
+    let g:airline#extensions#tabline#left_alt_sep = ''
+    let g:airline#extensions#tabline#right_sep = ''
+    let g:airline#extensions#tabline#right_alt_sep = ''
+
+    " let g:airline_theme='minimalist'
+    let g:airline_theme='papercolor'
 endfunction
 
 " 2014-11-04, AA: using seoul256
@@ -427,11 +436,8 @@ endfunction
 if has("gui_running")
   set t_Co=256
   set background=dark
-  colorscheme atom-dark
+  colorscheme seoul256
 else
-  " 2017/05/11 10:11:09, AA: Rotates among a few cool colorschemes
-  " let colorscheme_index = reltimestr(reltime())[-2:]
-  " call ChangeSchemeWithIndex(colorscheme_index)
   " setting always PaperColer by default
   call ChangeSchemeWithIndex(0)
 endif
@@ -504,10 +510,9 @@ endfunction
 
 map <C-f><C-f> :call ChangeScheme()<CR>
 
-" 12/25/04 15:29:34, AA: font changer
 let g:font_index_to_use = 0
-function! ChangeFont()
-    let l:favourite_fonts = ["Raize:h12", "Courier_New:h12", "Envy\\ Code\\ R:h10"]
+function! ChangeWindowsFont()
+    let l:favourite_fonts = ["Raize:h12", "Courier_New:h12", "Envy\\ Code\\ R\\ for\\ Powerline:h10"]
     let g:font_index_to_use += 1
     let l:to_use = l:favourite_fonts[g:font_index_to_use % len(l:favourite_fonts)]
     execute "set guifont=" . l:to_use
@@ -655,14 +660,6 @@ try
   set stal=2
 catch
 endtry
-
-" 2017/08/13, AA: using airline
-let g:airline#extensions#tabline#enabled = 2
-let g:airline#extensions#tabline#fnamemod = ':t'
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline#extensions#tabline#right_sep = ' '
-let g:airline#extensions#tabline#right_alt_sep = '|'
 
 function! CurDir()
     " tinha isto mas tirei o substitute:
