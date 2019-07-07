@@ -661,21 +661,6 @@ try
 catch
 endtry
 
-function! CurDir()
-    " tinha isto mas tirei o substitute:
-    " let curdir = substitute(getcwd(), '/Users/amir/', "~/", "g")
-    " return curdir
-    return getcwd()
-endfunction
-
-function! HasPaste()
-    if &paste
-        return 'PASTE MODE  '
-    else
-        return ''
-    endif
-endfunction
-
 " 2014-11-03, AA: From http://stackoverflow.com/a/4952200/687420
 " mapping to make movements operate on 1 screen line in wrap mode
 function! ScreenMovement(movement)
@@ -715,8 +700,7 @@ vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 """"""""""""""""""""""""""""""""""
 au Filetype conf set foldmethod=manual
 au Filetype log set foldmethod=manual
-" TODO: Doesn't work
-" au Filetype nnoremap <C-f> V//\n\n<CR>zf
+
 """"""""""""""""""""""""""""""""""
 " Cenas dos plug-ins
 """"""""""""""""""""""""""""""""""
