@@ -950,8 +950,7 @@ let g:textobj#quote#educate = 0
 
 augroup pencil
   autocmd!
-  autocmd FileType markdown,mkd nnoremap <silent> <leader>t :OnlineThesaurusCurrentWord<CR>
-                            \ | call pencil#init()
+  autocmd FileType markdown,mkd call pencil#init()
                             \ | call lexical#init()
                             \ | call textobj#quote#init()
                             \ | call textobj#sentence#init()
