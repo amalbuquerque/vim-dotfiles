@@ -82,6 +82,12 @@ Plug 'mhinz/vim-mix-format'
 Plug 'mcchrish/nnn.vim'
 Plug 'fsharp/vim-fsharp', { 'for': 'fsharp', 'do':  'make fsautocomplete' }
 Plug 'tpope/vim-projectionist'
+Plug 'sophacles/vim-processing'
+Plug 'skywind3000/asyncrun.vim'
+
+let g:processing_no_default_mappings=1
+" async make
+command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 
 let g:fsharp_interactive_bin = '/usr/bin/fsharpi'
 let g:fsharp_xbuild_bin = '/usr/bin/xbuild'
@@ -182,29 +188,6 @@ nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <F8> :TestLast<CR>
 nmap <silent> <F6> :Tmux !!<space><CR>
 let test#ruby#rspec#executable = 'bundle exec rspec'
-
-nmap <silent> <F4> :call ToggleBetweenSpecCode()<CR>
-
-function! ToggleBetweenSpecCode()
-    let l:current_file = expand('%:r')
-    let l:next_file = ""
-
-    if (l:current_file =~ "^spec/")
-        let l:next_file = substitute(l:current_file, "spec/", "app/", "")
-        let l:next_file = substitute(l:next_file, "_spec", "", "")
-        let l:next_file = l:next_file . '.rb'
-    elseif (l:current_file =~ "^app/")
-        let l:next_file = substitute(l:current_file, "app/", "spec/", "")
-        let l:next_file = l:next_file . '_spec.rb'
-    endif
-
-    if filereadable(l:next_file)
-        execute "e " . l:next_file
-    else
-        echo "Couldn't find " . l:next_file
-    endif
-endfunction
-
 
 " 2015/09/12 17:44:38, AA:
 let delimitMate_expand_space = 1
@@ -907,6 +890,21 @@ sunmap e
 " => Refactor stuff
 """"""""""""""""""""""""""""""
 nmap X *Nvar:s///gc<Left><Left><Left>
+
+""""""""""""""""""""""""""""""
+" => Processing section
+""""""""""""""""""""""""""""""
+let g:showing_processing_preview = 0
+function! ToggleProcessingPreview()
+    if g:showing_processing_preview == 0
+        let g:showing_processing_preview = 1
+        execute 'Make'
+    else
+        let g:showing_processing_preview = 0
+        execute 'AsyncStop'
+    endif
+endfunction
+au Filetype processing nnoremap <silent> <F5> :call ToggleProcessingPreview()<CR>
 
 """"""""""""""""""""""""""""""
 " => Elixir section
