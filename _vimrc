@@ -1075,16 +1075,6 @@ endfunction
 
 autocmd Filetype unite call s:unite_settings()
 
-if has("nvim")
-    " 2017/08/13, AA: Different cursor insert/replace/normal for neovim
-    let &t_SI = "<Esc>[6 q"
-    let &t_SR = "<Esc>[4 q"
-    let &t_EI = "<Esc>[2 q"
-
-    " 2017/05/09 18:09:58, AA: Neovim needs this
-    let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-endif
-
 " not blinking cursor
 set guicursor=n:block-blinkon0-Cursor,v:block-blinkon0-VisualCursor,c-i-ci:ver25-blinkon0-Cursor,r-cr:hor16-blinkon0-Cursor
 
