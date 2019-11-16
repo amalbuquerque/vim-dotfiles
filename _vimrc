@@ -10,7 +10,6 @@ Plug 'gosukiwi/vim-atom-dark'
 Plug 'haya14busa/incsearch.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/seoul256.vim'
-Plug 'junegunn/vim-peekaboo'
 Plug 'justinmk/vim-sneak'
 Plug 'ledger/vim-ledger'
 Plug 'tomtom/tlib_vim'
@@ -225,7 +224,8 @@ inoremap <C-Del> <C-\><C-o>dw
 " expands %% to current file's directory in command-line mode
 cnoremap %% <C-R>=fnameescape(expand('%'))<CR>
 cnoremap %p <C-R>=fnameescape(expand('%:h')).'/'<CR>
-cnoremap CC ! cp <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
+map <leader>C :! cp <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
+map <leader>M :! mv <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
 " 2017/04/11 09:28:57, AA: visually select the last paste or change
 nnoremap <expr> ge '`[' . strpart(getregtype(), 0, 1) . '`]'
@@ -723,11 +723,6 @@ au FileType cs set errorformat=\ %#%f(%l\\\,%c):\ error\ CS%n:\ %m
 set tag=$VIMRUNTIME\ctags\alltags
 
 """"""""""""""""""""""""""""""
-" => peekaboo
-""""""""""""""""""""""""""""""
-let g:peekaboo_window = "vert bo 50new"
-
-""""""""""""""""""""""""""""""
 " => yankRing with Unite
 """"""""""""""""""""""""""""""
 " 2015/07/27 13:04:49, AA: replaced YankRing with Unite
@@ -765,9 +760,9 @@ augroup FILETYPES
   autocmd FileType netrw call NetrwBuf()
 augroup END
 
-nnoremap <silent> <C-e> :call QuickFixOrLocationNext()<CR>
+let g:netrw_gx="<cWORD>"
+
 nnoremap <silent> <leader>< :call QuickFixOrLocationNext()<CR>
-nnoremap <silent> <C-t> :call QuickFixOrLocationPrev()<CR>
 nnoremap <silent> <leader>> :call QuickFixOrLocationPrev()<CR>
 
 " σ = AltGr + S
