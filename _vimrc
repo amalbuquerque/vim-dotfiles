@@ -83,8 +83,10 @@ Plug 'fsharp/vim-fsharp', { 'for': 'fsharp', 'do':  'make fsautocomplete' }
 Plug 'tpope/vim-projectionist'
 Plug 'sophacles/vim-processing'
 Plug 'skywind3000/asyncrun.vim'
+Plug 'shumphrey/fugitive-gitlab.vim'
 
 let g:processing_no_default_mappings=1
+
 " async make
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 
@@ -966,6 +968,7 @@ au FileType python syn keyword pythonDecorator True None False self
 au Filetype python nmap <Leader>p oimport ipdb; ipdb.set_trace();<Esc>
 au Filetype python nmap <silent> <F5> :Tmux recompile<CR>
 
+au FileType json nmap =j :%!python -m json.tool<CR>
 
 """"""""""""""""""""""""""""""
 " => Latex section
@@ -1252,7 +1255,7 @@ endfunction
 
 function! GitPushToOrigin(...)
   let l:branch = GitCurrentBranch()
-  let l:suggested_command = "Git push origin " . l:branch
+  let l:suggested_command = "Gpush origin " . l:branch
 
   if exists('a:1')
       call AskCommandWithSuggestion(l:suggested_command, a:1)
@@ -1261,25 +1264,31 @@ function! GitPushToOrigin(...)
   endif
 endfunction
 
-function! GetOnfidoBitbucketPullRequestURL()
-  let l:project_command = "git remote -v | grep -Po 'git@bitbucket.org:onfido/\\K[^.]+' | uniq | tr -d '\n'"
-  let l:project = system(l:project_command)
+let g:onfido_gitlab_domain = 'https://gitlab.eu-west-1.mgmt.onfido.xyz'
+let g:fugitive_gitlab_domains = [g:onfido_gitlab_domain]
 
-  let l:current_branch = GitCurrentBranch()
-
-  let l:url_template = "https://bitbucket.org/onfido/%s/pull-requests/new?source=%s&t=1"
-  return printf(l:url_template, l:project, l:current_branch)
-endfunction
-
-function! OpenOnfidoBitbucketPR()
-    let l:bb_pr_url = GetOnfidoBitbucketPullRequestURL()
-    silent execute '! xdg-open "' . l:bb_pr_url . '"'
+function! OpenOnfidoGitlabMR()
+    let l:gitlab_mr_url = GetOnfidoGitlabMergeRequestURL()
+    silent execute '! xdg-open "' . l:gitlab_mr_url . '"'
 
     redraw!
 endfunction
 
+function! GetOnfidoGitlabMergeRequestURL()
+  let l:project_command = "git remote -v | grep -Po 'git@gitlab.eu-west-1.mgmt.onfido.xyz:\\K[^.]+' | uniq | tr -d '\n'"
+  let l:project = system(l:project_command)
+
+  let l:current_branch = GitCurrentBranch()
+
+  let l:url_template = "%s/%s/-/merge_requests/new?merge_request[source_branch]=%s&merge_request[target_branch]=master"
+
+  return printf(l:url_template, g:onfido_gitlab_domain, l:project, l:current_branch)
+endfunction
+
 call tinykeymap#EnterMap('git', 'gj', {'name': 'Git mode'})
 call tinykeymap#Map('git', '<space>', 'Gstatus')
+" MR
+call tinykeymap#Map('git', 'm', 'call OpenOnfidoGitlabMR()')
 " pushes
 call tinykeymap#Map('git', 'ps', 'call GitPushToOrigin()')
 call tinykeymap#Map('git', 'pf', 'call GitPushToOrigin("--force-with-lease")')
