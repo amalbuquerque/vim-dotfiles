@@ -226,8 +226,8 @@ inoremap <C-Del> <C-\><C-o>dw
 " expands %% to current file's directory in command-line mode
 cnoremap %% <C-R>=fnameescape(expand('%'))<CR>
 cnoremap %p <C-R>=fnameescape(expand('%:h')).'/'<CR>
-map <leader>C :! cp <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
-map <leader>M :! mv <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
+nnoremap <leader>C :! cp <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
+nnoremap <leader>M :! mv <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
 " 2017/04/11 09:28:57, AA: visually select the last paste or change
 nnoremap <expr> ge '`[' . strpart(getregtype(), 0, 1) . '`]'
@@ -895,6 +895,7 @@ let g:showing_processing_preview = 0
 function! ToggleProcessingPreview()
     if g:showing_processing_preview == 0
         let g:showing_processing_preview = 1
+        execute 'w'
         execute 'Make'
     else
         let g:showing_processing_preview = 0
