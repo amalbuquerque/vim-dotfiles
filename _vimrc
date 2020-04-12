@@ -1,4 +1,3 @@
-" 2017/04/28 22:09:53, AA: Junegunn plug
 set runtimepath+=~/.vim/
 
 call plug#begin('~/.vim/plugged')
@@ -84,6 +83,16 @@ Plug 'tpope/vim-projectionist'
 Plug 'sophacles/vim-processing'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'shumphrey/fugitive-gitlab.vim'
+Plug 'kassio/neoterm'
+
+if has("macunix")
+  Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+elseif has("unix")
+  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': '.install --all' }
+  Plug 'junegunn/fzf.vim'
+endif
+
+call plug#end()
 
 let g:processing_no_default_mappings=1
 
@@ -103,15 +112,6 @@ let g:nnn#set_default_mappings = 0
 map <silent> <leader>n <Plug>VinegarUp
 
 let g:gutentags_cache_dir = '~/.tags_cache'
-
-if has("macunix")
-  Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
-elseif has("unix")
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': '.install --all' }
-  Plug 'junegunn/fzf.vim'
-endif
-
-call plug#end()
 
 let g:projectionist_heuristics = {}
 let g:projectionist_heuristics['mix.exs'] = {
@@ -177,18 +177,44 @@ set noshowmode
 " 2015/08/03 14:43:50, AA: 0 equals ^ only in normal mode
 noremap 0 ^
 
-" 2017/05/09 10:01:45, AA: Tslime + vim-test stuff
+" 2017/05/09 10:01:45, AA: Tslime + Neoterm + vim-test stuff
 nmap <silent> Q <Plug>SetTmuxVars
-nmap <silent> qq V<Plug>SendSelectionToTmux
-nmap <silent> qa ggVG<Plug>SendSelectionToTmux<C-o>
-vmap <silent> Q <Plug>SendSelectionToTmux
-let test#strategy = "tslime"
+nmap <silent> qt :call ChangeTestStrategy()<CR>
+
 nmap <silent> <leader>Ts :TestSuite<CR>
 nmap <silent> <leader>Tf :TestFile<CR>
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <F8> :TestLast<CR>
-nmap <silent> <F6> :Tmux !!<space><CR>
-let test#ruby#rspec#executable = 'bundle exec rspec'
+
+let g:neoterm_default_mod = 'vertical'
+let g:neoterm_autoscroll = 1
+
+function! ChangeTestStrategy()
+    if !exists("g:test#strategy") || g:test#strategy == 'neoterm'
+        " With tslime, we want to run things in a tmux pane
+        let g:test#strategy = 'tslime'
+
+        nmap <silent> qq V<Plug>SendSelectionToTmux
+        nmap <silent> qa ggVG<Plug>SendSelectionToTmux<C-o>
+        vmap <silent> Q <Plug>SendSelectionToTmux
+        nmap <silent> <F6> :Tmux <Up><CR>
+
+        echo 'Using tslime/Tmux'
+    else
+        let g:test#strategy = 'neoterm'
+
+        nmap <silent> qq :TREPLSendLine<CR>
+        nmap <silent> qa :TREPLSendFile<CR>
+        vmap <silent> Q :TREPLSendSelection<CR>
+
+        echo 'Using neoterm/Term'
+    endif
+endfunction
+
+call ChangeTestStrategy()
+
+let test#elixir#exunit#executable = 'MIX_ENV=test mix test'
+let test#ruby#rspec#executable = 'RAILS_ENV=test bundle exec rspec'
 
 " 2015/09/12 17:44:38, AA:
 let delimitMate_expand_space = 1
@@ -1049,11 +1075,8 @@ map <leader>bb :cd ..<cr>
 let g:unite_source_tag_max_fname_length = 50
 let g:unite_source_tag_max_name_length = 50
 
-
 nnoremap <F10> :Unite -vertical -winwidth=50 outline<CR>
 nnoremap <F7> :UniteWithCursorWord -immediately tag<CR>
-" 2017/05/17 10:00:59, AA: wut is thiz? replaced by F8 to run the last test
-" nnoremap <F8> :<C-w>}
 
 function! s:unite_settings() "{
     " C-c to exit Unite
