@@ -82,8 +82,9 @@ Plug 'fsharp/vim-fsharp', { 'for': 'fsharp', 'do':  'make fsautocomplete' }
 Plug 'tpope/vim-projectionist'
 Plug 'sophacles/vim-processing'
 Plug 'skywind3000/asyncrun.vim'
-Plug 'shumphrey/fugitive-gitlab.vim'
+Plug 'tpope/vim-rhubarb'
 Plug 'kassio/neoterm'
+Plug 'hashivim/vim-terraform'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -151,13 +152,8 @@ let g:projectionist_heuristics['mix.exs'] = {
 
 nmap <silent> <leader>a :A<CR>
 
-if has("gui_win32")
-  let g:python_host_prog="C:/Python27/python.exe"
-elseif has("macunix")
-  let g:python_host_prog="/usr/local/bin/python"
-elseif has("unix")
-  let g:python_host_prog="/usr/bin/python"
-endif
+let g:python_host_prog="/usr/bin/python"
+let g:python3_host_prog="/usr/bin/python3"
 
 " 2017/04/12 09:40:06, AA: Had to force the mapping again here
 " because for some reason it was set (use `:verbose map %` to check)
@@ -188,6 +184,7 @@ nmap <silent> <F8> :TestLast<CR>
 
 let g:neoterm_default_mod = 'vertical'
 let g:neoterm_autoscroll = 1
+let g:neoterm_automap_keys = '<leader>TT'
 
 function! ChangeTestStrategy()
     if !exists("g:test#strategy") || g:test#strategy == 'neoterm'
@@ -197,7 +194,7 @@ function! ChangeTestStrategy()
         nmap <silent> qq V<Plug>SendSelectionToTmux
         nmap <silent> qa ggVG<Plug>SendSelectionToTmux<C-o>
         vmap <silent> Q <Plug>SendSelectionToTmux
-        nmap <silent> <F6> :Tmux <Up><CR>
+        nmap <silent> <F6> :Tmux <Up><CR>:Tmux <CR>
 
         echo 'Using tslime/Tmux'
     else
@@ -1078,6 +1075,30 @@ let g:unite_source_tag_max_name_length = 50
 nnoremap <F10> :Unite -vertical -winwidth=50 outline<CR>
 nnoremap <F7> :UniteWithCursorWord -immediately tag<CR>
 
+"To fix https://github.com/SirVer/ultisnips/issues/1202
+if has('nvim')
+    au VimEnter * if exists('#UltiSnips_AutoTrigger')
+        \ |     exe 'au! UltiSnips_AutoTrigger'
+        \ |     aug! UltiSnips_AutoTrigger
+        \ | endif
+endif
+
+function! UltisnipsToggleAutotrigger() abort
+    if exists('#UltiSnips_AutoTrigger')
+        au! UltiSnips_AutoTrigger
+        aug! UltiSnips_AutoTrigger
+        echom '[UltiSnips AutoTrigger] OFF'
+    else
+        augroup UltiSnips_AutoTrigger
+            au!
+            au InsertCharPre,TextChangedI,TextChangedP * call UltiSnips#TrackChange()
+        augroup END
+        echom '[UltiSnips AutoTrigger] ON'
+    endif
+endfu
+
+nnoremap <silent> cou :<c-u>call UltisnipsToggleAutotrigger()<cr>
+
 function! s:unite_settings() "{
     " C-c to exit Unite
     imap <buffer> <C-c> <Esc><Plug>(unite_all_exit)
@@ -1246,6 +1267,8 @@ map <Leader>k <Plug>(easymotion-k)
 set number        " always show line numbers
 set list
 
+let g:terraform_fmt_on_save=1
+
 " 2016/11/29 09:01:23, AA: Toggle zoom
 " From: http://stackoverflow.com/a/26551079/687420
 
@@ -1288,31 +1311,28 @@ function! GitPushToOrigin(...)
   endif
 endfunction
 
-let g:onfido_gitlab_domain = 'https://gitlab.eu-west-1.mgmt.onfido.xyz'
-let g:fugitive_gitlab_domains = [g:onfido_gitlab_domain]
-
-function! OpenOnfidoGitlabMR()
-    let l:gitlab_mr_url = GetOnfidoGitlabMergeRequestURL()
-    silent execute '! xdg-open "' . l:gitlab_mr_url . '"'
+function! OpenHopinGithubMR()
+    let l:github_mr_url = GetHopinGithubMergeRequestURL()
+    silent execute '! xdg-open "' . l:github_mr_url . '"'
 
     redraw!
 endfunction
 
-function! GetOnfidoGitlabMergeRequestURL()
-  let l:project_command = "git remote -v | grep -Po 'git@gitlab.eu-west-1.mgmt.onfido.xyz:\\K[^.]+' | uniq | tr -d '\n'"
+function! GetHopinGithubMergeRequestURL()
+  let l:project_command = "git remote -v | grep -Po 'git@github.com:\\K[^.]+' | uniq | tr -d '\n'"
   let l:project = system(l:project_command)
 
   let l:current_branch = GitCurrentBranch()
 
-  let l:url_template = "%s/%s/-/merge_requests/new?merge_request[source_branch]=%s&merge_request[target_branch]=master"
+  let l:url_template = "https://github.com/%s/compare/%s?expand=1"
 
-  return printf(l:url_template, g:onfido_gitlab_domain, l:project, l:current_branch)
+  return printf(l:url_template, l:project, l:current_branch)
 endfunction
 
 call tinykeymap#EnterMap('git', 'gj', {'name': 'Git mode'})
 call tinykeymap#Map('git', '<space>', 'Gstatus')
 " MR
-call tinykeymap#Map('git', 'm', 'call OpenOnfidoGitlabMR()')
+call tinykeymap#Map('git', 'm', 'call OpenHopinGithubMR()')
 " pushes
 call tinykeymap#Map('git', 'ps', 'call GitPushToOrigin()')
 call tinykeymap#Map('git', 'pf', 'call GitPushToOrigin("--force-with-lease")')
