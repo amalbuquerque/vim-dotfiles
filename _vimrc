@@ -260,9 +260,8 @@ nnoremap <leader>M :! mv <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(ex
 " 2017/04/11 09:28:57, AA: visually select the last paste or change
 nnoremap <expr> ge '`[' . strpart(getregtype(), 0, 1) . '`]'
 
-" 2017/05/26 11:08:17, AA: paste from pb above and below
-nnoremap gP k:read !pbpaste<CR>
-nnoremap gp :read !pbpaste<CR>
+nnoremap gP k:read !xclip -selection clipboard -o<CR>
+nnoremap gp :read !xclip -selection clipboard -o<CR>
 
 " switch to last buffer, like alt+tab
 nnoremap <Leader><Tab> :b#<CR>
