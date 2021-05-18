@@ -174,6 +174,10 @@ set noshowmode
 " 2015/08/03 14:43:50, AA: 0 equals ^ only in normal mode
 noremap 0 ^
 
+let g:tslime_always_current_session = 1
+let g:tslime_always_current_window = 1
+let g:tslime_autoset_pane = 0
+
 " 2017/05/09 10:01:45, AA: Tslime + Neoterm + vim-test stuff
 nmap <silent> Q <Plug>SetTmuxVars
 nmap <silent> qt :call ChangeTestStrategy()<CR>
@@ -195,7 +199,7 @@ function! ChangeTestStrategy()
         nmap <silent> qq V<Plug>SendSelectionToTmux
         nmap <silent> qa ggVG<Plug>SendSelectionToTmux<C-o>
         vmap <silent> Q <Plug>SendSelectionToTmux
-        nmap <silent> <F6> :Tmux <Up><CR>:Tmux <CR>
+        nmap <silent> <F6> :call Send_keys_to_Tmux('Up')<CR>:call Send_keys_to_Tmux('Enter')<CR>
 
         echo 'Using tslime/Tmux'
     else
