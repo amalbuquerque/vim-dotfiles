@@ -432,12 +432,16 @@ function! ChangeSchemeWithIndex(index)
     let g:airline_symbols.whitespace = 'Ξ'
     let g:airline_symbols.space = "\ua0"
 
+    let g:airline#extensions#fugitiveline#enabled = 1
+
     let g:airline#extensions#tabline#enabled = 2
     let g:airline#extensions#tabline#fnamemod = ':t'
     let g:airline#extensions#tabline#left_sep = ''
     let g:airline#extensions#tabline#left_alt_sep = ''
     let g:airline#extensions#tabline#right_sep = ''
     let g:airline#extensions#tabline#right_alt_sep = ''
+
+    let g:airline_section_b = '%{airline#util#wrap(airline#extensions#hunks#get_hunks(),100)}%{airline#util#wrap(airline#extensions#branch#get_head(),80)[0:23]}'
 
     " let g:airline_theme='minimalist'
     let g:airline_theme='papercolor'
@@ -721,6 +725,8 @@ vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 au Filetype conf set foldmethod=manual
 au Filetype log set foldmethod=manual
 
+au BufNewFile,BufRead *.puml nnoremap <silent> <F5> :! plantuml %<CR>
+
 """"""""""""""""""""""""""""""""""
 " Cenas dos plug-ins
 """"""""""""""""""""""""""""""""""
@@ -780,7 +786,8 @@ nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank
 nnoremap gm m
 " similar to what D does and what I'm used to Y doing
 nmap M <Plug>MoveMotionEndOfLinePlug
-map Y yy
+" Y yanks until the end (g_ = non-blank character)
+map Y yg_
 
 map <silent> <C-n> :NnnPicker %:p:h<CR>
 
@@ -981,8 +988,7 @@ let g:textobj#quote#educate = 0
 
 augroup pencil
   autocmd!
-  autocmd FileType markdown,mkd call pencil#init()
-                            \ | call lexical#init()
+  autocmd FileType markdown,mkd call lexical#init()
                             \ | call textobj#quote#init()
                             \ | call textobj#sentence#init()
                             \ | syn match UrlNoSpell '\w\+:\/\/[^[:space:]]\+' contains=@NoSpell
@@ -1004,7 +1010,7 @@ au FileType python syn keyword pythonDecorator True None False self
 au Filetype python nmap <Leader>p oimport ipdb; ipdb.set_trace();<Esc>
 au Filetype python nmap <silent> <F5> :Tmux recompile<CR>
 
-au FileType json nmap =j :%!python -m json.tool<CR>
+au FileType json nmap =j :%!python3 -m json.tool<CR>
 
 """"""""""""""""""""""""""""""
 " => Latex section
