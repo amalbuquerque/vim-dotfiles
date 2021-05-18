@@ -1206,7 +1206,7 @@ function! s:rg_handler(lines)
   endif
 endfunction
 
-let fzf_source_command = 'rg --files --hidden --follow --glob "!.git/*"'
+let fzf_source_command = 'rg --files --hidden --follow --glob "!.git/*" --glob "!*.rbi"'
 let g:fzf_command_prefix = 'Fzf'
 command! FzfFiles call fzf#run({
 \ 'source':  fzf_source_command,
@@ -1227,7 +1227,7 @@ command! FzfFilesCWord call fzf#run({
 \ })
 
 command! FzfAllFiles call fzf#run({
-\ 'source':  'rg --files --no-ignore --hidden --follow --glob "!.git/*"',
+\ 'source':  'rg --files --no-ignore --hidden --follow --glob "!.git/*" --glob "!*.rbi"',
 \ 'sink*':   function('<sid>rg_handler'),
 \ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x '.
 \            '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
@@ -1242,7 +1242,7 @@ nnoremap <leader>d :call fzf#vim#tags(expand('<cWORD>'), {'options': '--exact --
 nnoremap <silent> <leader>l :FzfLines<CR>
 
 command! -nargs=* FzfAg call fzf#run({
-\ 'source':  printf('rg --column --line-number --no-heading --fixed-strings --smart-case --hidden --follow --color "always" --glob "!.git/*" "%s"',
+\ 'source':  printf('rg --column --line-number --no-heading --fixed-strings --smart-case --hidden --follow --color "always" --glob "!.git/*" --glob "!*.rbi" "%s"',
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
 \ 'sink*':   function('<sid>ag_handler'),
 \ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x --delimiter : --nth 4.. '.
