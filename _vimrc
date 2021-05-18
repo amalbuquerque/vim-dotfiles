@@ -85,6 +85,7 @@ Plug 'skywind3000/asyncrun.vim'
 Plug 'tpope/vim-rhubarb'
 Plug 'kassio/neoterm'
 Plug 'hashivim/vim-terraform'
+Plug 'junegunn/vim-emoji'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -597,6 +598,14 @@ map <silent> <leader><leader> :noh<cr>:ALEToggle<cr>:GitGutterAll<cr>
 
 " From https://elixirforum.com/t/vim-interfering-with-phoenix-recompile-after-saving/10039/20
 let $MIX_ENV = 'test'
+
+" TODO: Revise this, since emojis aren't being shown with alacritty
+" let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
+" let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
+" let g:gitgutter_sign_removed = emoji#for('small_red_triangle')
+" let g:gitgutter_sign_modified_removed = emoji#for('collision')
+
+" set completefunc=emoji#complete
 
 let g:ale_sign_error = '>>'
 let g:ale_sign_warning = '--'
