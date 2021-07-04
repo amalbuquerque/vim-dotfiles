@@ -64,7 +64,6 @@ Plug 'jnurmine/Zenburn'
 Plug 'dracula/vim'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'w0rp/ale'
 Plug 'moll/vim-bbye'
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-lexical'
@@ -86,6 +85,11 @@ Plug 'tpope/vim-rhubarb'
 Plug 'kassio/neoterm'
 Plug 'hashivim/vim-terraform'
 Plug 'junegunn/vim-emoji'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/playground'
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/nvim-compe'
+Plug 'shumphrey/fugitive-gitlab.vim'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -95,6 +99,12 @@ elseif has("unix")
 endif
 
 call plug#end()
+
+lua << EOF
+require'lspconfig'.elixirls.setup{
+  cmd = { "/Users/andre/projs/personal/elixir-ls/language_server.sh" };
+}
+EOF
 
 let g:processing_no_default_mappings=1
 
@@ -255,7 +265,7 @@ inoremap <C-Del> <C-\><C-o>dw
 cnoremap %% <C-R>=fnameescape(expand('%'))<CR>
 cnoremap %p <C-R>=fnameescape(expand('%:h')).'/'<CR>
 nnoremap <leader>C :! cp <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
-nnoremap <leader>M :! mv <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
+nnoremap <leader>M :! mv <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'.fnameescape(expand('%:t:r'))<CR>
 
 " 2017/04/11 09:28:57, AA: visually select the last paste or change
 nnoremap <expr> ge '`[' . strpart(getregtype(), 0, 1) . '`]'
@@ -601,7 +611,7 @@ nnoremap ; :
 
 " 2015/06/17 15:56:51, AA: Map Backspace to Toggle between current file and previous
 nnoremap <BS> <C-^>
-map <silent> <leader><leader> :noh<cr>:ALEToggle<cr>:GitGutterAll<cr>
+map <silent> <leader><leader> :noh<cr>:GitGutterAll<cr>
 
 " From https://elixirforum.com/t/vim-interfering-with-phoenix-recompile-after-saving/10039/20
 let $MIX_ENV = 'test'
@@ -614,53 +624,30 @@ let $MIX_ENV = 'test'
 
 " set completefunc=emoji#complete
 
-let g:ale_sign_error = '>>'
-let g:ale_sign_warning = '--'
-let g:ale_elixir_elixir_ls_release = '/home/andre/projs/personal/elixir-ls/rel'
-let g:ale_completion_enabled = 0
-let g:ale_linters_explicit = 1
-let g:ale_lint_on_enter = 1
-let g:ale_set_quickfix = 0
-let g:ale_set_loclist = 1
-let g:ale_linters = {
-\    'elixir': ['mix'],
-\    'javascript': ['prettier', 'eslint'],
-\    'ruby': ['rubocop'],
-\ }
-
-let g:ale_fixers = {
-\    'ruby': ['rubocop', 'remove_trailing_lines', 'trim_whitespace'],
-\    'elixir': ['mix_format', 'remove_trailing_lines', 'trim_whitespace'],
-\    'javascript': ['eslint'],
-\ }
-
-" nnoremap Kl :ALELint<CR>
-" nnoremap Kf :ALEFix<CR>
-" nnoremap Kd :ALEGoToDefinition<CR>
-" nnoremap Kr :ALEFindReferences<CR>
-
 " Tinykeymap now associates by default the windows mode with <mapleader>W
 let g:tinykeymap#map#windows#map = "<C-W>"
 
-call tinykeymap#EnterMap('ale', 'K', {'name': 'ALE mode'})
-call tinykeymap#Map('ale', 'l', 'ALELint')
-call tinykeymap#Map('ale', 'f', 'ALEFix')
-call tinykeymap#Map('ale', 'd', 'ALEGoToDefinition')
-call tinykeymap#Map('ale', 'r', 'ALEFindReferences')
-call tinykeymap#Map('ale', 'i', 'ALEInfo')
+call tinykeymap#EnterMap('lsp', 'K', {'name': 'LSP mode'})
+call tinykeymap#Map('lsp', 'f', 'lua vim.lsp.buf.formatting()')
+call tinykeymap#Map('lsp', 'd', 'lua vim.lsp.buf.definition()')
+call tinykeymap#Map('lsp', 'h', 'lua vim.lsp.buf.hover()')
+call tinykeymap#Map('lsp', 'r', 'lua vim.lsp.buf.references()')
+call tinykeymap#Map('lsp', 'i', 'LspInfo')
+call tinykeymap#Map('lsp', 'p', 'lua vim.lsp.diagnostic.goto_prev()')
+call tinykeymap#Map('lsp', 'n', 'lua vim.lsp.diagnostic.goto_next()')
+
+nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> gH <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
+
+autocmd BufWritePre *.ex lua vim.lsp.buf.formatting_sync(nil, 100)
+autocmd BufWritePre *.exs lua vim.lsp.buf.formatting_sync(nil, 100)
 
 " 2016/11/08 11:41:14, AA: From http://tex.stackexchange.com/a/3655/65117
 " Because IMAP_JumpForward was taking the C-j mapping
 " redef C-j to C-g
 imap <C-g> <Plug>IMAP_JumpForward
 nmap <C-g> <Plug>IMAP_JumpForward
-
-" Smart way to move btw. windows
-" 2018/04/14 22:15:55, AA: Done by tmux-navigator
-" map <C-j> <C-W>j
-" map <C-k> <C-W>k
-" map <C-h> <C-W>h
-" map <C-l> <C-W>l
 
 " Close the current buffer (uses Bdelete from bbye)
 map <leader>bd :Bdelete<cr>
@@ -725,7 +712,7 @@ vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 au Filetype conf set foldmethod=manual
 au Filetype log set foldmethod=manual
 
-au BufNewFile,BufRead *.puml nnoremap <silent> <F5> :! plantuml %<CR>
+au BufNewFile,BufRead *.puml nnoremap <silent> <F5> :! rm -f %:t:r.png && plantuml % && open %:t:r.png<CR>
 
 """"""""""""""""""""""""""""""""""
 " Cenas dos plug-ins
@@ -1320,7 +1307,7 @@ endfunction
 
 function! GitPushToOrigin(...)
   let l:branch = GitCurrentBranch()
-  let l:suggested_command = "Gpush origin " . l:branch
+  let l:suggested_command = "Git push origin " . l:branch
 
   if exists('a:1')
       call AskCommandWithSuggestion(l:suggested_command, a:1)
