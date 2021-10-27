@@ -258,10 +258,16 @@ let g:tslime_autoset_pane = 0
 nmap <silent> Q <Plug>SetTmuxVars
 nmap <silent> qt :call ChangeTestStrategy()<CR>
 
-nmap <silent> <leader>Ts :TestSuite<CR>
-nmap <silent> <leader>Tf :TestFile<CR>
-nmap <silent> <leader>t :TestNearest<CR>
-nmap <silent> <F8> :TestLast<CR>
+let g:only_run_changed_tests = 'mix test $(git diff --name-only master | grep _test.exs)'
+let g:only_format_changed_files = 'mix format $(git diff --name-only master | grep .ex)'
+let g:only_credo_changed_files = 'mix credo $(git diff --name-only master | grep .ex)'
+
+nmap <silent> <leader>Tx :call SendToTmux(g:only_format_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
+nmap <silent> <leader>Tb :call SendToTmux(g:only_run_changed_tests)<CR>:call Send_keys_to_Tmux('Enter')<CR>
+nmap <silent> <leader>Ts :w<CR>:TestSuite<CR>
+nmap <silent> <leader>Tf :w<CR>:TestFile<CR>
+nmap <silent> <leader>t :w<CR>:TestNearest<CR>
+nmap <silent> <F8> :w<CR>:TestLast<CR>
 
 let g:neoterm_default_mod = 'vertical'
 let g:neoterm_autoscroll = 1
