@@ -72,7 +72,6 @@ Plug 'NLKNguyen/papercolor-theme'
 Plug 'aquach/vim-http-client'
 Plug 'airblade/vim-gitgutter'
 Plug 'ryanoasis/vim-devicons'
-Plug 'ludovicchabant/vim-gutentags'
 Plug 'vim-utils/vim-husk'
 Plug 'gregsexton/gitv'
 Plug 'mhinz/vim-mix-format'
@@ -90,6 +89,7 @@ Plug 'nvim-treesitter/playground'
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
 Plug 'shumphrey/fugitive-gitlab.vim'
+Plug 'nvim-lua/lsp-status.nvim'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -101,11 +101,79 @@ endif
 call plug#end()
 
 lua << EOF
+local lspconfig = require('lspconfig')
+
+local lsp_status = require('lsp-status')
+lsp_status.register_progress()
+
+lsp_status.config({
+  kind_labels = kind_labels,
+  indicator_errors = "?",
+  indicator_warnings = "!",
+  indicator_info = "i",
+  indicator_hint = "?",
+  -- the default is a wide codepoint which breaks absolute and relative
+  -- line counts if placed before airline's Z section
+  status_symbol = "",
+})
+
 require'lspconfig'.elixirls.setup{
-  cmd = { "/Users/andre/projs/personal/elixir-ls/language_server.sh" };
+  cmd = { "/Users/andre/projs/personal/elixir-ls/language_server.sh" },
+  on_attach = lsp_status.on_attach,
+  capabilities = lsp_status.capabilities
 }
+
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = true;
+
+  source = {
+    path = true;
+    buffer = true;
+    calc = true;
+    vsnip = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+    spell = true;
+    tags = true;
+    snippets_nvim = true;
+    treesitter = true;
+  };
+}
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+    local col = vim.fn.col('.') - 1
+    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+        return true
+    else
+        return false
+    end
+end
 EOF
 
+function! LspStatus() abort
+  let status = luaeval('require("lsp-status").status()')
+  return trim(status)
+endfunction
+
+call airline#parts#define_function('lsp_status', 'LspStatus')
+call airline#parts#define_condition('lsp_status', 'luaeval("#vim.lsp.buf_get_clients() > 0")')
+
+let g:airline#extensions#nvimlsp#enabled = 0
+let g:airline_section_warning = airline#section#create_right(['lsp_status'])
 let g:processing_no_default_mappings=1
 
 " async make
@@ -122,8 +190,6 @@ let g:mapleader = ","
 let g:nnn#set_default_mappings = 0
 
 map <silent> <leader>n <Plug>VinegarUp
-
-let g:gutentags_cache_dir = '~/.tags_cache'
 
 let g:projectionist_heuristics = {}
 let g:projectionist_heuristics['mix.exs'] = {
@@ -637,11 +703,14 @@ call tinykeymap#Map('lsp', 'p', 'lua vim.lsp.diagnostic.goto_prev()')
 call tinykeymap#Map('lsp', 'n', 'lua vim.lsp.diagnostic.goto_next()')
 
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> gh <cmd>lua vim.lsp.buf.signature_help()<CR>
 nnoremap <silent> gH <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
 
-autocmd BufWritePre *.ex lua vim.lsp.buf.formatting_sync(nil, 100)
-autocmd BufWritePre *.exs lua vim.lsp.buf.formatting_sync(nil, 100)
+autocmd BufWritePre *.ex lua vim.lsp.buf.formatting_sync(nil, 500)
+autocmd BufWritePre *.exs lua vim.lsp.buf.formatting_sync(nil, 500)
+
+au Filetype markdown call compe#setup({'enabled': v:false}, 0)
 
 " 2016/11/08 11:41:14, AA: From http://tex.stackexchange.com/a/3655/65117
 " Because IMAP_JumpForward was taking the C-j mapping
