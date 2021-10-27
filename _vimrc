@@ -174,6 +174,7 @@ call airline#parts#define_condition('lsp_status', 'luaeval("#vim.lsp.buf_get_cli
 
 let g:airline#extensions#nvimlsp#enabled = 0
 let g:airline_section_warning = airline#section#create_right(['lsp_status'])
+
 let g:processing_no_default_mappings=1
 
 " async make
@@ -342,8 +343,13 @@ nnoremap <leader>M :! mv <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(ex
 " 2017/04/11 09:28:57, AA: visually select the last paste or change
 nnoremap <expr> ge '`[' . strpart(getregtype(), 0, 1) . '`]'
 
-nnoremap gP k:read !xclip -selection clipboard -o<CR>
-nnoremap gp :read !xclip -selection clipboard -o<CR>
+if has("mac")
+  nnoremap gP k:read !pbpaste<CR>
+  nnoremap gp :read !pbpaste<CR>
+else
+  nnoremap gP k:read !xclip -selection clipboard -o<CR>
+  nnoremap gp :read !xclip -selection clipboard -o<CR>
+endif
 
 " switch to last buffer, like alt+tab
 nnoremap <Leader><Tab> :b#<CR>
@@ -540,7 +546,7 @@ else
   call ChangeSchemeWithIndex(0)
 endif
 
-set colorcolumn=81
+set colorcolumn=121
 
 " Turn backup off, since most stuff is in SVN, git anyway...
 if has("gui_win32")
@@ -806,7 +812,8 @@ let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 
 imap <C-Tab> <C-X><C-O>
 set complete=.,w,b,u,t,]
-set completeopt=longest,menuone
+" set completeopt=longest,menuone
+set completeopt=menuone,noselect
 
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
@@ -1410,7 +1417,7 @@ function! GetHopinGithubMergeRequestURL()
 endfunction
 
 call tinykeymap#EnterMap('git', 'gj', {'name': 'Git mode'})
-call tinykeymap#Map('git', '<space>', 'Gstatus')
+call tinykeymap#Map('git', '<space>', 'Git')
 " MR
 call tinykeymap#Map('git', 'm', 'call OpenHopinGithubMR()')
 " pushes
@@ -1444,7 +1451,7 @@ call tinykeymap#Map('git', 'l', 'Glog')
 call tinykeymap#Map('git', 'e', 'Gedit')
 call tinykeymap#Map('git', 'st', 'Git stash')
 call tinykeymap#Map('git', 'sp', 'Git stash pop')
-call tinykeymap#Map('git', 'bl', 'Gblame')
+call tinykeymap#Map('git', 'bl', 'Git blame')
 call tinykeymap#Map('git', 'd', 'Gdiff')
 
 autocmd FileType gitcommit setlocal spell
