@@ -84,8 +84,6 @@ Plug 'tpope/vim-rhubarb'
 Plug 'kassio/neoterm'
 Plug 'hashivim/vim-terraform'
 Plug 'junegunn/vim-emoji'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-treesitter/playground'
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
 Plug 'shumphrey/fugitive-gitlab.vim'
@@ -120,7 +118,17 @@ lsp_status.config({
 require'lspconfig'.elixirls.setup{
   cmd = { "/Users/andre/projs/personal/elixir-ls/language_server.sh" },
   on_attach = lsp_status.on_attach,
-  capabilities = lsp_status.capabilities
+  capabilities = lsp_status.capabilities,
+  -- From https://elixirforum.com/t/neovim-nvim-lsp-elixir/31230/11
+  settings = {
+    elixirLS = {
+      dialyzerEnabled = false,
+      -- turn off the auto dep fetching feature.
+      -- It often get's into a weird state that requires deleting
+      -- the .elixir_ls directory and restarting your editor.
+      fetchDeps = false
+    }
+  }
 }
 
 require'compe'.setup {
@@ -147,7 +155,6 @@ require'compe'.setup {
     spell = true;
     tags = true;
     snippets_nvim = true;
-    treesitter = true;
   };
 }
 local t = function(str)
