@@ -6,7 +6,6 @@ Plug 'Lokaltog/vim-easymotion'
 Plug 'Shougo/neomru.vim'
 Plug 'Shougo/unite.vim'
 Plug 'gosukiwi/vim-atom-dark'
-Plug 'haya14busa/incsearch.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/seoul256.vim'
 Plug 'justinmk/vim-sneak'
@@ -115,8 +114,15 @@ lsp_status.config({
   status_symbol = "",
 })
 
+
+if vim.loop.os_uname().sysname == "Linux" then
+    language_server_cmd = "/home/andre/projs/personal/elixir-ls/language_server.sh"
+else
+    language_server_cmd = "/home/andre/projs/personal/elixir-ls/language_server.sh"
+end
+
 require'lspconfig'.elixirls.setup{
-  cmd = { "/Users/andre/projs/personal/elixir-ls/language_server.sh" },
+  cmd = { language_server_cmd },
   on_attach = lsp_status.on_attach,
   capabilities = lsp_status.capabilities,
   -- From https://elixirforum.com/t/neovim-nvim-lsp-elixir/31230/11
@@ -599,11 +605,6 @@ set smartindent "Smart indet
 set cindent "Use C-style indent
 set wrap "Wrap lines
 set textwidth=1000 "por defeito sao 500 apenas
-
-" 2014-11-07, AA: using https://github.com/haya14busa/incsearch.vim.git
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
 
 " 2015/09/02 14:41:35, AA: using vim-expand-region
 vmap v <Plug>(expand_region_expand)
@@ -1288,7 +1289,8 @@ function! s:rg_handler(lines)
   endif
 endfunction
 
-let fzf_source_command = 'rg --files --hidden --follow --glob "!.git/*" --glob "!*.rbi"'
+let fzf_source_command = 'rg --files --hidden --follow --glob "!.git/*" --glob "!*.rbi" --glob "!.next/*" --glob "!node_modules/*"'
+
 let g:fzf_command_prefix = 'Fzf'
 command! FzfFiles call fzf#run({
 \ 'source':  fzf_source_command,
@@ -1309,7 +1311,7 @@ command! FzfFilesCWord call fzf#run({
 \ })
 
 command! FzfAllFiles call fzf#run({
-\ 'source':  'rg --files --no-ignore --hidden --follow --glob "!.git/*" --glob "!*.rbi"',
+\ 'source':  'rg --files --no-ignore --hidden --follow --glob "!.git/*" --glob "!*.rbi" --glob "!.next/*" --glob "!node_modules/*"',
 \ 'sink*':   function('<sid>rg_handler'),
 \ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x '.
 \            '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
@@ -1324,7 +1326,7 @@ nnoremap <leader>d :call fzf#vim#tags(expand('<cWORD>'), {'options': '--exact --
 nnoremap <silent> <leader>l :FzfLines<CR>
 
 command! -nargs=* FzfAg call fzf#run({
-\ 'source':  printf('rg --column --line-number --no-heading --fixed-strings --smart-case --hidden --follow --color "always" --glob "!.git/*" --glob "!*.rbi" "%s"',
+\ 'source':  printf('rg --column --line-number --no-heading --fixed-strings --smart-case --hidden --follow --color "always" --glob "!.git/*" --glob "!.next/*" --glob "!node_modules/*" "%s"',
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
 \ 'sink*':   function('<sid>ag_handler'),
 \ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x --delimiter : --nth 4.. '.
