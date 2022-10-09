@@ -8,7 +8,6 @@ Plug 'Shougo/unite.vim'
 Plug 'gosukiwi/vim-atom-dark'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/seoul256.vim'
-Plug 'justinmk/vim-sneak'
 Plug 'ledger/vim-ledger'
 Plug 'tomtom/tlib_vim'
 Plug 'tomtom/tinykeymap_vim/'
@@ -87,6 +86,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
 Plug 'shumphrey/fugitive-gitlab.vim'
 Plug 'nvim-lua/lsp-status.nvim'
+Plug 'ggandor/leap.nvim'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -98,6 +98,8 @@ endif
 call plug#end()
 
 lua << EOF
+require('leap').set_default_keymaps()
+
 local lspconfig = require('lspconfig')
 
 local lsp_status = require('lsp-status')
@@ -208,6 +210,13 @@ let mapleader = ","
 let g:mapleader = ","
 
 let g:nnn#set_default_mappings = 0
+
+set incsearch
+augroup vimrc-incsearch-highlight
+ autocmd!
+ autocmd CmdlineEnter /,\? :set hlsearch
+ autocmd CmdlineLeave /,\? :set nohlsearch
+augroup END
 
 map <silent> <leader>n <Plug>VinegarUp
 
@@ -1348,12 +1357,6 @@ function! SnakecaseCurrentWord()
   let word = tolower(word)
   return word
 endfunction
-
-" 2014-11-04, AA: Vim-sneak, Alternativa ao Easymotion
-let g:sneak#streak = 1
-let g:sneak#s_next = 1
-" 2017/03/07 15:17:16, AA: Only if Sneak is being used
-nmap <expr> <Tab> sneak#is_sneaking() ? '<Plug>Sneak_;' : '<Tab>'
 
 " 2014-11-03, AA: Easymotion plug-in
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
