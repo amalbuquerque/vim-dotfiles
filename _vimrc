@@ -120,7 +120,7 @@ lsp_status.config({
 if vim.loop.os_uname().sysname == "Linux" then
     language_server_cmd = "/home/andre/projs/personal/elixir-ls/language_server.sh"
 else
-    language_server_cmd = "/home/andre/projs/personal/elixir-ls/language_server.sh"
+    language_server_cmd = "/Users/andre/projs/personal/elixir-ls/language_server.sh"
 end
 
 require'lspconfig'.elixirls.setup{
@@ -177,6 +177,22 @@ local check_back_space = function()
         return false
     end
 end
+
+-- URL handling
+if vim.fn.has "mac" == 1 then
+    vim.keymap.set("n", "gx", '<Cmd>call jobstart(["open", expand("<cfile>")], {"detach": v:true})<CR>', attach_opts)
+elseif vim.fn.has "unix" == 1 then
+    vim.keymap.set(
+        "n",
+        "gx",
+        '<Cmd>call jobstart(["xdg-open", expand("<cfile>")], {"detach": v:true})<CR>',
+        attach_opts
+    )
+else
+    vim.keymap.set("n", "gx", function()
+        print "Error: gx is not supported on this OS!"
+    end, attach_opts)
+end
 EOF
 
 "" surround customizations
@@ -212,11 +228,7 @@ let g:mapleader = ","
 let g:nnn#set_default_mappings = 0
 
 set incsearch
-augroup vimrc-incsearch-highlight
- autocmd!
- autocmd CmdlineEnter /,\? :set hlsearch
- autocmd CmdlineLeave /,\? :set nohlsearch
-augroup END
+set hlsearch
 
 map <silent> <leader>n <Plug>VinegarUp
 
@@ -286,6 +298,7 @@ let g:tslime_autoset_pane = 0
 " 2017/05/09 10:01:45, AA: Tslime + Neoterm + vim-test stuff
 nmap <silent> Q <Plug>SetTmuxVars
 nmap <silent> qt :call ChangeTestStrategy()<CR>
+nmap <silent> qp :call ChangeElixirTestExecutable()<CR>
 
 let g:only_run_changed_tests = 'mix test $(git diff --name-only master | grep _test.exs)'
 let g:only_format_changed_files = 'mix format $(git diff --name-only master | grep .ex)'
@@ -303,7 +316,7 @@ let g:neoterm_autoscroll = 1
 let g:neoterm_automap_keys = '<leader>TT'
 
 function! ChangeTestStrategy()
-    if !exists("g:test#strategy") || g:test#strategy == 'neoterm'
+    if !exists('g:test#strategy') || g:test#strategy == 'neoterm'
         " With tslime, we want to run things in a tmux pane
         let g:test#strategy = 'tslime'
 
@@ -326,7 +339,18 @@ endfunction
 
 call ChangeTestStrategy()
 
-let test#elixir#exunit#executable = 'MIX_ENV=test mix test'
+function! ChangeElixirTestExecutable()
+    if !exists('g:test#elixir#exunit#executable') || g:test#elixir#exunit#executable == 'MIX_ENV=test iex -S mix test --trace'
+        let g:test#elixir#exunit#executable = 'MIX_ENV=test mix test'
+        echo 'Using regular mix test'
+    else
+        let g:test#elixir#exunit#executable = 'MIX_ENV=test iex -S mix test --trace'
+        echo 'Using mix test --trace w/ IEx'
+    endif
+endfunction
+
+call ChangeElixirTestExecutable()
+
 let test#ruby#rspec#executable = 'RAILS_ENV=test bundle exec rspec'
 
 " 2015/09/12 17:44:38, AA:
@@ -441,8 +465,7 @@ set mat=2 "How many tenths of a second to blink
 set splitbelow
 set splitright
 
-" 2018/01/15 14:28:07, AA: Prettier vertical split
-set fillchars+=vert:│
+set fillchars=stl:\ ,stlnc:\ ,vert:.,fold:-,diff:-
 
 " No sound on errors
 set noerrorbells
@@ -528,6 +551,8 @@ function! ChangeSchemeWithIndex(index)
     if l:to_use == "moonfly"
         highlight Visual ctermbg=237
     endif
+
+    highlight VertSplit guibg=Orange guifg=Black ctermbg=234 ctermfg=3
 
     if !exists('g:airline_symbols')
         let g:airline_symbols = {}
@@ -734,16 +759,17 @@ call tinykeymap#Map('lsp', 'd', 'lua vim.lsp.buf.definition()')
 call tinykeymap#Map('lsp', 'h', 'lua vim.lsp.buf.hover()')
 call tinykeymap#Map('lsp', 'r', 'lua vim.lsp.buf.references()')
 call tinykeymap#Map('lsp', 'i', 'LspInfo')
-call tinykeymap#Map('lsp', 'p', 'lua vim.lsp.diagnostic.goto_prev()')
-call tinykeymap#Map('lsp', 'n', 'lua vim.lsp.diagnostic.goto_next()')
+call tinykeymap#Map('lsp', 's', 'lua vim.diagnostic.open_float()')
+call tinykeymap#Map('lsp', 'p', 'lua vim.diagnostic.goto_prev()')
+call tinykeymap#Map('lsp', 'n', 'lua vim.diagnostic.goto_next()')
 
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gh <cmd>lua vim.lsp.buf.signature_help()<CR>
 nnoremap <silent> gH <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
 
-autocmd BufWritePre *.ex lua vim.lsp.buf.formatting_sync(nil, 500)
-autocmd BufWritePre *.exs lua vim.lsp.buf.formatting_sync(nil, 500)
+autocmd BufWritePre *.ex lua vim.lsp.buf.format(nil, 500)
+autocmd BufWritePre *.exs lua vim.lsp.buf.format(nil, 500)
 
 au Filetype markdown call compe#setup({'enabled': v:false}, 0)
 
@@ -1416,28 +1442,33 @@ function! GitPushToOrigin(...)
   endif
 endfunction
 
-function! OpenHopinGithubMR()
-    let l:github_mr_url = GetHopinGithubMergeRequestURL()
-    silent execute '! xdg-open "' . l:github_mr_url . '"'
+function! OpenRemoteGitlabMR()
+    let l:gitlab_mr_url = GetRemoteGitlabMergeRequestURL()
 
-    redraw!
+    call jobstart(["open", l:gitlab_mr_url], {"detach": v:true})
 endfunction
 
-function! GetHopinGithubMergeRequestURL()
-  let l:project_command = "git remote -v | grep -Po 'git@github.com:\\K[^.]+' | uniq | tr -d '\n'"
+" https://gitlab.com/remote-com/employ-starbase/tiger/-/merge_requests/new?merge_request%5Bsource_branch%5D=feat%2F11396-permissions-dont-define-properties
+" project = employ-starbase/tiger
+" /-/merge_requests/new?merge_request%5Bsource_branch%5D=
+" current branch = feat%2F11396-permissions-dont-define-properties
+function! GetRemoteGitlabMergeRequestURL()
+  let l:project_command = "git remote -v | awk '{print $2}' | sed 's/git@gitlab.com://g' | sed 's/.git//g' | uniq | tr -d '\n'"
   let l:project = system(l:project_command)
 
   let l:current_branch = GitCurrentBranch()
 
-  let l:url_template = "https://github.com/%s/compare/%s?expand=1"
+  let l:url = "https://gitlab.com/" . l:project
+  let l:url = l:url . "/-/merge_requests/new?merge_request%5bsource_branch%5d="
+  let l:url = l:url . l:current_branch
 
-  return printf(l:url_template, l:project, l:current_branch)
+  return l:url
 endfunction
 
 call tinykeymap#EnterMap('git', 'gj', {'name': 'Git mode'})
 call tinykeymap#Map('git', '<space>', 'Git')
 " MR
-call tinykeymap#Map('git', 'm', 'call OpenHopinGithubMR()')
+call tinykeymap#Map('git', 'm', 'call OpenRemoteGitlabMR()')
 " pushes
 call tinykeymap#Map('git', 'ps', 'call GitPushToOrigin()')
 call tinykeymap#Map('git', 'pf', 'call GitPushToOrigin("--force-with-lease")')
@@ -1451,7 +1482,6 @@ call tinykeymap#Map('git', 'rr', 'call AskCommandWithSuggestion("Git rebase ")')
 call tinykeymap#Map('git', 'bf', 'call AskCommandWithSuggestion("Git checkout -b feature/")')
 call tinykeymap#Map('git', 'bh', 'call AskCommandWithSuggestion("Git checkout -b hotfix/")')
 call tinykeymap#Map('git', 'br', 'call AskCommandWithSuggestion("Git checkout -b ")')
-call tinykeymap#Map('git', 'bb', 'call OpenOnfidoBitbucketPR()')
 " checkouts
 call tinykeymap#Map('git', 'cd', 'call AskCommandWithSuggestion("Git checkout development")')
 call tinykeymap#Map('git', 'cf', 'call AskCommandWithSuggestion("Git checkout feature/")')
