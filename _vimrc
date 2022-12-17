@@ -69,7 +69,6 @@ Plug 'junegunn/goyo.vim'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'aquach/vim-http-client'
 Plug 'airblade/vim-gitgutter'
-Plug 'ryanoasis/vim-devicons'
 Plug 'vim-utils/vim-husk'
 Plug 'gregsexton/gitv'
 Plug 'mhinz/vim-mix-format'
@@ -83,10 +82,19 @@ Plug 'kassio/neoterm'
 Plug 'hashivim/vim-terraform'
 Plug 'junegunn/vim-emoji'
 Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/nvim-compe'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/cmp-git'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'shumphrey/fugitive-gitlab.vim'
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'ggandor/leap.nvim'
+Plug 'folke/lsp-colors.nvim'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'folke/trouble.nvim'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -99,8 +107,6 @@ call plug#end()
 
 lua << EOF
 require('leap').set_default_keymaps()
-
-local lspconfig = require('lspconfig')
 
 local lsp_status = require('lsp-status')
 lsp_status.register_progress()
@@ -116,6 +122,62 @@ lsp_status.config({
   status_symbol = "",
 })
 
+local cmp = require('cmp')
+
+cmp.setup({
+  snippet = {
+    -- REQUIRED - you must specify a snippet engine
+    expand = function(args)
+      vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+    end,
+  },
+  window = {
+    -- completion = cmp.config.window.bordered(),
+    -- documentation = cmp.config.window.bordered(),
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'ultisnips' }, -- For ultisnips users.
+  }, {
+    { name = 'buffer' },
+  })
+})
+
+-- Set configuration for specific filetype.
+cmp.setup.filetype('gitcommit', {
+  sources = cmp.config.sources({
+    { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+  }, {
+    { name = 'buffer' },
+  })
+})
+
+-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline({ '/', '?' }, {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
+})
+
+-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    { name = 'cmdline' }
+  })
+})
+
+local lspconfig = require('lspconfig')
 
 if vim.loop.os_uname().sysname == "Linux" then
     language_server_cmd = "/home/andre/projs/personal/elixir-ls/language_server.sh"
@@ -123,48 +185,37 @@ else
     language_server_cmd = "/Users/andre/projs/personal/elixir-ls/language_server.sh"
 end
 
-require'lspconfig'.elixirls.setup{
+-- Set up lspconfig.
+local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+local on_attach = function(client, bufnr)
+  local opts = { noremap=true, silent=true }
+
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>cr', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>cf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>cd', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+end
+
+lspconfig['elixirls'].setup {
   cmd = { language_server_cmd },
-  on_attach = lsp_status.on_attach,
-  capabilities = lsp_status.capabilities,
-  -- From https://elixirforum.com/t/neovim-nvim-lsp-elixir/31230/11
-  settings = {
-    elixirLS = {
-      dialyzerEnabled = false,
-      -- turn off the auto dep fetching feature.
-      -- It often get's into a weird state that requires deleting
-      -- the .elixir_ls directory and restarting your editor.
-      fetchDeps = false
-    }
-  }
+  on_attach = on_attach,
+  capabilities = cmp_capabilities,
+  dialyzerEnabled = false,
+  -- turn off the auto dep fetching feature.
+  -- It often get's into a weird state that requires deleting
+  -- the .elixir_ls directory and restarting your editor.
+  fetchDeps = false
 }
 
-require'compe'.setup {
-  enabled = true;
-  autocomplete = true;
-  debug = false;
-  min_length = 1;
-  preselect = 'enable';
-  throttle_time = 80;
-  source_timeout = 200;
-  incomplete_delay = 400;
-  max_abbr_width = 100;
-  max_kind_width = 100;
-  max_menu_width = 100;
-  documentation = true;
-
-  source = {
-    path = true;
-    buffer = true;
-    calc = true;
-    vsnip = true;
-    nvim_lsp = true;
-    nvim_lua = true;
-    spell = true;
-    tags = true;
-    snippets_nvim = true;
-  };
-}
 local t = function(str)
   return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
@@ -193,6 +244,13 @@ else
         print "Error: gx is not supported on this OS!"
     end, attach_opts)
 end
+
+require("trouble").setup {
+-- your configuration comes here
+-- or leave it empty to use the default settings
+-- refer to the configuration section below
+}
+
 EOF
 
 "" surround customizations
@@ -754,8 +812,6 @@ let $MIX_ENV = 'test'
 let g:tinykeymap#map#windows#map = "<C-W>"
 
 call tinykeymap#EnterMap('lsp', 'K', {'name': 'LSP mode'})
-call tinykeymap#Map('lsp', 'f', 'lua vim.lsp.buf.formatting()')
-call tinykeymap#Map('lsp', 'd', 'lua vim.lsp.buf.definition()')
 call tinykeymap#Map('lsp', 'h', 'lua vim.lsp.buf.hover()')
 call tinykeymap#Map('lsp', 'r', 'lua vim.lsp.buf.references()')
 call tinykeymap#Map('lsp', 'i', 'LspInfo')
@@ -770,8 +826,6 @@ nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
 
 autocmd BufWritePre *.ex lua vim.lsp.buf.format(nil, 500)
 autocmd BufWritePre *.exs lua vim.lsp.buf.format(nil, 500)
-
-au Filetype markdown call compe#setup({'enabled': v:false}, 0)
 
 " 2016/11/08 11:41:14, AA: From http://tex.stackexchange.com/a/3655/65117
 " Because IMAP_JumpForward was taking the C-j mapping
@@ -861,8 +915,7 @@ let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 
 imap <C-Tab> <C-X><C-O>
 set complete=.,w,b,u,t,]
-" set completeopt=longest,menuone
-set completeopt=menuone,noselect
+set completeopt=menu,menuone,noselect
 
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
@@ -1518,3 +1571,10 @@ nmap <silent> <leader>x :HTTPClientDoRequest<CR>
 
 " 2017/11/17 07:58:48, AA: Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
+
+" augroup sort_imports
+"     autocmd!
+"     autocmd BufWritePre /Users/andre/projs/remote/tiger/**/*.ex,/Users/andre/projs/remote/tiger/**/*.exs silent! mkview! | silent! g/^\(\(alias\)\@!.\)*$\n\s*alias/+1,/\s*alias.*$\n^\(\(alias\)\@!.\)*$/ sort i
+"     autocmd BufWritePost /Users/andre/projs/remote/tiger/**/*.ex,/Users/andre/projs/remote/tiger/**/*.exs silent! loadview
+" augroup end
+
