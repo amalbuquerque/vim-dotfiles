@@ -37,7 +37,7 @@ Plug 'tsukkee/unite-tag'
 Plug 'Shougo/unite-outline'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tomasr/molokai'
-Plug 'elixir-lang/vim-elixir'
+Plug 'elixir-editors/vim-elixir'
 Plug 'ahw/vim-pbcopy'
 Plug 'junegunn/vim-easy-align'
 Plug 'bkad/CamelCaseMotion'
@@ -86,7 +86,6 @@ Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
-Plug 'hrsh7th/cmp-git'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'shumphrey/fugitive-gitlab.vim'
@@ -95,6 +94,12 @@ Plug 'ggandor/leap.nvim'
 Plug 'folke/lsp-colors.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'folke/trouble.nvim'
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'elixir-lang/tree-sitter-elixir'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.x' }
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+Plug 'ful1e5/onedark.nvim'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -106,6 +111,30 @@ endif
 call plug#end()
 
 lua << EOF
+local telescope = require('telescope')
+local actions = require("telescope.actions")
+telescope.setup{
+  defaults = {
+    mappings = {
+      n = {
+        ["-"] = actions.toggle_selection + actions.move_selection_worse,
+        ["_"] = actions.toggle_selection + actions.move_selection_better,
+        ["Q"] = actions.send_selected_to_qflist + actions.open_qflist,
+      },
+      i = {
+        -- map actions.which_key to <C-h> (default: <C-/>)
+        -- actions.which_key shows the mappings for your picker,
+        -- e.g. git_{create, delete, ...}_branch for the git_branches picker
+        ["<esc>"] = actions.close,
+        ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+      }
+    }
+  }
+}
+telescope.load_extension('fzf')
+
+require('onedark').setup()
+
 require('leap').set_default_keymaps()
 
 local lsp_status = require('lsp-status')
@@ -153,7 +182,6 @@ cmp.setup({
 -- Set configuration for specific filetype.
 cmp.setup.filetype('gitcommit', {
   sources = cmp.config.sources({
-    { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
   }, {
     { name = 'buffer' },
   })
@@ -249,6 +277,16 @@ require("trouble").setup {
 -- your configuration comes here
 -- or leave it empty to use the default settings
 -- refer to the configuration section below
+}
+
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = {"elixir", "heex", "eex"}, -- only install parsers for elixir and heex
+  sync_install = false,
+  ignore_install = { },
+  highlight = {
+    enable = true,
+    disable = { },
+  },
 }
 
 EOF
@@ -583,7 +621,7 @@ au BufRead let b:fenc_at_read=&fileencoding
 au BufWinEnter call CheckFileEncoding()
 
 function! ChangeSchemeWithIndex(index)
-    let l:favourite_schemes = ["PaperColor", "molokai", "harlequin", "atom-dark-256", "railscasts", "deus", "moonfly", "neodark", "zenburn", "dracula", "seoul256"]
+    let l:favourite_schemes = ["PaperColor", "onedark", "seoul256", "molokai", "harlequin", "atom-dark-256", "railscasts", "deus", "moonfly", "neodark", "zenburn", "dracula"]
     let l:to_use = l:favourite_schemes[a:index % len(l:favourite_schemes)]
 
     if l:to_use == "deus" || l:to_use == "PaperColor"
@@ -642,7 +680,6 @@ function! ChangeSchemeWithIndex(index)
 
     let g:airline_section_b = '%{airline#util#wrap(airline#extensions#hunks#get_hunks(),100)}%{airline#util#wrap(airline#extensions#branch#get_head(),80)[0:23]}'
 
-    " let g:airline_theme='minimalist'
     let g:airline_theme='papercolor'
 endfunction
 
@@ -653,8 +690,7 @@ if has("gui_running")
   set background=dark
   colorscheme seoul256
 else
-  " setting always PaperColer by default
-  call ChangeSchemeWithIndex(0)
+  call ChangeSchemeWithIndex(1)
 endif
 
 set colorcolumn=121
@@ -800,6 +836,8 @@ map <silent> <leader><leader> :noh<cr>:GitGutterAll<cr>
 " From https://elixirforum.com/t/vim-interfering-with-phoenix-recompile-after-saving/10039/20
 let $MIX_ENV = 'test'
 
+let g:mix_format_on_save = 1
+
 " TODO: Revise this, since emojis aren't being shown with alacritty
 " let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
 " let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
@@ -812,6 +850,7 @@ let $MIX_ENV = 'test'
 let g:tinykeymap#map#windows#map = "<C-W>"
 
 call tinykeymap#EnterMap('lsp', 'K', {'name': 'LSP mode'})
+call tinykeymap#Map('lsp', 'f', 'lua vim.lsp.buf.formatting()')
 call tinykeymap#Map('lsp', 'h', 'lua vim.lsp.buf.hover()')
 call tinykeymap#Map('lsp', 'r', 'lua vim.lsp.buf.references()')
 call tinykeymap#Map('lsp', 'i', 'LspInfo')
@@ -1246,7 +1285,7 @@ endfunction
 """"""""""""""""""""""""""""""
 " => MRU
 """"""""""""""""""""""""""""""
-nnoremap <silent> <leader>r :FzfHistory<CR>
+nnoremap <silent> <leader>r <cmd>lua require('telescope.builtin').oldfiles()<CR>
 
 "Quickly open a buffer for scribble
 map <leader>q :e ~/Dropbox/etc/scratchpad.txt<cr>
@@ -1319,7 +1358,7 @@ set guicursor=n:block-blinkon0-Cursor,v:block-blinkon0-VisualCursor,c-i-ci:ver25
 " => 2017/01/30 16:28:03, AA: CtrlP stuff, Unite is slow af
 " => 2017/05/15 14:25:58, AA: Disabled CtrlP for files, fzf is the real deal
 """""""""""""""""""""""""""""""""""""""""""""
-nmap <silent> <Space> :FzfBuffers<CR>
+nmap <silent> <Space> <cmd>lua require('telescope.builtin').buffers()<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""
 " => 2017/05/15 14:25:58, AA: FZF is the real deal
@@ -1407,11 +1446,9 @@ command! FzfAllFiles call fzf#run({
 \ 'down':    '50%'
 \ })
 
-nmap <silent> <leader>f :FzfFiles<CR>
-nmap <silent> <leader>F :FzfFilesCWord<CR>
-nnoremap <leader>d :call fzf#vim#tags(expand('<cWORD>'), {'options': '--exact --select-1 --exit-0'})<CR>
-
-nnoremap <silent> <leader>l :FzfLines<CR>
+nnoremap <leader>f <cmd>lua require('telescope.builtin').find_files()<CR>
+nnoremap <leader>F <cmd>lua require('telescope.builtin').find_files({ search_file = vim.fn.cword_lowercase() })<CR>
+nnoremap <leader>l <cmd>lua require('telescope.builtin').live_grep({ grep_open_files = true })<CR>
 
 command! -nargs=* FzfAg call fzf#run({
 \ 'source':  printf('rg --column --line-number --no-heading --fixed-strings --smart-case --hidden --follow --color "always" --glob "!.git/*" --glob "!.next/*" --glob "!node_modules/*" "%s"',
@@ -1423,8 +1460,8 @@ command! -nargs=* FzfAg call fzf#run({
 \ 'down':    '50%'
 \ })
 
-nmap <leader>G :FzfAg <c-r>=expand("<cword>")<CR>
-nmap <leader>g :FzfAg<Space>
+nnoremap <leader>G <cmd>lua require('telescope.builtin').grep_string()<CR>
+nnoremap <leader>g <cmd>lua require('telescope.builtin').live_grep()<CR>
 
 " 2017/08/10, AA: Copied from tpope abolish.vim
 function! SnakecaseCurrentWord()
@@ -1436,6 +1473,22 @@ function! SnakecaseCurrentWord()
   let word = tolower(word)
   return word
 endfunction
+
+lua << EOF
+  local function cword_lowercase()
+    local word = vim.fn.expand("<cword>")
+
+    -- adapted from https://codegolf.stackexchange.com/a/177958
+    word = word:gsub('%f[^%l]%u','_%1')
+    word = word:gsub('%f[^%a]%d','_%1')
+    word = word:gsub('%f[^%d]%a','_%1')
+    word = word:gsub('(%u)(%u%l)','%1_%2')
+
+    return word:lower()
+  end
+
+  vim.fn.cword_lowercase = cword_lowercase
+EOF
 
 " 2014-11-03, AA: Easymotion plug-in
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
@@ -1540,8 +1593,8 @@ call tinykeymap#Map('git', 'cd', 'call AskCommandWithSuggestion("Git checkout de
 call tinykeymap#Map('git', 'cf', 'call AskCommandWithSuggestion("Git checkout feature/")')
 call tinykeymap#Map('git', 'cc', 'call AskCommandWithSuggestion("Git checkout ")')
 " logs
-call tinykeymap#Map('git', 'pp', 'FzfCommits')
-call tinykeymap#Map('git', 'pb', 'FzfBCommits')
+call tinykeymap#Map('git', 'pp', 'Telescope git_commits')
+call tinykeymap#Map('git', 'pb', 'Telescope git_bcommits')
 " hunks
 call tinykeymap#Map('git', 'N', 'GitGutterPrevHunk')
 call tinykeymap#Map('git', 'n', 'GitGutterNextHunk')
