@@ -168,13 +168,21 @@ cmp.setup({
   mapping = cmp.mapping.preset.insert({
     ["<Tab>"] = cmp.mapping(
       function(fallback)
-        cmp_ultisnips_mappings.expand_or_jump_forwards(fallback)
+        if cmp.visible() then
+          cmp.select_next_item()
+        else
+          cmp_ultisnips_mappings.expand_or_jump_forwards(fallback)
+        end
       end,
       { "i", "s" }
     ),
     ["<S-Tab>"] = cmp.mapping(
       function(fallback)
-        cmp_ultisnips_mappings.jump_backwards(fallback)
+        if cmp.visible() then
+          cmp.select_prev_item()
+        else
+          cmp_ultisnips_mappings.jump_backwards(fallback)
+        end
       end,
       { "i", "s" }
     ),
@@ -187,7 +195,7 @@ cmp.setup({
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
     { name = 'ultisnips' }, -- For ultisnips users.
-  }, {
+    { name = 'treesitter' },
     { name = 'buffer' },
   })
 })
