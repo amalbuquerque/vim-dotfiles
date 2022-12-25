@@ -152,6 +152,7 @@ lsp_status.config({
 })
 
 local cmp = require('cmp')
+local cmp_ultisnips_mappings = require("cmp_nvim_ultisnips.mappings")
 
 cmp.setup({
   snippet = {
@@ -165,6 +166,18 @@ cmp.setup({
     -- documentation = cmp.config.window.bordered(),
   },
   mapping = cmp.mapping.preset.insert({
+    ["<Tab>"] = cmp.mapping(
+      function(fallback)
+        cmp_ultisnips_mappings.expand_or_jump_forwards(fallback)
+      end,
+      { "i", "s" }
+    ),
+    ["<S-Tab>"] = cmp.mapping(
+      function(fallback)
+        cmp_ultisnips_mappings.jump_backwards(fallback)
+      end,
+      { "i", "s" }
+    ),
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
@@ -179,13 +192,11 @@ cmp.setup({
   })
 })
 
--- Set configuration for specific filetype.
-cmp.setup.filetype('gitcommit', {
-  sources = cmp.config.sources({
-  }, {
-    { name = 'buffer' },
-  })
-})
+require("cmp_nvim_ultisnips").setup {
+  -- filetype_source = "ultisnips_default",
+  filetype_source = "treesitter",
+  show_snippets = "expandable",
+}
 
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline({ '/', '?' }, {
@@ -1302,14 +1313,6 @@ let g:unite_source_tag_max_name_length = 50
 
 nnoremap <F10> :Unite -vertical -winwidth=50 outline<CR>
 nnoremap <F7> :UniteWithCursorWord -immediately tag<CR>
-
-"To fix https://github.com/SirVer/ultisnips/issues/1202
-if has('nvim')
-    au VimEnter * if exists('#UltiSnips_AutoTrigger')
-        \ |     exe 'au! UltiSnips_AutoTrigger'
-        \ |     aug! UltiSnips_AutoTrigger
-        \ | endif
-endif
 
 function! UltisnipsToggleAutotrigger() abort
     if exists('#UltiSnips_AutoTrigger')
