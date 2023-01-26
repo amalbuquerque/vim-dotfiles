@@ -129,7 +129,16 @@ telescope.setup{
         ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
       }
     }
-  }
+  },
+  pickers = {
+    buffers = {
+      mappings = {
+        n = {
+            ['<c-d>'] = require('telescope.actions').delete_buffer
+        }
+      }
+    }
+  },
 }
 telescope.load_extension('fzf')
 
@@ -252,15 +261,28 @@ local on_attach = function(client, bufnr)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
 end
 
-lspconfig['elixirls'].setup {
+lspconfig.elixirls.setup {
   cmd = { language_server_cmd },
   on_attach = on_attach,
   capabilities = cmp_capabilities,
-  dialyzerEnabled = false,
-  -- turn off the auto dep fetching feature.
-  -- It often get's into a weird state that requires deleting
-  -- the .elixir_ls directory and restarting your editor.
-  fetchDeps = false
+  settings = {
+    elixirLS = {
+      dialyzerEnabled = false,
+      fetchDeps = false,
+    },
+    dialyzerEnabled = false,
+    -- turn off the auto dep fetching feature.
+    -- It often get's into a weird state that requires deleting
+    -- the .elixir_ls directory and restarting your editor.
+    fetchDeps = false
+  },
+  flags = {
+    debounce_text_changes = 150,
+  },
+  elixirLS = {
+    dialyzerEnabled = false,
+    fetchDeps = false,
+  };
 }
 
 local t = function(str)
@@ -303,8 +325,10 @@ require'nvim-treesitter.configs'.setup {
   sync_install = false,
   ignore_install = { },
   highlight = {
-    enable = true,
-    disable = { },
+    disable = true
+  },
+  indent = {
+      disable = true
   },
 }
 
@@ -747,9 +771,7 @@ set shiftwidth=4
 set tabstop=4
 
 set lbr
-
-set smartindent "Smart indet
-set cindent "Use C-style indent
+filetype plugin indent on
 set wrap "Wrap lines
 set textwidth=1000 "por defeito sao 500 apenas
 
@@ -876,6 +898,8 @@ call tinykeymap#Map('lsp', 'i', 'LspInfo')
 call tinykeymap#Map('lsp', 's', 'lua vim.diagnostic.open_float()')
 call tinykeymap#Map('lsp', 'p', 'lua vim.diagnostic.goto_prev()')
 call tinykeymap#Map('lsp', 'n', 'lua vim.diagnostic.goto_next()')
+call tinykeymap#Map('lsp', 'H', 'lua vim.diagnostic.hide()')
+call tinykeymap#Map('lsp', 'S', 'lua vim.diagnostic.show()')
 
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gh <cmd>lua vim.lsp.buf.signature_help()<CR>
