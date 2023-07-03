@@ -1201,9 +1201,21 @@ au Filetype processing nnoremap <silent> <F5> :call ToggleProcessingPreview()<CR
 """"""""""""""""""""""""""""""
 " => Elixir section
 """"""""""""""""""""""""""""""
+
+" places on the 't' register the penultimate tmux pane line
+function! CopyPenultimateLineFromTmuxPane()
+    " capture-pane -p captures the full pane contents
+    " awk NF removes empty lines
+    " tail -2 gets the last 2 lines
+    " head -1 gets the first of the last 2 lines
+    let l:tmux_pane = g:tslime['pane']
+    let @t = system("tmux capture-pane -p -t " . l:tmux_pane . " | awk NF | tail -2 | head -1")
+endfunction
+
 au Filetype elixir nmap <leader>p odbg()<Esc>
 au Filetype elixir nmap <silent> <leader>L :MixFormat<CR>
 au Filetype elixir nmap <silent> <F5> :Tmux recompile<CR>
+au Filetype elixir nmap <silent> qc :call CopyPenultimateLineFromTmuxPane()<CR><C-R>"tp
 
 """"""""""""""""""""""""""""""
 " => Ruby section
