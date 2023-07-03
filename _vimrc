@@ -86,7 +86,9 @@ Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/cmp-emoji'
 Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'shumphrey/fugitive-gitlab.vim'
 Plug 'nvim-lua/lsp-status.nvim'
@@ -97,7 +99,7 @@ Plug 'folke/trouble.nvim'
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'elixir-lang/tree-sitter-elixir'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.x' }
+Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 Plug 'ful1e5/onedark.nvim'
 
@@ -202,10 +204,19 @@ cmp.setup({
     ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
   }),
   sources = cmp.config.sources({
+    { name = 'nvim_lsp_signature_help' },
+    { name = 'emoji' },
+    {
+       name = 'buffer',
+       option = {
+         get_bufnrs = function()
+           return vim.api.nvim_list_bufs()
+         end
+       }
+    },
     { name = 'nvim_lsp' },
     { name = 'ultisnips' }, -- For ultisnips users.
     { name = 'treesitter' },
-    { name = 'buffer' },
   })
 })
 
@@ -255,7 +266,7 @@ local on_attach = function(client, bufnr)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>cr', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>cf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>cf', '<cmd>lua vim.lsp.buf.format()<CR>', opts)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>cd', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
@@ -270,19 +281,10 @@ lspconfig.elixirls.setup {
       dialyzerEnabled = false,
       fetchDeps = false,
     },
-    dialyzerEnabled = false,
-    -- turn off the auto dep fetching feature.
-    -- It often get's into a weird state that requires deleting
-    -- the .elixir_ls directory and restarting your editor.
-    fetchDeps = false
   },
   flags = {
     debounce_text_changes = 150,
   },
-  elixirLS = {
-    dialyzerEnabled = false,
-    fetchDeps = false,
-  };
 }
 
 local t = function(str)
@@ -575,7 +577,7 @@ set hidden "Change buffer - without saving
 set whichwrap+=<,>,h,l
 set backspace=indent,eol,start
 
-set ignorecase "Ignore case when searching
+set ignorecase
 set smartcase
 
 set hlsearch "Highlight search things
@@ -648,7 +650,6 @@ if has("multi_byte")
   " 2013-12-27, AA: comentei para usar o ucs-bom e o latin1
   " setglobal bomb
   set fileencodings=utf-8
-  set penc=utf-8
   " set fileencodings=ucs-bom,utf-8,latin1
 endif
 
@@ -891,7 +892,7 @@ let g:mix_format_on_save = 1
 let g:tinykeymap#map#windows#map = "<C-W>"
 
 call tinykeymap#EnterMap('lsp', 'K', {'name': 'LSP mode'})
-call tinykeymap#Map('lsp', 'f', 'lua vim.lsp.buf.formatting()')
+call tinykeymap#Map('lsp', 'f', 'lua vim.lsp.buf.format()')
 call tinykeymap#Map('lsp', 'h', 'lua vim.lsp.buf.hover()')
 call tinykeymap#Map('lsp', 'r', 'lua vim.lsp.buf.references()')
 call tinykeymap#Map('lsp', 'i', 'LspInfo')
@@ -905,9 +906,6 @@ nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gh <cmd>lua vim.lsp.buf.signature_help()<CR>
 nnoremap <silent> gH <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
-
-autocmd BufWritePre *.ex lua vim.lsp.buf.format(nil, 500)
-autocmd BufWritePre *.exs lua vim.lsp.buf.format(nil, 500)
 
 " 2016/11/08 11:41:14, AA: From http://tex.stackexchange.com/a/3655/65117
 " Because IMAP_JumpForward was taking the C-j mapping
