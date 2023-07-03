@@ -441,10 +441,11 @@ let g:tslime_autoset_pane = 0
 nmap <silent> Q <Plug>SetTmuxVars
 nmap <silent> qt :call ChangeTestStrategy()<CR>
 nmap <silent> qp :call ChangeElixirTestExecutable()<CR>
+nmap <silent> qw :Tmux mix test.watch <C-R>=fnameescape(expand('%'))<CR><CR>
 
 let g:only_run_changed_tests = 'mix test $(git diff --name-only master | grep _test.exs)'
-let g:only_format_changed_files = 'mix format $(git diff --name-only master | grep .ex)'
-let g:only_credo_changed_files = 'mix credo $(git diff --name-only master | grep .ex)'
+let g:only_format_changed_files = "mix format $(git diff --name-only master | grep '[.ex|.exs]')"
+let g:only_credo_changed_files = "mix credo $(git diff --name-only master | grep '[.ex|.exs]')"
 
 nmap <silent> <leader>Tx :call SendToTmux(g:only_format_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
 nmap <silent> <leader>Tb :call SendToTmux(g:only_run_changed_tests)<CR>:call Send_keys_to_Tmux('Enter')<CR>
@@ -537,11 +538,10 @@ nnoremap <leader>M :! mv <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(ex
 " 2017/04/11 09:28:57, AA: visually select the last paste or change
 nnoremap <expr> ge '`[' . strpart(getregtype(), 0, 1) . '`]'
 
+nnoremap gP `[v`]
 if has("mac")
-  nnoremap gP k:read !pbpaste<CR>
   nnoremap gp :read !pbpaste<CR>
 else
-  nnoremap gP k:read !xclip -selection clipboard -o<CR>
   nnoremap gp :read !xclip -selection clipboard -o<CR>
 endif
 
@@ -879,7 +879,7 @@ map <silent> <leader><leader> :noh<cr>:GitGutterAll<cr>
 " From https://elixirforum.com/t/vim-interfering-with-phoenix-recompile-after-saving/10039/20
 let $MIX_ENV = 'test'
 
-let g:mix_format_on_save = 1
+" let g:mix_format_on_save = 1
 
 " TODO: Revise this, since emojis aren't being shown with alacritty
 " let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
@@ -1201,7 +1201,7 @@ au Filetype processing nnoremap <silent> <F5> :call ToggleProcessingPreview()<CR
 """"""""""""""""""""""""""""""
 " => Elixir section
 """"""""""""""""""""""""""""""
-au Filetype elixir nmap <Leader>p orequire IEx; IEx.pry<Esc>
+au Filetype elixir nmap <leader>p odbg()<Esc>
 au Filetype elixir nmap <silent> <leader>L :MixFormat<CR>
 au Filetype elixir nmap <silent> <F5> :Tmux recompile<CR>
 
@@ -1210,7 +1210,7 @@ au Filetype elixir nmap <silent> <F5> :Tmux recompile<CR>
 """"""""""""""""""""""""""""""
 au FileType ruby set omnifunc=rubycomplete#Complete
 au FileType ruby set shiftwidth=2
-au Filetype ruby nmap <Leader>p orequire "pry"; binding.pry<Esc>
+au Filetype ruby nmap <leader>p orequire "pry"; binding.pry<Esc>
 au FileType ruby iabbrev ,,P require "pry"; ["continue", "step", "next"].each do \|c\| Pry.commands.alias_command c[0], c end; binding.pry
 " au FileType ruby let g:rubycomplete_buffer_loading = 1
 " au FileType ruby let g:rubycomplete_classes_in_global = 1
