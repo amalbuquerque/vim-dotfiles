@@ -441,6 +441,7 @@ let g:tslime_autoset_pane = 0
 nmap <silent> Q <Plug>SetTmuxVars
 nmap <silent> qt :call ChangeTestStrategy()<CR>
 nmap <silent> qp :call ChangeElixirTestExecutable()<CR>
+nmap <silent> qf :Tmux mix test --failed<CR>
 nmap <silent> qw :Tmux mix test.watch <C-R>=fnameescape(expand('%'))<CR><CR>
 
 let g:only_run_changed_tests = 'mix test $(git diff --name-only master | grep _test.exs)'
@@ -449,6 +450,7 @@ let g:only_credo_changed_files = "mix credo $(git diff --name-only master | grep
 
 nmap <silent> <leader>Tx :call SendToTmux(g:only_format_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
 nmap <silent> <leader>Tb :call SendToTmux(g:only_run_changed_tests)<CR>:call Send_keys_to_Tmux('Enter')<CR>
+nmap <silent> <leader>Tc :call SendToTmux(g:only_credo_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
 nmap <silent> <leader>Ts :w<CR>:TestSuite<CR>
 nmap <silent> <leader>Tf :w<CR>:TestFile<CR>
 nmap <silent> <leader>t :w<CR>:TestNearest<CR>
@@ -1212,7 +1214,7 @@ function! CopyPenultimateLineFromTmuxPane()
     let @t = system("tmux capture-pane -p -t " . l:tmux_pane . " | awk NF | tail -2 | head -1")
 endfunction
 
-au Filetype elixir nmap <leader>p odbg()<Esc>
+au Filetype elixir nmap <leader>p orequire IEx; IEx.pry<Esc>
 au Filetype elixir nmap <silent> <leader>L :MixFormat<CR>
 au Filetype elixir nmap <silent> <F5> :Tmux recompile<CR>
 au Filetype elixir nmap <silent> qc :call CopyPenultimateLineFromTmuxPane()<CR><C-R>"tp
