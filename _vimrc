@@ -1,5 +1,16 @@
 set runtimepath+=~/.vim/
 
+" Install vim-plug if not found
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'Lokaltog/vim-easymotion'
@@ -73,7 +84,6 @@ Plug 'vim-utils/vim-husk'
 Plug 'gregsexton/gitv'
 Plug 'mhinz/vim-mix-format'
 Plug 'mcchrish/nnn.vim'
-Plug 'fsharp/vim-fsharp', { 'for': 'fsharp', 'do':  'make fsautocomplete' }
 Plug 'tpope/vim-projectionist'
 Plug 'sophacles/vim-processing'
 Plug 'skywind3000/asyncrun.vim'
@@ -90,6 +100,8 @@ Plug 'hrsh7th/cmp-emoji'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+Plug 'quangnguyen30192/cmp-nvim-tags'
+Plug 'ludovicchabant/vim-gutentags'
 Plug 'shumphrey/fugitive-gitlab.vim'
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'ggandor/leap.nvim'
@@ -97,12 +109,14 @@ Plug 'folke/lsp-colors.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'folke/trouble.nvim'
 Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'elixir-lang/tree-sitter-elixir'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 Plug 'ful1e5/onedark.nvim'
 Plug 'marrub--/vim-zscript'
+Plug 'jeetsukumaran/telescope-buffer-lines.nvim'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -113,6 +127,9 @@ endif
 
 call plug#end()
 
+let mapleader = ","
+let g:mapleader = ","
+
 lua << EOF
 local telescope = require('telescope')
 local actions = require("telescope.actions")
@@ -122,14 +139,15 @@ telescope.setup{
       n = {
         ["-"] = actions.toggle_selection + actions.move_selection_worse,
         ["_"] = actions.toggle_selection + actions.move_selection_better,
-        ["Q"] = actions.send_selected_to_qflist + actions.open_qflist,
+        -- smart means it sends everything if nothing is selected 💃
+        ["Q"] = actions.smart_send_to_qflist + actions.open_qflist,
       },
       i = {
         -- map actions.which_key to <C-h> (default: <C-/>)
         -- actions.which_key shows the mappings for your picker,
         -- e.g. git_{create, delete, ...}_branch for the git_branches picker
         ["<esc>"] = actions.close,
-        ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+        ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
       }
     }
   },
@@ -144,6 +162,12 @@ telescope.setup{
   },
 }
 telescope.load_extension('fzf')
+telescope.load_extension('buffer_lines')
+
+local builtin = require('telescope.builtin')
+
+vim.keymap.set('n', '<leader>r', builtin.oldfiles, { desc = 'Recently opened files', noremap = true })
+vim.keymap.set('n', 'gt', builtin.tags, { desc = '[G]o to C[T]ags (telescope)', noremap = true })
 
 require('onedark').setup()
 
@@ -200,9 +224,11 @@ cmp.setup({
     ),
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
+    -- C-Space already "fixes" the current list, to allow further refining
+    -- ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
   }),
   sources = cmp.config.sources({
     { name = 'nvim_lsp_signature_help' },
@@ -218,6 +244,23 @@ cmp.setup({
     { name = 'nvim_lsp' },
     { name = 'ultisnips' }, -- For ultisnips users.
     { name = 'treesitter' },
+    {
+      name = 'tags',
+      option = {
+        -- this is the default options, change them if you want.
+        -- Delayed time after user input, in milliseconds.
+        complete_defer = 100,
+        -- Max items when searching `taglist`.
+        max_items = 10,
+        -- The number of characters that need to be typed to trigger
+        -- auto-completion.
+        keyword_length = 3,
+        -- Use exact word match when searching `taglist`, for better search performance.
+        exact_match = false,
+        -- Prioritize searching result for current buffer.
+        current_buffer_only = false,
+      },
+    }
   })
 })
 
@@ -328,11 +371,26 @@ require'nvim-treesitter.configs'.setup {
   sync_install = false,
   ignore_install = { },
   highlight = {
-    disable = true
+    enable = true
   },
   indent = {
-      disable = true
+    enable = true
   },
+}
+
+require'treesitter-context'.setup{
+  enable = true,
+  max_lines = 2, -- How many lines the window should span. Values <= 0 mean no limit.
+  min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+  line_numbers = true,
+  multiline_threshold = 20, -- Maximum number of lines to show for a single context
+  trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+  mode = 'cursor',  -- Line used to calculate context. Choices: 'cursor', 'topline'
+  -- Separator between context and content. Should be a single character string, like '-'.
+  -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
+  separator = nil,
+  zindex = 20, -- The Z-index of the context window
+  on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
 }
 
 EOF
@@ -355,17 +413,6 @@ let g:airline#extensions#nvimlsp#enabled = 0
 let g:airline_section_warning = airline#section#create_right(['lsp_status'])
 
 let g:processing_no_default_mappings=1
-
-" async make
-command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
-
-let g:fsharp_interactive_bin = '/usr/bin/fsharpi'
-let g:fsharp_xbuild_bin = '/usr/bin/xbuild'
-
-let g:fsharp_only_check_errors_on_write = 1
-
-let mapleader = ","
-let g:mapleader = ","
 
 let g:nnn#set_default_mappings = 0
 
@@ -445,8 +492,8 @@ nmap <silent> qf :Tmux mix test --failed<CR>
 nmap <silent> qw :Tmux mix test.watch <C-R>=fnameescape(expand('%'))<CR><CR>
 
 let g:only_run_changed_tests = 'mix test $(git diff --name-only master | grep _test.exs)'
-let g:only_format_changed_files = "mix format $(git diff --name-only master | grep '[.ex|.exs]')"
-let g:only_credo_changed_files = "mix credo $(git diff --name-only master | grep '[.ex|.exs]')"
+let g:only_format_changed_files = "mix format $(git diff --name-only master | grep '\.ex\(s\)\?$')"
+let g:only_credo_changed_files = "mix credo $(git diff --name-only master | grep '\.ex\(s\)\?$')"
 
 nmap <silent> <leader>Tx :call SendToTmux(g:only_format_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
 nmap <silent> <leader>Tb :call SendToTmux(g:only_run_changed_tests)<CR>:call Send_keys_to_Tmux('Enter')<CR>
@@ -668,7 +715,7 @@ au BufRead let b:fenc_at_read=&fileencoding
 au BufWinEnter call CheckFileEncoding()
 
 function! ChangeSchemeWithIndex(index)
-    let l:favourite_schemes = ["PaperColor", "onedark", "seoul256", "molokai", "harlequin", "atom-dark-256", "railscasts", "deus", "moonfly", "neodark", "zenburn", "dracula"]
+    let l:favourite_schemes = ["PaperColor", "neodark", "onedark", "seoul256", "molokai", "harlequin", "atom-dark-256", "railscasts", "deus", "moonfly", "zenburn", "dracula"]
     let l:to_use = l:favourite_schemes[a:index % len(l:favourite_schemes)]
 
     if l:to_use == "deus" || l:to_use == "PaperColor"
@@ -1016,9 +1063,6 @@ au FileType cs set foldlevelstart=2
 " Quickfix mode: command line msbuild error format
 au FileType cs set errorformat=\ %#%f(%l\\\,%c):\ error\ CS%n:\ %m
 
-" Colocar o caminho do ficheiro de tags gerado com o Ctags
-set tag=$VIMRUNTIME\ctags\alltags
-
 """"""""""""""""""""""""""""""
 " => yankRing with Unite
 """"""""""""""""""""""""""""""
@@ -1338,11 +1382,6 @@ function! JavaScriptFold()
     setl foldtext=FoldText()
 endfunction
 
-""""""""""""""""""""""""""""""
-" => MRU
-""""""""""""""""""""""""""""""
-nnoremap <silent> <leader>r <cmd>lua require('telescope.builtin').oldfiles()<CR>
-
 "Quickly open a buffer for scribble
 map <leader>q :e ~/Dropbox/etc/scratchpad.txt<cr>
 au BufRead,BufNewFile ~/Dropbox/etc/scratchpad.txt iab <buffer> xh1 ============================ <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr> ========
@@ -1352,9 +1391,6 @@ map <leader>bb :cd ..<cr>
 """""""""""""""""""""""""""""""""""""""""""""
 " => 2015-03-31 22:41:34, AA: Vim Unite Stuff
 """""""""""""""""""""""""""""""""""""""""""""
-" 2016/11/17 15:25:47, AA: unite-tag (ctags stuff)
-let g:unite_source_tag_max_fname_length = 50
-let g:unite_source_tag_max_name_length = 50
 
 nnoremap <F10> :Unite -vertical -winwidth=50 outline<CR>
 nnoremap <F7> :UniteWithCursorWord -immediately tag<CR>
