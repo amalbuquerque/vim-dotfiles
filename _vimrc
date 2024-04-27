@@ -291,45 +291,39 @@ cmp.setup.cmdline(':', {
 local lspconfig = require('lspconfig')
 
 if vim.loop.os_uname().sysname == "Linux" then
-    language_server_cmd = "/home/andre/projs/personal/elixir-ls/language_server.sh"
+    language_server_cmd = "/home/andre/projs/personal/elixir-ls/build/language_server.sh"
 else
-    language_server_cmd = "/Users/andre/projs/personal/elixir-ls/language_server.sh"
+    language_server_cmd = "/Users/andre/projs/personal/elixir-ls/build/language_server.sh"
 end
 
 -- Set up lspconfig.
 local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-local on_attach = function(client, bufnr)
-  local opts = { noremap=true, silent=true }
+-- BEGIN LEXICAL SETUP
+local configs = require("lspconfig.configs")
 
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>cr', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>cf', '<cmd>lua vim.lsp.buf.format()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>cd', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+local lexical_config = {
+  filetypes = { "elixir", "eelixir", },
+  cmd = { "/home/andre/projs/personal/lexical/build/bin/start_lexical.sh" },
+  settings = {},
+}
+
+if not configs.lexical then
+  configs.lexical = {
+    default_config = {
+      filetypes = lexical_config.filetypes,
+      cmd = lexical_config.cmd,
+      root_dir = function(fname)
+        return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or vim.loop.os_homedir()
+      end,
+      -- optional settings
+      settings = lexical_config.settings,
+    },
+  }
 end
 
-lspconfig.elixirls.setup {
-  cmd = { language_server_cmd },
-  on_attach = on_attach,
-  capabilities = cmp_capabilities,
-  settings = {
-    elixirLS = {
-      dialyzerEnabled = false,
-      fetchDeps = false,
-    },
-  },
-  flags = {
-    debounce_text_changes = 150,
-  },
-}
+lspconfig.lexical.setup({})
+-- END LEXICAL SETUP
 
 local t = function(str)
   return vim.api.nvim_replace_termcodes(str, true, true, true)
