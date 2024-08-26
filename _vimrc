@@ -166,7 +166,8 @@ telescope.load_extension('buffer_lines')
 local builtin = require('telescope.builtin')
 
 vim.keymap.set('n', '<leader>r', builtin.oldfiles, { desc = 'Recently opened files', noremap = true })
-vim.keymap.set('n', 'gt', builtin.tags, { desc = '[G]o to C[T]ags (telescope)', noremap = true })
+vim.keymap.set('n', '<leader>TT', builtin.tags, { desc = '[G]o to C[T]ags (telescope)', noremap = true })
+-- vim.keymap.set('n', '<leader>TE', builtin.taglist, { desc = 'Specific taglist', noremap = true })
 
 require('onedark').setup()
 
@@ -230,7 +231,7 @@ cmp.setup({
     ['<CR>'] = cmp.mapping.confirm({ select = true }),
   }),
   sources = cmp.config.sources({
-    -- { name = 'nvim_lsp_signature_help' },
+    { name = 'nvim_lsp_signature_help' },
     { name = 'emoji' },
     {
        name = 'buffer',
@@ -240,26 +241,27 @@ cmp.setup({
          end
        }
     },
-    -- { name = 'nvim_lsp' },
+    { name = 'nvim_lsp' },
     { name = 'ultisnips' }, -- For ultisnips users.
     { name = 'treesitter' },
-    {
-      name = 'tags',
-      option = {
-        -- this is the default options, change them if you want.
-        -- Delayed time after user input, in milliseconds.
-        complete_defer = 100,
-        -- Max items when searching `taglist`.
-        max_items = 10,
-        -- The number of characters that need to be typed to trigger
-        -- auto-completion.
-        keyword_length = 3,
-        -- Use exact word match when searching `taglist`, for better search performance.
-        exact_match = false,
-        -- Prioritize searching result for current buffer.
-        current_buffer_only = false,
-      },
-    }
+    { name = 'buffer' }
+    -- {
+    --   name = 'tags',
+    --   option = {
+    --     -- this is the default options, change them if you want.
+    --     -- Delayed time after user input, in milliseconds.
+    --     complete_defer = 100,
+    --     -- Max items when searching `taglist`.
+    --     max_items = 10,
+    --     -- The number of characters that need to be typed to trigger
+    --     -- auto-completion.
+    --     keyword_length = 3,
+    --     -- Use exact word match when searching `taglist`, for better search performance.
+    --     exact_match = false,
+    --     -- Prioritize searching result for current buffer.
+    --     current_buffer_only = false,
+    --   },
+    -- }
   })
 })
 
@@ -417,8 +419,6 @@ let g:nnn#set_default_mappings = 0
 
 set incsearch
 set hlsearch
-
-map <silent> <leader>n <Plug>VinegarUp
 
 let g:projectionist_heuristics = {}
 let g:projectionist_heuristics['mix.exs'] = {
