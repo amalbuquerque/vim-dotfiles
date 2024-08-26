@@ -27,13 +27,11 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'idbrii/vim-focusclip'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-vinegar'
 Plug 'pangloss/vim-javascript'
 Plug 'terryma/vim-expand-region'
 Plug 'Raimondi/delimitMate'
@@ -110,6 +108,7 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'folke/trouble.nvim'
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/nvim-treesitter-context'
+Plug 'RRethy/nvim-treesitter-endwise'
 Plug 'elixir-lang/tree-sitter-elixir'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -387,6 +386,12 @@ require'treesitter-context'.setup{
   on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
 }
 
+require('nvim-treesitter.configs').setup {
+    endwise = {
+        enable = true,
+    },
+}
+
 EOF
 
 "" surround customizations
@@ -573,6 +578,7 @@ inoremap <C-BS> <C-\><C-o>db
 inoremap <C-Del> <C-\><C-o>dw
 
 " expands %% to current file's directory in command-line mode
+cnoremap GG GBrowse!
 cnoremap %% <C-R>=fnameescape(expand('%'))<CR>
 cnoremap %p <C-R>=fnameescape(expand('%:h')).'/'<CR>
 nnoremap <leader>C :! cp <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
