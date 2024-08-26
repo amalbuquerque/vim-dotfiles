@@ -504,10 +504,19 @@ nmap <silent> <F8> :w<CR>:TestLast<CR>
 
 let g:neoterm_default_mod = 'vertical'
 let g:neoterm_autoscroll = 1
-let g:neoterm_automap_keys = '<leader>TT'
+let g:neoterm_automap_keys = '<leader>TZ'
 
 function! ChangeTestStrategy()
-    if !exists('g:test#strategy') || g:test#strategy == 'neoterm'
+    if !exists('g:test#strategy') || g:test#strategy == 'tslime'
+        let g:test#strategy = 'neoterm'
+
+        nmap <silent> qq V<Plug>(neoterm-repl-send)
+        nmap <silent> qa ggVG<Plug>(neoterm-repl-send)
+        vmap Q <Plug>(neoterm-repl-send)
+        nmap <silent> <F6> :Tredo<CR>
+
+        echo 'Using neoterm/Term'
+    else
         " With tslime, we want to run things in a tmux pane
         let g:test#strategy = 'tslime'
 
@@ -517,14 +526,6 @@ function! ChangeTestStrategy()
         nmap <silent> <F6> :call Send_keys_to_Tmux('Up')<CR>:call Send_keys_to_Tmux('Enter')<CR>
 
         echo 'Using tslime/Tmux'
-    else
-        let g:test#strategy = 'neoterm'
-
-        nmap <silent> qq :TREPLSendLine<CR>
-        nmap <silent> qa :TREPLSendFile<CR>
-        vmap <silent> Q :TREPLSendSelection<CR>
-
-        echo 'Using neoterm/Term'
     endif
 endfunction
 
@@ -924,9 +925,6 @@ nnoremap ; :
 " 2015/06/17 15:56:51, AA: Map Backspace to Toggle between current file and previous
 nnoremap <BS> <C-^>
 map <silent> <leader><leader> :noh<cr>:GitGutterAll<cr>
-
-" From https://elixirforum.com/t/vim-interfering-with-phoenix-recompile-after-saving/10039/20
-let $MIX_ENV = 'test'
 
 " let g:mix_format_on_save = 1
 
@@ -1585,7 +1583,7 @@ map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 " 2014-11-03, END
 
-set number        " always show line numbers
+set number
 set list
 
 let g:terraform_fmt_on_save=1
@@ -1707,7 +1705,7 @@ nmap <silent> <leader>x :HTTPClientDoRequest<CR>
 " source ~/vim-dotfiles/disable_repeated_hjkl_motions.vim
 
 " 2017/11/17 07:58:48, AA: Allow saving of files as sudo when I forgot to start vim using sudo.
-cmap w!! w !sudo tee > /dev/null %
+cmap w!! exec 'w !sudo tee ' . shellescape(@%, 1) . ' >/dev/null'
 
 " augroup sort_imports
 "     autocmd!
