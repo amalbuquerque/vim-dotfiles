@@ -130,6 +130,10 @@ let mapleader = ","
 let g:mapleader = ","
 
 lua << EOF
+-- getting the vimrc.lua from ~/.config/nvim/lua/vimrc.lua
+local lua_stuff = require('vimrc')
+vim.keymap.set('n', '<leader>n', lua_stuff.switch_to_selected_term_window, { desc = 'Switch to the selected term window', noremap = true })
+
 local telescope = require('telescope')
 local actions = require("telescope.actions")
 telescope.setup{
@@ -645,6 +649,16 @@ set lazyredraw "Don't redraw while executing macros
 set notimeout
 set ttimeout
 set ttimeoutlen=10
+
+augroup neovim_terminal
+    autocmd!
+    " Enter Terminal-mode (insert) automatically
+    autocmd TermOpen * startinsert
+    " Disables number lines on terminal buffers
+    autocmd TermOpen * :set nonumber norelativenumber
+    " allows you to use Ctrl-c on terminal window
+    autocmd TermOpen * nnoremap <buffer> <C-c> i<C-c>
+augroup END
 
 set nocursorline
 
@@ -1528,8 +1542,8 @@ command! FzfAllFiles call fzf#run({
 \ 'down':    '50%'
 \ })
 
-nnoremap <leader>f <cmd>lua require('telescope.builtin').find_files()<CR>
-nnoremap <leader>F <cmd>lua require('telescope.builtin').find_files({ search_file = vim.fn.cword_lowercase() })<CR>
+nnoremap <leader>f <cmd>lua require('telescope.builtin').find_files({ previewer = false })<CR>
+nnoremap <leader>F <cmd>lua require('telescope.builtin').find_files({default_text = vim.fn.cWORD_lowercase(), previewer = false })<CR>
 nnoremap <leader>l <cmd>lua require('telescope.builtin').live_grep({ grep_open_files = true })<CR>
 
 command! -nargs=* FzfAg call fzf#run({
@@ -1557,8 +1571,8 @@ function! SnakecaseCurrentWord()
 endfunction
 
 lua << EOF
-  local function cword_lowercase()
-    local word = vim.fn.expand("<cword>")
+  local function cword_lowercase(word)
+    local word = word or vim.fn.expand("<cword>")
 
     -- adapted from https://codegolf.stackexchange.com/a/177958
     word = word:gsub('%f[^%l]%u','_%1')
@@ -1569,7 +1583,52 @@ lua << EOF
     return word:lower()
   end
 
+  local function cWORD_lowercase()
+    local word = vim.fn.expand("<cWORD>")
+
+    local result = ""
+
+    for part in string.gmatch(word, "([^.]+)") do
+        result = result .. " " .. cword_lowercase(part)
+    end
+
+    -- trim the result
+    result = string.gsub(result, "^%s*(.-)%s*$", "%1")
+
+    print("Searching for:" .. result)
+
+    return result
+  end
+
+  local function get_table_keys(t)
+    local keys={}
+    for key,_ in pairs(t) do
+      table.insert(keys, key)
+    end
+    return keys
+  end
+
+  local function taglist_for_expr(expr)
+    expr = expr or ""
+    local taglist = vim.fn.taglist(expr)
+
+    print("Searching taglist for:" .. expr)
+
+    for k,v in pairs(taglist) do
+        print("ENTRY:" .. k)
+        keys = get_table_keys(v)
+
+        for value_key, value_value in pairs(v) do
+        print("VALUE (inside):" .. value_key .. "=" .. value_value)
+        end
+    end
+
+    return taglist
+  end
+
   vim.fn.cword_lowercase = cword_lowercase
+  vim.fn.cWORD_lowercase = cWORD_lowercase
+  vim.fn.taglist_for_expr = taglist_for_expr
 EOF
 
 " 2014-11-03, AA: Easymotion plug-in
