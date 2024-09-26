@@ -115,6 +115,7 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCM
 Plug 'ful1e5/onedark.nvim'
 Plug 'marrub--/vim-zscript'
 Plug 'jeetsukumaran/telescope-buffer-lines.nvim'
+Plug 'bfredl/nvim-luadev'
 
 if has("macunix")
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -490,36 +491,37 @@ let g:tslime_autoset_pane = 0
 nmap <silent> Q <Plug>SetTmuxVars
 nmap <silent> qt :call ChangeTestStrategy()<CR>
 nmap <silent> qp :call ChangeElixirTestExecutable()<CR>
-nmap <silent> qf :Tmux mix test --failed<CR>
-nmap <silent> qw :Tmux mix test.watch <C-R>=fnameescape(expand('%'))<CR><CR>
 
 let g:only_run_changed_tests = 'mix test $(git diff --name-only master | grep _test.exs)'
 let g:only_format_changed_files = "mix format $(git diff --name-only master | grep '\.ex\(s\)\?$')"
 let g:only_credo_changed_files = "mix credo $(git diff --name-only master | grep '\.ex\(s\)\?$')"
 
-nmap <silent> <leader>Tx :call SendToTmux(g:only_format_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
-nmap <silent> <leader>Tb :call SendToTmux(g:only_run_changed_tests)<CR>:call Send_keys_to_Tmux('Enter')<CR>
-nmap <silent> <leader>Tc :call SendToTmux(g:only_credo_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
-nmap <silent> <leader>Ts :w<CR>:TestSuite<CR>
-nmap <silent> <leader>Tf :w<CR>:TestFile<CR>
-nmap <silent> <leader>t :w<CR>:TestNearest<CR>
-nmap <silent> <F8> :w<CR>:TestLast<CR>
-
-let g:neoterm_default_mod = 'vertical'
+let g:neoterm_default_mod = 'horizontal'
 let g:neoterm_autoscroll = 1
+let g:neoterm_auto_repl_cmd = 0
 let g:neoterm_automap_keys = '<leader>TZ'
 
+function! UseDefaultVimTestCommands()
+    nmap <silent> <leader>Ts :w<CR>:TestSuite<CR>
+    nmap <silent> <leader>Tf :w<CR>:TestFile<CR>
+    nmap <silent> <leader>t :w<CR>:TestNearest<CR>
+    nmap <silent> <F8> :w<CR>:TestLast<CR>
+endfunction
+
+call UseDefaultVimTestCommands()
+
+let g:strategy_index_to_use = 0
 function! ChangeTestStrategy()
-    if !exists('g:test#strategy') || g:test#strategy == 'tslime'
-        let g:test#strategy = 'neoterm'
+    call ChangeTestStrategyWithIndex(g:strategy_index_to_use)
+    let g:strategy_index_to_use += 1
+endfunction
 
-        nmap <silent> qq V<Plug>(neoterm-repl-send)
-        nmap <silent> qa ggVG<Plug>(neoterm-repl-send)
-        vmap Q <Plug>(neoterm-repl-send)
-        nmap <silent> <F6> :Tredo<CR>
+function! ChangeTestStrategyWithIndex(index)
+    let l:available_strategies = ['tslime', 'neoterm', 'neoterm-iextests']
 
-        echo 'Using neoterm/Term'
-    else
+    let l:to_use = l:available_strategies[a:index % len(l:available_strategies)]
+
+    if l:to_use == 'tslime'
         " With tslime, we want to run things in a tmux pane
         let g:test#strategy = 'tslime'
 
@@ -528,18 +530,57 @@ function! ChangeTestStrategy()
         vmap <silent> Q <Plug>SendSelectionToTmux
         nmap <silent> <F6> :call Send_keys_to_Tmux('Up')<CR>:call Send_keys_to_Tmux('Enter')<CR>
 
-        echo 'Using tslime/Tmux'
+        nmap <silent> <leader>Tx :call SendToTmux(g:only_format_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
+        nmap <silent> <leader>Tb :call SendToTmux(g:only_run_changed_tests)<CR>:call Send_keys_to_Tmux('Enter')<CR>
+        nmap <silent> <leader>Tc :call SendToTmux(g:only_credo_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
+
+        nmap <silent> qf :Tmux mix test --failed<CR>
+        nmap <silent> qw :Tmux mix test.watch <C-R>=fnameescape(expand('%'))<CR><CR>
+
+        call UseDefaultVimTestCommands()
+
+        echo 'Test strategy: tslime+tmux'
+    endif
+
+    if l:to_use == 'neoterm'
+        let g:test#strategy = 'neoterm'
+
+        nmap <silent> qq <Plug>(neoterm-repl-send-line)
+        nmap <silent> qa ggVG<Plug>(neoterm-repl-send)
+        vmap Q <Plug>(neoterm-repl-send)
+        nmap <silent> <F6> :Tredo<CR>
+
+        call UseDefaultVimTestCommands()
+
+        echo 'Test strategy: neoterm+vim-test'
+    endif
+
+    if l:to_use == 'neoterm-iextests'
+        let g:test#strategy = 'neoterm'
+
+        nmap <silent> qq <Plug>(neoterm-repl-send-line)
+        nmap <silent> qa ggVG<Plug>(neoterm-repl-send)
+        vmap Q <Plug>(neoterm-repl-send)
+        nmap <silent> <F6> :Tredo<CR>
+
+        nmap <silent> <leader>Ts :echo 'neoterm+iex-tests does not execute run test suite...'<CR>
+        nmap <silent> <leader>Tf :w<CR>:lua require('vimrc').test_current_file()<CR>
+        nmap <silent> <leader>Ti :lua require('vimrc').start_iex_pry()<CR>
+        nmap <silent> <leader>Tw :w<CR>:lua require('vimrc').watch_current_file()<CR>
+        nmap <silent> <leader>t :w<CR>:lua require('vimrc').test_current_line()<CR>
+
+        echo 'Test strategy: neoterm+iex-tests'
     endif
 endfunction
 
 call ChangeTestStrategy()
 
 function! ChangeElixirTestExecutable()
-    if !exists('g:test#elixir#exunit#executable') || g:test#elixir#exunit#executable == 'MIX_ENV=test iex -S mix test --trace'
-        let g:test#elixir#exunit#executable = 'MIX_ENV=test mix test'
+    if !exists('g:test#elixir#exunit#executable') || g:test#elixir#exunit#executable == 'iex -S mix test --trace'
+        let g:test#elixir#exunit#executable = 'mix test'
         echo 'Using regular mix test'
     else
-        let g:test#elixir#exunit#executable = 'MIX_ENV=test iex -S mix test --trace'
+        let g:test#elixir#exunit#executable = 'iex -S mix test --trace'
         echo 'Using mix test --trace w/ IEx'
     endif
 endfunction
