@@ -12,7 +12,13 @@ function set_global_value(dict, key, value)
     vim.g[dict] = my_dict
 end
 
-function printObj(obj, hierarchyLevel)
+-- package.loaded['vimrc']=nil; V = require('vimrc')
+-- I've symlinked ~/vim-dotfiles/lua to ~/.config/nvim/lua
+-- I = require('lua/inspect')
+-- print(I.inspect(V.all_buffers()))
+-- print(I.inspect(V.all_terms()))
+-- this printObj not needed anymore, use :Luadev and inspect.lua instead 👆
+M.printObj = function(obj, hierarchyLevel)
     if (hierarchyLevel == nil) then
         hierarchyLevel = 0
     elseif (hierarchyLevel == 4) then
@@ -23,17 +29,15 @@ function printObj(obj, hierarchyLevel)
     for i=0,hierarchyLevel,1 do
         whitespace = whitespace .. "-"
     end
-    io.write(whitespace)
 
-    print(obj)
     if (type(obj) == "table") then
         for k,v in pairs(obj) do
-            io.write(whitespace .. "-")
+            padding = whitespace .. "-"
             if (type(v) == "table") then
-                printObj(v, hierarchyLevel+1)
+                print(padding .. ' key=' .. k .. '; v=' .. lua.inspect(v))
+                M.printObj(v, hierarchyLevel+1)
             else
-                print('key=' .. k)
-                print(v)
+                print(padding .. ' key=' .. k .. '; v=' .. v)
             end
         end
     else
@@ -53,6 +57,21 @@ M.all_buffers = function()
 
     for i, bufnr in ipairs(vim.api.nvim_list_bufs()) do
         to_return[bufnr] = vim.api.nvim_buf_get_name(bufnr)
+    end
+
+    return to_return
+end
+
+M.all_terms = function()
+    local to_return = {}
+
+    for i, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+        local bufname = vim.api.nvim_buf_get_name(bufnr)
+        local neoterm_id = string.match(bufname, "#(neoterm%-%d+)$")
+
+        if neoterm_id then
+            to_return[bufnr] = {neoterm_id, bufname}
+        end
     end
 
     return to_return
@@ -92,6 +111,8 @@ M.switch_to_selected_term_window = function(term_window)
     local term_window = term_window or window_with_selected_term()
     local command_to_execute = term_window .. 'wincmd w'
 
+    print('Changing to term window with command: ' .. command_to_execute)
+
     set_global_value('vimrc', 'previous_window', current_window())
 
     print('Previous window NOW set to ' .. vim.g.vimrc.previous_window)
@@ -105,6 +126,29 @@ M.switch_to_previous_window = function(previous_window)
     local command_to_execute = previous_window .. 'wincmd w'
 
     vim.cmd(command_to_execute)
+end
+
+M.test_current_file = function()
+  local current_file = vim.fn.expand("%:p")
+  local cmd = 'IexTests.test("' .. current_file .. '")'
+  vim.cmd("T " .. cmd)
+end
+
+M.test_current_line = function()
+  local current_file = vim.fn.expand("%:p")
+  local current_line = vim.fn.line(".")
+  local cmd = 'IexTests.test("' .. current_file .. '", ' .. current_line .. ')'
+  vim.cmd("T " .. cmd)
+end
+
+M.watch_current_file = function()
+  local current_file = vim.fn.expand("%:p")
+  local cmd = 'IexTests.test_watch("' .. current_file .. '")'
+  vim.cmd("T " .. cmd)
+end
+
+M.start_iex_pry = function()
+  vim.cmd("T ,tiex")
 end
 
 return M
