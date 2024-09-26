@@ -12,9 +12,9 @@ function set_global_value(dict, key, value)
     vim.g[dict] = my_dict
 end
 
--- package.loaded['vimrc']=nil; V = require('vimrc')
 -- I've symlinked ~/vim-dotfiles/lua to ~/.config/nvim/lua
--- I = require('lua/inspect')
+-- package.loaded['vimrc']=nil; V = require('vimrc'); I = require('lua/inspect')
+--
 -- print(I.inspect(V.all_buffers()))
 -- print(I.inspect(V.all_terms()))
 -- this printObj not needed anymore, use :Luadev and inspect.lua instead 👆
@@ -70,11 +70,27 @@ M.all_terms = function()
         local neoterm_id = string.match(bufname, "#(neoterm%-%d+)$")
 
         if neoterm_id then
-            to_return[bufnr] = {neoterm_id, bufname}
+            to_return[neoterm_id] = {bufnr, bufname}
         end
     end
 
     return to_return
+end
+
+M.table_size = function(t)
+    size = 0
+    for _,_ in pairs(t) do
+        size = size + 1
+    end
+    return size
+end
+
+M.table_keys = function(t)
+    keys = {}
+    for k,_ in pairs(t) do
+        table.insert(keys, k)
+    end
+    return keys
 end
 
 -- Obtain all terms from Neoterm with vim.g.neoterm.instances
@@ -85,7 +101,17 @@ M.selected_term_name = function()
     if vim.g.neoterm.repl and vim.g.neoterm.repl.instance_id ~= nil then
         return 'neoterm-' .. vim.g.neoterm.repl.instance_id
     else
-        error('No terminal selected!')
+        local all_terms = M.all_terms()
+
+        if M.table_size(all_terms) == 0 then
+            error('No terminal selected!')
+        else
+            all_term_keys = M.table_keys(all_terms)
+            table.sort(all_term_keys)
+
+            -- first key is the first term, e.g. neoterm-1
+            return keys[1]
+        end
     end
 end
 
