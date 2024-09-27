@@ -1,137 +1,15 @@
 set runtimepath+=~/.vim/
 
-" Install vim-plug if not found
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-endif
-
-" Run PlugInstall if there are missing plugins
-autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-  \| PlugInstall --sync | source $MYVIMRC
-\| endif
-
-call plug#begin('~/.vim/plugged')
-
-Plug 'Lokaltog/vim-easymotion'
-Plug 'Shougo/neomru.vim'
-Plug 'Shougo/unite.vim'
-Plug 'gosukiwi/vim-atom-dark'
-Plug 'junegunn/limelight.vim'
-Plug 'junegunn/seoul256.vim'
-Plug 'ledger/vim-ledger'
-Plug 'tomtom/tlib_vim'
-Plug 'tomtom/tinykeymap_vim/'
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-Plug 'idbrii/vim-focusclip'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-speeddating'
-Plug 'tpope/vim-surround'
-Plug 'pangloss/vim-javascript'
-Plug 'terryma/vim-expand-region'
-Plug 'Raimondi/delimitMate'
-Plug 'rhysd/clever-f.vim'
-Plug 'ChesleyTan/wordCount.vim'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-rails'
-Plug 'Shougo/neoyank.vim'
-Plug 'Shougo/vimproc.vim'
-Plug 'tpope/vim-git'
-Plug 'tsukkee/unite-tag'
-Plug 'Shougo/unite-outline'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'tomasr/molokai'
-Plug 'elixir-editors/vim-elixir'
-Plug 'ahw/vim-pbcopy'
-Plug 'junegunn/vim-easy-align'
-Plug 'bkad/CamelCaseMotion'
-Plug 'Firef0x/matchit'
-Plug 'kana/vim-textobj-user'
-Plug 'nelstrom/vim-textobj-rubyblock'
-Plug 'andyl/vim-textobj-elixir'
-Plug 'reedes/vim-textobj-sentence'
-Plug 'reedes/vim-textobj-quote'
-Plug 'jgdavey/tslime.vim'
-Plug 'janko-m/vim-test'
-Plug 'nielsmadan/harlequin'
-Plug 'svermeulen/vim-easyclip'
-Plug 'Konfekt/FastFold'
-Plug 'ajmwagar/vim-deus'
-Plug 'bluz71/vim-moonfly-colors'
-Plug 'KeitaNakamura/neodark.vim'
-Plug 'romainl/vim-qf'
-Plug 'tpope/tpope-vim-abolish'
-Plug 'jnurmine/Zenburn'
-Plug 'dracula/vim'
-Plug 'bling/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'moll/vim-bbye'
-Plug 'reedes/vim-pencil'
-Plug 'reedes/vim-lexical'
-Plug 'junegunn/goyo.vim'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'aquach/vim-http-client'
-Plug 'airblade/vim-gitgutter'
-Plug 'vim-utils/vim-husk'
-Plug 'gregsexton/gitv'
-Plug 'mhinz/vim-mix-format'
-Plug 'mcchrish/nnn.vim'
-Plug 'tpope/vim-projectionist'
-Plug 'sophacles/vim-processing'
-Plug 'skywind3000/asyncrun.vim'
-Plug 'tpope/vim-rhubarb'
-Plug 'kassio/neoterm'
-Plug 'hashivim/vim-terraform'
-Plug 'junegunn/vim-emoji'
-Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-cmdline'
-Plug 'hrsh7th/cmp-emoji'
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
-Plug 'quangnguyen30192/cmp-nvim-ultisnips'
-Plug 'quangnguyen30192/cmp-nvim-tags'
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'shumphrey/fugitive-gitlab.vim'
-Plug 'nvim-lua/lsp-status.nvim'
-Plug 'ggandor/leap.nvim'
-Plug 'folke/lsp-colors.nvim'
-Plug 'kyazdani42/nvim-web-devicons'
-Plug 'folke/trouble.nvim'
-Plug 'nvim-treesitter/nvim-treesitter'
-Plug 'nvim-treesitter/nvim-treesitter-context'
-Plug 'RRethy/nvim-treesitter-endwise'
-Plug 'elixir-lang/tree-sitter-elixir'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
-Plug 'ful1e5/onedark.nvim'
-Plug 'marrub--/vim-zscript'
-Plug 'jeetsukumaran/telescope-buffer-lines.nvim'
-Plug 'bfredl/nvim-luadev'
-
-if has("macunix")
-  Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
-elseif has("unix")
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': '.install --all' }
-  Plug 'junegunn/fzf.vim'
-endif
-
-call plug#end()
-
-let mapleader = ","
-let g:mapleader = ","
+" mapleader being set before starting lazy.nvim, check ./lua/config/lazy.lua:21
+" Plugs being installed with lazy.nvim, check ./lua/plugins/spec.lua
 
 lua << EOF
--- getting the vimrc.lua from ~/.config/nvim/lua/vimrc.lua
-local lua_stuff = require('vimrc')
+
+-- migrating from Plug to lazy.nvim
+require('config.lazy')
+
+-- getting the vimrc.lua from ~/.config/nvim/lua/stuff.lua
+local lua_stuff = require('stuff')
 vim.keymap.set('n', '<leader>n', lua_stuff.switch_to_selected_term_window, { desc = 'Switch to the selected term window', noremap = true })
 
 local telescope = require('telescope')
@@ -464,13 +342,6 @@ nmap <silent> <leader>a :A<CR>
 
 let g:python_host_prog="/usr/bin/python"
 let g:python3_host_prog="/usr/bin/python3"
-
-" 2017/04/12 09:40:06, AA: Had to force the mapping again here
-" because for some reason it was set (use `:verbose map %` to check)
-" but it didn't work
-" autocmd VimEnter because the _vimrc is parsed before loading the plugins
-" and I want this to run after everything
-autocmd VimEnter * map % <Plug>Matchit-%
 
 let g:UltiSnipsSnippetsDir=$HOME.'/vim-dotfiles/bundles/mysnippets'
 let g:UltiSnipsSnippetDirectories=['UltiSnips', g:UltiSnipsSnippetsDir]
