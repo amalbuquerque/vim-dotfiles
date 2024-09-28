@@ -53,8 +53,6 @@ vim.keymap.set('n', '<leader>TT', builtin.tags, { desc = '[G]o to C[T]ags (teles
 
 require('onedark').setup()
 
-require('leap').set_default_keymaps()
-
 local lsp_status = require('lsp-status')
 lsp_status.register_progress()
 

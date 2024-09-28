@@ -84,7 +84,23 @@ local plugins = {
     { url = 'git@github.com:ludovicchabant/vim-gutentags.git' },
     { url = 'git@github.com:shumphrey/fugitive-gitlab.vim.git' },
     { url = 'git@github.com:nvim-lua/lsp-status.nvim.git' },
-    { url = 'git@github.com:ggandor/leap.nvim.git' },
+    {
+        url = 'git@github.com:ggandor/leap.nvim.git',
+        keys = {
+          { "s", mode = { "n", "x", "o" }, desc = "Leap Forward to" },
+          { "S", mode = { "n", "x", "o" }, desc = "Leap Backward to" },
+          { "gs", mode = { "n", "x", "o" }, desc = "Leap from Windows" },
+        },
+        config = function(_, opts)
+          local leap = require("leap")
+          for k, v in pairs(opts) do
+            leap.opts[k] = v
+          end
+          leap.add_default_mappings(true)
+          vim.keymap.del({ "x", "o" }, "x")
+          vim.keymap.del({ "x", "o" }, "X")
+        end
+    },
     { url = 'git@github.com:folke/lsp-colors.nvim.git' },
     { url = 'git@github.com:kyazdani42/nvim-web-devicons.git' },
     { url = 'git@github.com:folke/trouble.nvim.git' },
