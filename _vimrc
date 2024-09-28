@@ -206,19 +206,6 @@ end
 lspconfig.lexical.setup({})
 -- END LEXICAL SETUP
 
-local t = function(str)
-  return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-local check_back_space = function()
-    local col = vim.fn.col('.') - 1
-    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
-        return true
-    else
-        return false
-    end
-end
-
 -- URL handling
 if vim.fn.has "mac" == 1 then
     vim.keymap.set("n", "gx", '<Cmd>call jobstart(["open", expand("<cfile>")], {"detach": v:true})<CR>', attach_opts)
@@ -242,7 +229,16 @@ require("trouble").setup {
 }
 
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = {"elixir", "heex", "eex"}, -- only install parsers for elixir and heex
+  ensure_installed = {
+      "elixir",
+      "heex",
+      "eex",
+      "vim",
+      "lua",
+      "vimdoc",
+      "luadoc",
+      "markdown"
+      },
   sync_install = false,
   ignore_install = { },
   highlight = {
@@ -316,7 +312,7 @@ let g:projectionist_heuristics['mix.exs'] = {
             \ 'test/*_test.exs': {
             \   'type': 'test',
             \   'alternate': 'lib/{}.ex',
-            \   'template': ['defmodule {camelcase|capitalize|dot}Test do', '  use ExUnit.Case', '', '  alias {camelcase|capitalize|dot}, as: Subject', '', 'end'],
+            \   'template': ['defmodule {camelcase|capitalize|dot}Test do', '  use ExUnit.Case', '', '  alias {camelcase|capitalize|dot}', '', 'end'],
             \ },
             \ 'mix.exs': { 'type': 'mix' },
             \ 'config/*.exs': { 'type': 'config' },
@@ -462,9 +458,8 @@ let test#ruby#rspec#executable = 'RAILS_ENV=test bundle exec rspec'
 let delimitMate_expand_space = 1
 let delimitMate_expand_cr = 1
 let delimitMate_jump_expansion = 1
+
 " 2018/01/28 21:29:17, AA: Delete goes to the next closing thing (bracket, parenthesis, quote, etc.)
-" AltGr + x = ξ
-imap ξ <Plug>delimitMateS-Tab
 imap <expr> <Del> delimitMate#ShouldJump() == 1 ? '<Plug>delimitMateS-Tab' : '<Del>'
 
 " easy xml editing
