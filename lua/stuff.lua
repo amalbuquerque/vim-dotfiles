@@ -1,9 +1,10 @@
 -- use the following to reload this script
 -- package.loaded['vimrc'] = nil, require('vimrc')
 
-vim.g.vimrc = {}
-
 local M = {}
+
+-- needed for the set_global_value below
+vim.g.vimrc = {}
 
 -- vim.g.foo returns a copy dict, see https://stackoverflow.com/a/77381601/687420
 function set_global_value(dict, key, value)
