@@ -3,6 +3,11 @@ set runtimepath+=~/.vim/
 " mapleader being set before starting lazy.nvim, check ./lua/config/lazy.lua:21
 " Plugs being installed with lazy.nvim, check ./lua/plugins/spec.lua
 
+let g:neoterm_default_mod = 'horizontal'
+let g:neoterm_autoscroll = 1
+let g:neoterm_auto_repl_cmd = 0
+let g:neoterm_automap_keys = '<leader>TZ'
+
 lua << EOF
 
 -- migrating from Plug to lazy.nvim
@@ -102,11 +107,6 @@ let g:only_run_changed_tests = 'mix test $(git diff --name-only master | grep _t
 let g:only_format_changed_files = "mix format $(git diff --name-only master | grep '\.ex\(s\)\?$')"
 let g:only_credo_changed_files = "mix credo $(git diff --name-only master | grep '\.ex\(s\)\?$')"
 
-let g:neoterm_default_mod = 'horizontal'
-let g:neoterm_autoscroll = 1
-let g:neoterm_auto_repl_cmd = 0
-let g:neoterm_automap_keys = '<leader>TZ'
-
 function! UseDefaultVimTestCommands()
     nmap <silent> <leader>Ts :w<CR>:TestSuite<CR>
     nmap <silent> <leader>Tf :w<CR>:TestFile<CR>
@@ -170,10 +170,10 @@ function! ChangeTestStrategyWithIndex(index)
         nmap <silent> <F6> :Tredo<CR>
 
         nmap <silent> <leader>Ts :echo 'neoterm+iex-tests does not execute run test suite...'<CR>
-        nmap <silent> <leader>Tf :w<CR>:lua require('vimrc').test_current_file()<CR>
-        nmap <silent> <leader>Ti :lua require('vimrc').start_iex_pry()<CR>
-        nmap <silent> <leader>Tw :w<CR>:lua require('vimrc').watch_current_file()<CR>
-        nmap <silent> <leader>t :w<CR>:lua require('vimrc').test_current_line()<CR>
+        nmap <silent> <leader>Tf :w<CR>:lua require('stuff').test_current_file()<CR>
+        nmap <silent> <leader>Ti :lua require('stuff').start_iex_pry()<CR>
+        nmap <silent> <leader>Tw :w<CR>:lua require('stuff').watch_current_file()<CR>
+        nmap <silent> <leader>t :w<CR>:lua require('stuff').test_current_line()<CR>
 
         echo 'Test strategy: neoterm+iex-tests'
     endif
@@ -1400,13 +1400,6 @@ autocmd FileType gitcommit setlocal spell
 call tinykeymap#EnterMap('window', 'gw', {'name': 'Window mode'})
 call tinykeymap#Map('window', 'l', 'lopen')
 call tinykeymap#Map('window', 'q', 'copen')
-
-" 2018/03/19 10:31:00, AA: Disable the default hotkey
-let g:http_client_bind_hotkey=0
-nmap <silent> <leader>x :HTTPClientDoRequest<CR>
-
-" 2017/08/03 08:17:30, AA: Disable repeated hjkl motions
-" source ~/vim-dotfiles/disable_repeated_hjkl_motions.vim
 
 " 2017/11/17 07:58:48, AA: Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! exec 'w !sudo tee ' . shellescape(@%, 1) . ' >/dev/null'

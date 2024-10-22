@@ -5,8 +5,12 @@ vim.keymap.set('n', '<leader>n', lua_stuff.switch_to_selected_term_window, { des
 
 local telescope = require('telescope')
 local actions = require("telescope.actions")
+
 telescope.setup{
   defaults = {
+    preview = {
+      hide_on_startup = true -- hide previewer when picker starts
+    },
     mappings = {
       n = {
         ["-"] = actions.toggle_selection + actions.move_selection_worse,
@@ -20,6 +24,7 @@ telescope.setup{
         -- e.g. git_{create, delete, ...}_branch for the git_branches picker
         ["<esc>"] = actions.close,
         ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+        ['<C-s>'] = require("telescope.actions.layout").toggle_preview
       }
     }
   },

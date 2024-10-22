@@ -58,7 +58,14 @@ local plugins = {
     { url = 'git@github.com:reedes/vim-lexical.git' },
     { url = 'git@github.com:junegunn/goyo.vim.git' },
     { url = 'git@github.com:NLKNguyen/papercolor-theme.git' },
-    { url = 'git@github.com:aquach/vim-http-client.git' },
+    {
+        url = 'git@github.com:aquach/vim-http-client.git',
+        init = function()
+          vim.g.http_client_bind_hotkey = 0
+
+          vim.keymap.set('n', '<leader>x', ':HTTPClientDoRequest<CR>', { desc = 'Perform HTTP request', noremap = true })
+        end
+    },
     { url = 'git@github.com:airblade/vim-gitgutter.git' },
     { url = 'git@github.com:vim-utils/vim-husk.git' },
     { url = 'git@github.com:gregsexton/gitv.git' },
