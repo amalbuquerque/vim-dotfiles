@@ -134,8 +134,92 @@ local plugins = {
     { url = 'git@github.com:folke/lsp-colors.nvim.git' },
     { url = 'git@github.com:kyazdani42/nvim-web-devicons.git' },
     { url = 'git@github.com:folke/trouble.nvim.git' },
-    { url = 'git@github.com:nvim-treesitter/nvim-treesitter.git' },
-    { url = 'git@github.com:nvim-treesitter/nvim-treesitter-context.git' },
+    { 'nvim-treesitter/nvim-treesitter' },
+    {
+        'nvim-treesitter/nvim-treesitter-context',
+        config = function(_, opts)
+            require('treesitter-context').setup({
+            enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+                max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+                trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+                min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+                patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
+                    -- For all filetypes
+                    -- Note that setting an entry here replaces all other patterns for this entry.
+                    -- By setting the 'default' entry below, you can control which nodes you want to
+                    -- appear in the context window.
+                    default = {
+                        'class',
+                        'function',
+                        'method',
+                        'for',
+                        'while',
+                        'if',
+                        'switch',
+                        'case',
+                    },
+                    markdown = {
+                        'section',
+                    },
+                    elixir = {
+                        'anonymous_function',
+                        'arguments',
+                        'block',
+                        'do_block',
+                        'list',
+                        'map',
+                        'tuple',
+                        'quoted_content',
+                    },
+                    json = {
+                        'pair',
+                    },
+                    yaml = {
+                        'block_mapping_pair',
+                    },
+                }
+            })
+        end
+    },
+    {
+        'nvim-treesitter/nvim-treesitter-textobjects',
+        dependencies = { 'nvim-treesitter/nvim-treesitter' },
+        config = function(_, opts)
+            require('nvim-treesitter.configs').setup({
+                textobjects = {
+                    select = {
+                      enable = true,
+
+                      -- Automatically jump forward to textobj, similar to targets.vim
+                      lookahead = true,
+
+                      keymaps = {
+                        ["af"] = "@function.outer",
+                        ["if"] = "@function.inner",
+                        ["ar"] = "@block.outer",
+                        ["ir"] = "@block.inner",
+                        -- class map to module
+                        ["ac"] = "@class.outer",
+                        ["ic"] = "@class.inner",
+                      },
+                      -- You can choose the select mode (default is charwise 'v')
+                      --
+                      -- Can also be a function which gets passed a table with the keys
+                      -- * query_string: eg '@function.inner'
+                      -- * method: eg 'v' or 'o'
+                      -- and should return the mode ('v', 'V', or '<c-v>') or a table
+                      -- mapping query_strings to modes.
+                      selection_modes = {
+                        ['@parameter.outer'] = 'v', -- charwise
+                        ['@function.outer'] = 'V', -- linewise
+                        ['@class.outer'] = '<c-v>', -- blockwise
+                      },
+                    },
+                  }
+            })
+        end
+
+    },
     { url = 'git@github.com:RRethy/nvim-treesitter-endwise.git' },
     { url = 'git@github.com:elixir-lang/tree-sitter-elixir.git' },
     { url = 'git@github.com:nvim-lua/plenary.nvim.git' },
