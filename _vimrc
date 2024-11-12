@@ -18,12 +18,6 @@ require('setup')
 
 EOF
 
-"" surround customizations
-"" ASCII 111= 'o'
-"" ASCII 101= 'e'
-let g:surround_111 = "{:ok, \r}"
-let g:surround_101 = "{:error, \r}"
-
 function! LspStatus() abort
   let status = luaeval('require("lsp-status").status()')
   return trim(status)
