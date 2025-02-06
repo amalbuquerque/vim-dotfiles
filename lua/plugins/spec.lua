@@ -28,7 +28,7 @@ local plugins = {
             { "yss", "<Plug>Yssurround", desc = "wraps line in #1 (surround)" },
             { "ySs", "<Plug>YSsurround", desc = "wraps line in #1 (surround) + new line" },
             { "ySS", "<Plug>YSsurround", desc = "wraps line in #1 (surround) + new line" },
-            { "gs", "<Plug>VSurround", desc = "wraps visual selection in #1 (surround)", mode = "x" },
+            { "S", "<Plug>VSurround", desc = "wraps visual selection in #1 (surround)", mode = "x" },
             { "gS", "<Plug>VgSurround", desc = "wraps visual selection in #1 (surround) + new line", mode = "x" },
         },
         init = function()
@@ -65,7 +65,12 @@ local plugins = {
     { url = 'git@github.com:jgdavey/tslime.vim.git' },
     { url = 'git@github.com:janko-m/vim-test.git' },
     { url = 'git@github.com:nielsmadan/harlequin.git' },
-    { url = 'git@github.com:svermeulen/vim-easyclip.git' },
+    {
+        'git@github.com:svermeulen/vim-easyclip.git',
+        init = function()
+          vim.g.EasyClipUseGlobalPasteToggle = 0
+        end
+    },
     { url = 'git@github.com:Konfekt/FastFold.git' },
     { url = 'git@github.com:ajmwagar/vim-deus.git' },
     { url = 'git@github.com:bluz71/vim-moonfly-colors.git' },
@@ -117,9 +122,9 @@ local plugins = {
     {
         url = 'git@github.com:ggandor/leap.nvim.git',
         keys = {
-          { "s", mode = { "n", "x", "o" }, desc = "Leap Forward to" },
-          { "S", mode = { "n", "x", "o" }, desc = "Leap Backward to" },
-          { "gs", mode = { "n", "x", "o" }, desc = "Leap from Windows" },
+          { "s", mode = { "n", "o" }, desc = "Leap Forward to" },
+          { "S", mode = { "n", "o" }, desc = "Leap Backward to" },
+          { "gs", mode = { "n", "o" }, desc = "Leap from Windows" },
         },
         config = function(_, opts)
           local leap = require("leap")
@@ -134,7 +139,21 @@ local plugins = {
     { url = 'git@github.com:folke/lsp-colors.nvim.git' },
     { url = 'git@github.com:kyazdani42/nvim-web-devicons.git' },
     { url = 'git@github.com:folke/trouble.nvim.git' },
-    { 'nvim-treesitter/nvim-treesitter' },
+    {
+        'nvim-treesitter/nvim-treesitter',
+        config = function(_, opts)
+            opts = {
+                ensure_installed = { 'ruby', 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'elixir', 'erlang', 'python' },
+                -- Autoinstall languages that are not installed
+                auto_install = true,
+                endwise = { enabled = true },
+                highlight = { enable = true },
+                indent = { enable = true },
+            }
+
+            require('nvim-treesitter.configs').setup(opts)
+        end
+    },
     {
         'nvim-treesitter/nvim-treesitter-context',
         config = function(_, opts)
