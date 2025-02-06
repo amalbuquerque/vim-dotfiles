@@ -258,7 +258,7 @@ set sidescrolloff=1
 
 " 2015/08/19 10:01:29, AA: To toggle the editing line to be always
 " centered on the screen
-nnoremap <Leader>ss :let &scrolloff=999-&scrolloff<CR>
+nnoremap <leader>SS :let &scrolloff=999-&scrolloff<CR>
 
 set wildmenu
 set wildmode=list:longest,full
@@ -342,19 +342,6 @@ else
     " 2014-12-08 10:59:50, AA: latex config for shell
     let g:Tex_CompileRule_pdf = 'latexmk -pdf -f $*'
     let g:Tex_ViewRule_pdf = 'run /cygdrive/c/dados/programas/sumatraPDF/SumatraPDF'
-endif
-
-" abrir utf-8 the right way
-if has("multi_byte")
-  if &termencoding == ""
-    let &termencoding = &encoding
-  endif
-  set encoding=utf-8
-  setglobal fileencoding=utf-8
-  " 2013-12-27, AA: comentei para usar o ucs-bom e o latin1
-  " setglobal bomb
-  set fileencodings=utf-8
-  " set fileencodings=ucs-bom,utf-8,latin1
 endif
 
 " 2014-09-30, AA: Copied from
@@ -1181,6 +1168,7 @@ command! FzfAllFiles call fzf#run({
 \ 'down':    '50%'
 \ })
 
+nnoremap <leader>s <cmd>lua require('telescope.builtin').lsp_document_symbols({ previewer = true, symbol_width = 120 })<CR>
 nnoremap <leader>f <cmd>lua require('telescope.builtin').find_files({ previewer = false })<CR>
 nnoremap <leader>F <cmd>lua require('telescope.builtin').find_files({default_text = vim.fn.cWORD_lowercase(), previewer = false })<CR>
 nnoremap <leader>l <cmd>lua require('telescope.builtin').live_grep({ grep_open_files = true })<CR>
