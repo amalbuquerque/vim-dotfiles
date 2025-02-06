@@ -233,16 +233,16 @@ require'nvim-treesitter.configs'.setup {
       "lua",
       "vimdoc",
       "luadoc",
-      "markdown"
-      },
+      "markdown",
+      "ruby",
+      "python"
+  },
+  auto_install = true,
   sync_install = false,
   ignore_install = { },
-  highlight = {
-    enable = true
-  },
-  indent = {
-    enable = true
-  },
+  highlight = { enable = true },
+  indent = { enable = true },
+  endwise = { enabled = true },
 }
 
 require'treesitter-context'.setup{
@@ -260,8 +260,24 @@ require'treesitter-context'.setup{
   on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
 }
 
-require('nvim-treesitter.configs').setup {
-    endwise = {
-        enable = true,
+-- from https://github.com/neovim/neovim/discussions/28010#discussioncomment-10187140
+function my_paste(reg)
+    return function(lines)
+        local content = vim.fn.getreg('"')
+        return vim.split(content, '\n')
+    end
+end
+
+if (os.getenv('SSH_TTY') ~= nil) then
+    vim.g.clipboard = {
+      name = 'OSC 52',
+      copy = {
+        ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+        ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+      },
+      paste = {
+        ["+"] = my_paste("+"),
+        ["*"] = my_paste("*"),
     },
 }
+end
