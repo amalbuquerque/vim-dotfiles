@@ -117,13 +117,22 @@ function! ChangeTestStrategy()
 endfunction
 
 function! ChangeTestStrategyWithIndex(index)
-    let l:available_strategies = ['tslime', 'neoterm', 'neoterm-iextests']
+    " Common
+    nmap <silent> <leader>TF :lua require('stuff').tmux_or_neoterm_cmd('mix test --failed')<CR>
+    nmap <silent> <leader>Ti :lua require('stuff').start_iex_pry()<CR>
+    nmap <silent> <leader>Tf :w<CR>:lua require('stuff').test_current_file()<CR>
+    nmap <silent> <leader>t :w<CR>:lua require('stuff').test_current_line()<CR>
+    nmap <silent> <leader>Tw :w<CR>:lua require('stuff').watch_current_file()<CR>
+
+    let l:available_strategies = ['tslime', 'tslime-iextests', 'neoterm', 'neoterm-iextests']
 
     let l:to_use = l:available_strategies[a:index % len(l:available_strategies)]
 
     if l:to_use == 'tslime'
         " With tslime, we want to run things in a tmux pane
         let g:test#strategy = 'tslime'
+        " this is for us to have access to the vim.g.test_strategy on the lua side
+        let g:test_strategy = 'tslime'
 
         nmap <silent> qq V<Plug>SendSelectionToTmux
         nmap <silent> qa ggVG<Plug>SendSelectionToTmux<C-o>
@@ -134,40 +143,47 @@ function! ChangeTestStrategyWithIndex(index)
         nmap <silent> <leader>Tb :call SendToTmux(g:only_run_changed_tests)<CR>:call Send_keys_to_Tmux('Enter')<CR>
         nmap <silent> <leader>Tc :call SendToTmux(g:only_credo_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
 
-        nmap <silent> qf :Tmux mix test --failed<CR>
-        nmap <silent> qw :Tmux mix test.watch <C-R>=fnameescape(expand('%'))<CR><CR>
-
         call UseDefaultVimTestCommands()
 
-        echo 'Test strategy: tslime+tmux'
+        echo 'Test strategy: tslime+vim-tests'
+    endif
+
+    if l:to_use == 'tslime-iextests'
+        let g:test#strategy = 'tslime'
+        let g:test_strategy = 'tslime-iextests'
+
+        nmap <silent> qq V<Plug>SendSelectionToTmux
+        nmap <silent> qa ggVG<Plug>SendSelectionToTmux<C-o>
+        vmap <silent> Q <Plug>SendSelectionToTmux
+        nmap <silent> <F6> :call Send_keys_to_Tmux('Up')<CR>:call Send_keys_to_Tmux('Enter')<CR>
+
+        nmap <silent> <leader>Tx :call SendToTmux(g:only_format_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
+        nmap <silent> <leader>Tb :call SendToTmux(g:only_run_changed_tests)<CR>:call Send_keys_to_Tmux('Enter')<CR>
+        nmap <silent> <leader>Tc :call SendToTmux(g:only_credo_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
+
+        echo 'Test strategy: tslime+iextests'
     endif
 
     if l:to_use == 'neoterm'
         let g:test#strategy = 'neoterm'
+        let g:test_strategy = 'neoterm'
 
         nmap <silent> qq <Plug>(neoterm-repl-send-line)
         nmap <silent> qa ggVG<Plug>(neoterm-repl-send)
         vmap Q <Plug>(neoterm-repl-send)
         nmap <silent> <F6> :Tredo<CR>
-
-        call UseDefaultVimTestCommands()
 
         echo 'Test strategy: neoterm+vim-test'
     endif
 
     if l:to_use == 'neoterm-iextests'
         let g:test#strategy = 'neoterm'
+        let g:test_strategy = 'neoterm'
 
         nmap <silent> qq <Plug>(neoterm-repl-send-line)
         nmap <silent> qa ggVG<Plug>(neoterm-repl-send)
         vmap Q <Plug>(neoterm-repl-send)
         nmap <silent> <F6> :Tredo<CR>
-
-        nmap <silent> <leader>Ts :echo 'neoterm+iex-tests does not execute run test suite...'<CR>
-        nmap <silent> <leader>Tf :w<CR>:lua require('stuff').test_current_file()<CR>
-        nmap <silent> <leader>Ti :lua require('stuff').start_iex_pry()<CR>
-        nmap <silent> <leader>Tw :w<CR>:lua require('stuff').watch_current_file()<CR>
-        nmap <silent> <leader>t :w<CR>:lua require('stuff').test_current_line()<CR>
 
         echo 'Test strategy: neoterm+iex-tests'
     endif
@@ -712,7 +728,7 @@ let g:unite_source_history_yank_limit = 10000
 let g:unite_source_history_yank_file = $HOME.'/.vim/yankring.txt'
 " 2016/11/10 10:38:08, AA: From https://github.com/Shougo/unite.vim/issues/986
 let g:unite_source_rec_async_command = [ 'ag', '-l', '-g', '', '--nocolor'  ]
-nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank register history/yank<cr>
+nnoremap <leader>yr :<C-u>Unite -no-split -buffer-name=yank register history/yank<cr>
 
 """"""""""""""""""""""""""""""
 " => Easyclip stuff
@@ -900,6 +916,7 @@ au Filetype elixir nmap <leader>p orequire IEx; IEx.pry<Esc>
 au Filetype elixir nmap <silent> <leader>L :MixFormat<CR>
 au Filetype elixir nmap <silent> <F5> :Tmux recompile<CR>
 au Filetype elixir nmap <silent> qc :call CopyPenultimateLineFromTmuxPane()<CR><C-R>"tp
+au Filetype elixir nmap <silent> <leader>yy :lua require('stuff').copy_module_name()<CR>
 
 """"""""""""""""""""""""""""""
 " => Ruby section

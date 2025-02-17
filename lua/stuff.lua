@@ -155,27 +155,61 @@ M.switch_to_previous_window = function(previous_window)
     vim.cmd(command_to_execute)
 end
 
+M.alternate_test_file = function()
+  local file_path = vim.fn.expand("%")
+
+  if string.find(file_path, "test/") == 1 then
+    -- test file already
+    return file_path
+  else
+    file_path = string.gsub(file_path, "lib/", "test/")
+    return string.gsub(file_path, ".ex", "_test.exs")
+  end
+end
+
+M.tmux_or_neoterm_cmd = function(cmd)
+  if string.find(vim.g.test_strategy, 'tslime') then
+    vim.cmd("Tmux " .. cmd)
+  else
+    vim.cmd("T " .. cmd)
+  end
+end
+
 M.test_current_file = function()
-  local current_file = vim.fn.expand("%:p")
+  local current_file = M.alternate_test_file()
   local cmd = 'IexTests.test("' .. current_file .. '")'
-  vim.cmd("T " .. cmd)
+  M.tmux_or_neoterm_cmd(cmd)
 end
 
 M.test_current_line = function()
-  local current_file = vim.fn.expand("%:p")
+  local current_file = M.alternate_test_file()
   local current_line = vim.fn.line(".")
   local cmd = 'IexTests.test("' .. current_file .. '", ' .. current_line .. ')'
-  vim.cmd("T " .. cmd)
+  M.tmux_or_neoterm_cmd(cmd)
 end
 
 M.watch_current_file = function()
-  local current_file = vim.fn.expand("%:p")
+  local current_file = M.alternate_test_file()
   local cmd = 'IexTests.test_watch("' .. current_file .. '")'
-  vim.cmd("T " .. cmd)
+  M.tmux_or_neoterm_cmd(cmd)
 end
 
 M.start_iex_pry = function()
-  vim.cmd("T ,tiex")
+  M.tmux_or_neoterm_cmd(',tiex')
+end
+
+M.copy_module_name = function()
+  local first_line = vim.fn.getline(1)
+
+  if string.find(first_line, "defmodule") then
+    local module_name = string.gsub(first_line, "defmodule ", "")
+    module_name = string.gsub(module_name, " do", "")
+
+    vim.fn.setreg("@", module_name)
+    print('Copied ' .. module_name)
+  else
+    print('defmodule in the 1st line not found')
+  end
 end
 
 return M
