@@ -226,6 +226,10 @@ nmap <leader>w :w!<cr>
 " nmap <leader>c :%w !pbcopy<cr>
 " now using vim-pbcopy, normal mode: cy{motion}, visual mode: cy
 let g:vim_pbcopy_local_cmd = "pbcopy"
+" also had to run `xhost +local:andre-jupiter` on the laptop, to consider andre-jupiter "remote" host as local
+" the `loops` config was in order for vim to not block waiting for the SSH connection to close
+" can be tested with `echo "it works nooow" | ssh andre@andre-thinkpad DISPLAY=:0 xclip -loops 5 -sel clip-board`
+let g:vim_pbcopy_remote_cmd = "ssh andre@andre-thinkpad DISPLAY=:0 xclip -loops 5 -sel clip-board"
 let g:vim_pbcopy_escape_backslashes = 1
 
 inoremap jk <Esc>
@@ -915,7 +919,7 @@ endfunction
 au Filetype elixir nmap <leader>p orequire IEx; IEx.pry<Esc>
 au Filetype elixir nmap <silent> <leader>L :MixFormat<CR>
 au Filetype elixir nmap <silent> <F5> :Tmux recompile<CR>
-au Filetype elixir nmap <silent> qc :call CopyPenultimateLineFromTmuxPane()<CR><C-R>"tp
+au Filetype elixir nmap <silent> qc :call CopyPenultimateLineFromTmuxPane()<CR>"tp
 au Filetype elixir nmap <silent> <leader>yy :lua require('stuff').copy_module_name()<CR>
 
 """"""""""""""""""""""""""""""
