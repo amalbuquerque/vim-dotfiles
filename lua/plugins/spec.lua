@@ -79,8 +79,10 @@ local plugins = {
     { url = 'git@github.com:tpope/tpope-vim-abolish.git' },
     { url = 'git@github.com:jnurmine/Zenburn.git' },
     { url = 'git@github.com:dracula/vim.git' },
-    { url = 'git@github.com:bling/vim-airline.git' },
-    { url = 'git@github.com:vim-airline/vim-airline-themes.git' },
+    {
+        'nvim-lualine/lualine.nvim',
+        dependencies = { 'nvim-tree/nvim-web-devicons' }
+    },
     { url = 'git@github.com:moll/vim-bbye.git' },
     { url = 'git@github.com:reedes/vim-pencil.git' },
     { url = 'git@github.com:reedes/vim-lexical.git' },

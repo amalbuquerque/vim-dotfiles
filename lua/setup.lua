@@ -281,3 +281,14 @@ if (os.getenv('SSH_TTY') ~= nil) then
     },
 }
 end
+
+require('lualine').setup({
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics', 'lsp_status'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  }
+})

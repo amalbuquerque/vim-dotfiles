@@ -23,12 +23,6 @@ function! LspStatus() abort
   return trim(status)
 endfunction
 
-call airline#parts#define_function('lsp_status', 'LspStatus')
-call airline#parts#define_condition('lsp_status', 'luaeval("#vim.lsp.buf_get_clients() > 0")')
-
-let g:airline#extensions#nvimlsp#enabled = 0
-let g:airline_section_warning = airline#section#create_right(['lsp_status'])
-
 let g:processing_no_default_mappings=1
 
 let g:nnn#set_default_mappings = 0
@@ -172,6 +166,8 @@ function! ChangeTestStrategyWithIndex(index)
         nmap <silent> qa ggVG<Plug>(neoterm-repl-send)
         vmap Q <Plug>(neoterm-repl-send)
         nmap <silent> <F6> :Tredo<CR>
+
+        call UseDefaultVimTestCommands()
 
         echo 'Test strategy: neoterm+vim-test'
     endif
@@ -350,9 +346,6 @@ if has ("gui_running")
 
     if has("gui_gtk2")
         set guifont=Envy\ Code\ R\ for\ Powerline\ 14
-        let g:airline_powerline_fonts = 1
-        let g:airline_symbols = {}
-        let g:airline_symbols.space = "\ua0"
     elseif has("gui_win32")
         set guifont=Envy\ Code\ R\ for\ Powerline:h10:cANSI
     elseif has("macunix")
@@ -404,38 +397,6 @@ function! ChangeSchemeWithIndex(index)
     endif
 
     highlight VertSplit guibg=Orange guifg=Black ctermbg=234 ctermfg=3
-
-    if !exists('g:airline_symbols')
-        let g:airline_symbols = {}
-    endif
-
-    " air-line
-    let g:airline_powerline_fonts = 1
-
-    " airline symbols
-    let g:airline_left_sep = ''
-    let g:airline_left_alt_sep = ''
-    let g:airline_right_sep = ''
-    let g:airline_right_alt_sep = ''
-    let g:airline_symbols.branch = ''
-    let g:airline_symbols.readonly = ''
-    let g:airline_symbols.linenr = ''
-    let g:airline_symbols.paste = 'ρ'
-    let g:airline_symbols.whitespace = 'Ξ'
-    let g:airline_symbols.space = "\ua0"
-
-    let g:airline#extensions#fugitiveline#enabled = 1
-
-    let g:airline#extensions#tabline#enabled = 2
-    let g:airline#extensions#tabline#fnamemod = ':t'
-    let g:airline#extensions#tabline#left_sep = ''
-    let g:airline#extensions#tabline#left_alt_sep = ''
-    let g:airline#extensions#tabline#right_sep = ''
-    let g:airline#extensions#tabline#right_alt_sep = ''
-
-    let g:airline_section_b = '%{airline#util#wrap(airline#extensions#hunks#get_hunks(),100)}%{airline#util#wrap(airline#extensions#branch#get_head(),80)[0:23]}'
-
-    let g:airline_theme='papercolor'
 endfunction
 
 " 2014-11-04, AA: using seoul256
