@@ -123,19 +123,19 @@ local plugins = {
     { url = 'git@github.com:nvim-lua/lsp-status.nvim.git' },
     {
         url = 'git@github.com:ggandor/leap.nvim.git',
-        keys = {
-          { "s", mode = { "n", "o" }, desc = "Leap Forward to" },
-          { "S", mode = { "n", "o" }, desc = "Leap Backward to" },
-          { "gs", mode = { "n", "o" }, desc = "Leap from Windows" },
-        },
         config = function(_, opts)
           local leap = require("leap")
           for k, v in pairs(opts) do
             leap.opts[k] = v
           end
-          leap.add_default_mappings(true)
-          vim.keymap.del({ "x", "o" }, "x")
-          vim.keymap.del({ "x", "o" }, "X")
+          -- only set leap on normal and insert mode
+          vim.keymap.set({'n', 'o'}, 's',  '<Plug>(leap-forward)')
+          vim.keymap.set({'n', 'o'}, 'S',  '<Plug>(leap-backward)')
+          vim.keymap.set({'n', 'o'}, 'gs', '<Plug>(leap-from-window)')
+          -- perform action in a remote location
+          vim.keymap.set({'n', 'o'}, 'gS', function ()
+            require('leap.remote').action()
+          end)
         end
     },
     { url = 'git@github.com:folke/lsp-colors.nvim.git' },

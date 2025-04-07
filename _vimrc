@@ -71,8 +71,8 @@ nmap <silent> <leader>a :A<CR>
 let g:python_host_prog="/usr/bin/python"
 let g:python3_host_prog="/usr/bin/python3"
 
-let g:UltiSnipsSnippetsDir=$HOME.'/vim-dotfiles/bundles/mysnippets'
-let g:UltiSnipsSnippetDirectories=['UltiSnips', g:UltiSnipsSnippetsDir]
+" had to symlink ~/.config/nvim/mysnippets to ~/vim-dotfiles/bundles/mysnippets
+let g:UltiSnipsSnippetDirectories=['UltiSnips', 'mysnippets']
 
 set nocompatible
 
