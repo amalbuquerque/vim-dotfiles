@@ -237,8 +237,16 @@ tnoremap <C-\> <C-\><C-n>
 inoremap <C-BS> <C-\><C-o>db
 inoremap <C-Del> <C-\><C-o>dw
 
+function! SshGBrowse() range
+  call system(g:vim_pbcopy_remote_cmd, execute(a:firstline . ',' . a:lastline . 'GBrowse!'))
+endfunction
+
 " expands %% to current file's directory in command-line mode
-cnoremap GG GBrowse!
+if $SSH_CLIENT
+    cnoremap GG call SshGBrowse()
+else
+    cnoremap GG GBrowse!
+endif
 cnoremap %% <C-R>=fnameescape(expand('%'))<CR>
 cnoremap %p <C-R>=fnameescape(expand('%:h')).'/'<CR>
 nnoremap <leader>C :! cp <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
@@ -878,7 +886,6 @@ function! CopyPenultimateLineFromTmuxPane()
 endfunction
 
 au Filetype elixir nmap <leader>p orequire IEx; IEx.pry<Esc>
-au Filetype elixir nmap <silent> <leader>L :MixFormat<CR>
 au Filetype elixir nmap <silent> <F5> :Tmux recompile<CR>
 au Filetype elixir nmap <silent> qc :call CopyPenultimateLineFromTmuxPane()<CR>"tp
 au Filetype elixir nmap <silent> <leader>yy :lua require('stuff').copy_module_name()<CR>
