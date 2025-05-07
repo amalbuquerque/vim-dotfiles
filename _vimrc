@@ -241,12 +241,12 @@ function! SshGBrowse() range
   call system(g:vim_pbcopy_remote_cmd, execute(a:firstline . ',' . a:lastline . 'GBrowse!'))
 endfunction
 
-" expands %% to current file's directory in command-line mode
 if $SSH_CLIENT
     cnoremap GG call SshGBrowse()
 else
     cnoremap GG GBrowse!
 endif
+" expands %% to current file's directory in command-line mode
 cnoremap %% <C-R>=fnameescape(expand('%'))<CR>
 cnoremap %p <C-R>=fnameescape(expand('%:h')).'/'<CR>
 nnoremap <leader>C :! cp <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(expand('%:h')).'/'<CR>
@@ -1308,7 +1308,13 @@ endfunction
 function! OpenRemoteGitlabMR()
     let l:gitlab_mr_url = GetRemoteGitlabMergeRequestURL()
 
-    call jobstart(["open", l:gitlab_mr_url], {"detach": v:true})
+    if $SSH_CLIENT
+        call system(g:vim_pbcopy_remote_cmd, execute('echo "' . l:gitlab_mr_url . '"'))
+        echo 'Copied ' . l:gitlab_mr_url
+    else
+        echo 'Opening ' . l:gitlab_mr_url
+        call jobstart(["open", l:gitlab_mr_url], {"detach": v:true})
+    endif
 endfunction
 
 " https://gitlab.com/remote-com/employ-starbase/tiger/-/merge_requests/new?merge_request%5Bsource_branch%5D=feat%2F11396-permissions-dont-define-properties
