@@ -1,6 +1,10 @@
 -- getting the vimrc.lua from ~/.config/nvim/lua/stuff.lua
 local lua_stuff = require('stuff')
 
+local claudius_chat = require('claudius_chat')
+vim.keymap.set('n', '<leader>CC', claudius_chat.toggle_chat, { silent = true, noremap = true })
+vim.keymap.set('v', '<leader>CC', claudius_chat.handle_visual_selection, { silent = true, noremap = true })
+
 vim.keymap.set('n', '<leader>n', lua_stuff.switch_to_selected_term_window, { desc = 'Switch to the selected term window', noremap = true })
 
 local telescope = require('telescope')
