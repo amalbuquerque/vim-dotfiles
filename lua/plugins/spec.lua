@@ -251,7 +251,11 @@ local plugins = {
     { url = 'git@github.com:jeetsukumaran/telescope-buffer-lines.nvim.git' },
     { url = 'git@github.com:bfredl/nvim-luadev.git' },
     { url = 'git@github.com:junegunn/fzf.git', dir = '~/.fzf', build = '.install --all' },
-    { url = 'git@github.com:junegunn/fzf.vim.git' }
+    { url = 'git@github.com:junegunn/fzf.vim.git' },
+    {
+        url = 'git@github.com:StanAngeloff/claudius.nvim',
+        opts = { keymaps = {}, provider = "claude" }
+    }
 }
 
 return plugins;
