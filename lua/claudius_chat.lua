@@ -81,6 +81,9 @@ M.toggle_chat = function()
         border = 'rounded'
     })
 
+    -- :nnoremap <buffer> <leader>CS :ClaudiusSendAndInsert<CR>
+    vim.keymap.set('n', '<leader>CS', ':ClaudiusSendAndInsert<CR>', { silent = true, noremap = true, buffer = true })
+
     -- Window setup
     vim.api.nvim_win_set_option(chat_win, 'winhighlight', 'Normal:Normal,FloatBorder:FloatBorder')
     vim.wo[chat_win].conceallevel = 0
