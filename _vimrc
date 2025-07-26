@@ -1381,9 +1381,15 @@ call tinykeymap#Map('window', 'q', 'copen')
 " 2017/11/17 07:58:48, AA: Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! exec 'w !sudo tee ' . shellescape(@%, 1) . ' >/dev/null'
 
-" augroup sort_imports
-"     autocmd!
-"     autocmd BufWritePre /Users/andre/projs/remote/tiger/**/*.ex,/Users/andre/projs/remote/tiger/**/*.exs silent! mkview! | silent! g/^\(\(alias\)\@!.\)*$\n\s*alias/+1,/\s*alias.*$\n^\(\(alias\)\@!.\)*$/ sort i
-"     autocmd BufWritePost /Users/andre/projs/remote/tiger/**/*.ex,/Users/andre/projs/remote/tiger/**/*.exs silent! loadview
-" augroup end
+" fixing tmux-navigator, because it was inserting 'TmuxNavigateDown' in the command line
+" if doing <C-j> in `terminal mode` to go the the Tmux pane below
+if !empty($TMUX)
+  function! IsFZF()
+    return &ft == 'fzf'
+  endfunction
 
+  tnoremap <expr> <silent> <C-h> IsFZF() ? "\<C-h>" : "\<C-\>\<C-n>:\<C-U> TmuxNavigateLeft\<cr>"
+  tnoremap <expr> <silent> <C-j> IsFZF() ? "\<C-j>" : "\<C-\>\<C-n>:\<C-U> TmuxNavigateDown\<cr>"
+  tnoremap <expr> <silent> <C-k> IsFZF() ? "\<C-k>" : "\<C-\>\<C-n>:\<C-U> TmuxNavigateUp\<cr>"
+  tnoremap <expr> <silent> <C-l> IsFZF() ? "\<C-l>" : "\<C-\>\<C-n>:\<C-U> TmuxNavigateRight\<cr>"
+endif
