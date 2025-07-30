@@ -172,39 +172,17 @@ cmp.setup.cmdline(':', {
 local lspconfig = require('lspconfig')
 
 if vim.loop.os_uname().sysname == "Linux" then
-    language_server_cmd = "/home/andre/projs/personal/elixir-ls/build/language_server.sh"
+    language_server_cmd = '/home/andre/projs/personal/elixir-ls/build/language_server.sh'
 else
-    language_server_cmd = "/Users/andre/projs/personal/elixir-ls/build/language_server.sh"
+    language_server_cmd = '/Users/andre/projs/personal/elixir-ls/build/language_server.sh'
 end
 
--- Set up lspconfig.
-local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+-- Set up lspconfig for Lexical
+vim.lsp.config('lexical', {
+    cmd = { '/home/andre/projs/personal/lexical/build/bin/start_lexical.sh' },
+})
 
--- BEGIN LEXICAL SETUP
-local configs = require("lspconfig.configs")
-
-local lexical_config = {
-  filetypes = { "elixir", "eelixir", },
-  cmd = { "/home/andre/projs/personal/lexical/build/bin/start_lexical.sh" },
-  settings = {},
-}
-
-if not configs.lexical then
-  configs.lexical = {
-    default_config = {
-      filetypes = lexical_config.filetypes,
-      cmd = lexical_config.cmd,
-      root_dir = function(fname)
-        return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or vim.loop.os_homedir()
-      end,
-      -- optional settings
-      settings = lexical_config.settings,
-    },
-  }
-end
-
-lspconfig.lexical.setup({})
--- END LEXICAL SETUP
+vim.lsp.enable('lexical')
 
 -- URL handling
 if vim.fn.has "mac" == 1 then
