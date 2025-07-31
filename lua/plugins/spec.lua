@@ -254,7 +254,7 @@ local plugins = {
     { url = 'git@github.com:junegunn/fzf.vim.git' },
     {
         url = 'git@github.com:StanAngeloff/claudius.nvim',
-        opts = { keymaps = {}, provider = "claude" }
+        opts = { keymaps = {enable = false}, provider = "claude" }
     }
 }
 

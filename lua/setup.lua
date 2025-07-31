@@ -1,9 +1,22 @@
 -- getting the vimrc.lua from ~/.config/nvim/lua/stuff.lua
 local lua_stuff = require('stuff')
 
+-- Claudius as a simple way to interact with LLMs
 local claudius_chat = require('claudius_chat')
-vim.keymap.set('n', '<leader>CC', claudius_chat.toggle_chat, { silent = true, noremap = true })
 vim.keymap.set('v', '<leader>CC', claudius_chat.handle_visual_selection, { silent = true, noremap = true })
+vim.keymap.set('n', '<leader>CC', claudius_chat.toggle_chat, { silent = true, noremap = true })
+
+vim.api.nvim_create_autocmd({'BufEnter', 'BufWinEnter'}, {
+    pattern = { '*.chat' },
+    callback = function()
+        vim.schedule(function()
+            vim.keymap.set('n', '<C-s>', '<cmd>ClaudiusSend<cr>', { buffer=0, silent = true, noremap = true })
+            vim.keymap.set('i', '<C-s>', '<cmd>ClaudiusSendAndInsert<cr>', { buffer=0, silent = true, noremap = true })
+            vim.keymap.set('n', '<Leader><', '<cmd>ClaudiusNextMessage<cr>', { buffer=0, silent = true, noremap = true })
+            vim.keymap.set('n', '<Leader>>', '<cmd>ClaudiusPrevMessage<cr>', { buffer=0, silent = true, noremap = true })
+        end)
+    end
+})
 
 vim.keymap.set('n', '<leader>n', lua_stuff.switch_to_selected_term_window, { desc = 'Switch to the selected term window', noremap = true })
 
