@@ -1161,6 +1161,7 @@ nnoremap <leader>s <cmd>lua require('telescope.builtin').lsp_document_symbols({ 
 nnoremap <leader>f <cmd>lua require('telescope.builtin').find_files({ previewer = false })<CR>
 nnoremap <leader>F <cmd>lua require('telescope.builtin').find_files({default_text = vim.fn.cWORD_lowercase(), previewer = false })<CR>
 nnoremap <leader>l <cmd>lua require('telescope.builtin').live_grep({ grep_open_files = true })<CR>
+nnoremap <leader>Tr <cmd>Telescope resume<CR>
 
 command! -nargs=* FzfAg call fzf#run({
 \ 'source':  printf('rg --column --line-number --no-heading --fixed-strings --smart-case --hidden --follow --color "always" --glob "!.git/*" --glob "!.next/*" --glob "!node_modules/*" "%s"',

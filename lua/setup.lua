@@ -30,8 +30,8 @@ telescope.setup{
     },
     mappings = {
       n = {
-        ["-"] = actions.toggle_selection + actions.move_selection_worse,
-        ["_"] = actions.toggle_selection + actions.move_selection_better,
+        ["-"] = actions.toggle_selection + actions.move_selection_better,
+        ["_"] = actions.toggle_selection + actions.move_selection_worse,
         -- smart means it sends everything if nothing is selected 💃
         ["Q"] = actions.smart_send_to_qflist + actions.open_qflist,
       },
@@ -39,6 +39,7 @@ telescope.setup{
         -- map actions.which_key to <C-h> (default: <C-/>)
         -- actions.which_key shows the mappings for your picker,
         -- e.g. git_{create, delete, ...}_branch for the git_branches picker
+        ["<C-/>"] = actions.which_key,
         ["<esc>"] = actions.close,
         ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
         ['<C-s>'] = require("telescope.actions.layout").toggle_preview
