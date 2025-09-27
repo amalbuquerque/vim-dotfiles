@@ -185,18 +185,12 @@ cmp.setup.cmdline(':', {
 
 local lspconfig = require('lspconfig')
 
-if vim.loop.os_uname().sysname == "Linux" then
-    language_server_cmd = '/home/andre/projs/personal/elixir-ls/build/language_server.sh'
-else
-    language_server_cmd = '/Users/andre/projs/personal/elixir-ls/build/language_server.sh'
-end
-
--- Set up lspconfig for Lexical
-vim.lsp.config('lexical', {
-    cmd = { '/home/andre/projs/personal/lexical/build/bin/start_lexical.sh' },
+-- Set up lspconfig for Expert
+vim.lsp.config('expert', {
+    cmd = { '/home/andre/projs/personal/expert_linux_amd64' },
 })
 
-vim.lsp.enable('lexical')
+vim.lsp.enable('expert')
 
 -- URL handling
 if vim.fn.has "mac" == 1 then

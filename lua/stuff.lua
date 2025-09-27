@@ -184,7 +184,7 @@ end
 M.test_current_line = function()
   local current_file = M.alternate_test_file()
   local current_line = vim.fn.line(".")
-  local cmd = 'IexTests.test("' .. current_file .. '", ' .. current_line .. ')'
+  local cmd = 'IexTests.test("' .. current_file .. ':' .. current_line .. '")'
   M.tmux_or_neoterm_cmd(cmd)
 end
 
