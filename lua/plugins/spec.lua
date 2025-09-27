@@ -143,18 +143,79 @@ local plugins = {
     { url = 'git@github.com:folke/trouble.nvim.git' },
     {
         'nvim-treesitter/nvim-treesitter',
-        config = function(_, opts)
-            opts = {
-                ensure_installed = { 'ruby', 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'elixir', 'erlang', 'python' },
-                -- Autoinstall languages that are not installed
-                auto_install = true,
-                endwise = { enabled = true },
-                highlight = { enable = true },
-                indent = { enable = true },
-            }
+        branch = 'main',
+        lazy = false,
+        dependencies = {
+          "RRethy/nvim-treesitter-endwise",
+        },
+    },
 
-            require('nvim-treesitter.configs').setup(opts)
-        end
+    {
+      'MeanderingProgrammer/treesitter-modules.nvim',
+      dependencies = { 'nvim-treesitter/nvim-treesitter' },
+      lazy = false,
+      keys = {
+        { "<A-v>", desc = "Start TS Selection" },
+        { "<v>",   desc = "Increment Selection Node",  mode = "x" },
+        { "<gv>",  desc = "Increment Selection Scope", mode = "x" },
+        { "<V>",   desc = "Shrink selection",         mode = "x" },
+      },
+      opts = {
+        ensure_installed = {
+          "bash",
+          "c",
+          "cmake",
+          "comment",
+          "css",
+          "dockerfile",
+          "eex",
+          "elixir",
+          "elm",
+          "erlang",
+          "go",
+          "gomod",
+          "hcl",
+          "heex",
+          -- "help",
+          "html",
+          "java",
+          "javascript",
+          "jsdoc",
+          "json",
+          "json5",
+          "jsonc",
+          "lua",
+          "make",
+          "markdown",
+          "markdown_inline",
+          "python",
+          "query",
+          "regex",
+          "ruby",
+          "rust",
+          "scss",
+          "terraform",
+          "tmux",
+          "toml",
+          "tsx",
+          "typescript",
+          "vim",
+          "vimdoc",
+          "yaml",
+        },
+        fold = { enable = true },
+        highlight = { enable = true },
+        indent = { enable = true },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = "<A-v>",
+            node_incremental = "v",
+            scope_incremental = "gv",
+            node_decremental = "V",
+          },
+        },
+      },
     },
     {
         'nvim-treesitter/nvim-treesitter-context',
@@ -203,45 +264,85 @@ local plugins = {
         end
     },
     {
-        'nvim-treesitter/nvim-treesitter-textobjects',
-        dependencies = { 'nvim-treesitter/nvim-treesitter' },
-        config = function(_, opts)
-            require('nvim-treesitter.configs').setup({
-                textobjects = {
-                    select = {
-                      enable = true,
-
-                      -- Automatically jump forward to textobj, similar to targets.vim
-                      lookahead = true,
-
-                      keymaps = {
-                        ["af"] = "@function.outer",
-                        ["if"] = "@function.inner",
-                        ["ar"] = "@block.outer",
-                        ["ir"] = "@block.inner",
-                        -- class map to module
-                        ["ac"] = "@class.outer",
-                        ["ic"] = "@class.inner",
-                      },
-                      -- You can choose the select mode (default is charwise 'v')
-                      --
-                      -- Can also be a function which gets passed a table with the keys
-                      -- * query_string: eg '@function.inner'
-                      -- * method: eg 'v' or 'o'
-                      -- and should return the mode ('v', 'V', or '<c-v>') or a table
-                      -- mapping query_strings to modes.
-                      selection_modes = {
-                        ['@parameter.outer'] = 'v', -- charwise
-                        ['@function.outer'] = 'V', -- linewise
-                        ['@class.outer'] = '<c-v>', -- blockwise
-                      },
-                    },
-                  }
-            })
-        end
-
+      "nvim-treesitter/nvim-treesitter-textobjects",
+      branch = "main",
+      select = {
+        -- Automatically jump forward to textobj, similar to targets.vim
+        lookahead = true,
+        -- You can choose the select mode (default is charwise 'v')
+        --
+        -- Can also be a function which gets passed a table with the keys
+        -- * query_string: eg '@function.inner'
+        -- * method: eg 'v' or 'o'
+        -- and should return the mode ('v', 'V', or '<c-v>') or a table
+        -- mapping query_strings to modes.
+        selection_modes = {
+          ['@parameter.outer'] = 'v', -- charwise
+          ['@function.outer'] = 'V', -- linewise
+          ['@class.outer'] = '<c-v>', -- blockwise
+        },
+      },
+      keys = {
+        {
+          "af",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
+          end,
+          desc = "Select outer function",
+          mode = { "x", "o" },
+        },
+        {
+          "if",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
+          end,
+          desc = "Select inner function",
+          mode = { "x", "o" },
+        },
+        {
+          "ac",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@class.outer", "textobjects")
+          end,
+          desc = "Select outer class",
+          mode = { "x", "o" },
+        },
+        {
+          "ic",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects")
+          end,
+          desc = "Select inner class",
+          mode = { "x", "o" },
+        },
+        {
+          "ar",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@block.outer", "textobjects")
+          end,
+          desc = "Select outer block",
+          mode = { "x", "o" },
+        },
+        {
+          "ir",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@block.inner", "textobjects")
+          end,
+          desc = "Select inner block",
+          mode = { "x", "o" },
+        },
+        {
+          "as",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@local.scope", "locals")
+          end,
+          desc = "Select local scope",
+          mode = { "x", "o" },
+        },
+      },
+      ---@module "nvim-treesitter-textobjects"
+      opts = { multiwindow = true },
     },
-    { url = 'git@github.com:RRethy/nvim-treesitter-endwise.git' },
     { url = 'git@github.com:elixir-lang/tree-sitter-elixir.git' },
     { url = 'git@github.com:nvim-lua/plenary.nvim.git' },
     { url = 'git@github.com:nvim-telescope/telescope.nvim.git' },
@@ -255,6 +356,16 @@ local plugins = {
     {
         url = 'git@github.com:StanAngeloff/claudius.nvim',
         opts = { keymaps = {enable = false}, provider = "claude" }
+    },
+    {
+      url = 'git@github.com:andymass/vim-matchup.git',
+      -- `opts` mechanism built into `lazy.nvim`.
+      -- Calls `require('match-up').setup` under the hood
+      opts = {
+        treesitter = {
+          stopline = 500,
+        }
+      }
     }
 }
 

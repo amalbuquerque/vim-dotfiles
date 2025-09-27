@@ -220,27 +220,6 @@ require("trouble").setup {
 -- refer to the configuration section below
 }
 
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = {
-      "elixir",
-      "heex",
-      "eex",
-      "vim",
-      "lua",
-      "vimdoc",
-      "luadoc",
-      "markdown",
-      "ruby",
-      "python"
-  },
-  auto_install = true,
-  sync_install = false,
-  ignore_install = { },
-  highlight = { enable = true },
-  indent = { enable = true },
-  endwise = { enabled = true },
-}
-
 require'treesitter-context'.setup{
   enable = true,
   max_lines = 2, -- How many lines the window should span. Values <= 0 mean no limit.
