@@ -725,8 +725,16 @@ function! NetrwBuf()
   nmap <buffer> Y 0"zy$:! cp <C-R>z <C-R>z
 endfunction
 
+function! ReviewInsertMappings()
+  inoremap <buffer> XX ❌
+  inoremap <buffer> !! ⚠️
+  inoremap <buffer> VV ✅
+endfunction
+
 augroup FILETYPES
   autocmd FileType netrw call NetrwBuf()
+  autocmd BufRead,BufNewFile review.md call ReviewInsertMappings()
+  autocmd BufRead,BufNewFile REVIEW.md call ReviewInsertMappings()
 augroup END
 
 let g:netrw_gx="<cWORD>"

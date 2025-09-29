@@ -175,7 +175,7 @@ local plugins = {
           "go",
           "gomod",
           "hcl",
-          "heex",
+          -- "heex",
           -- "help",
           "html",
           "java",
