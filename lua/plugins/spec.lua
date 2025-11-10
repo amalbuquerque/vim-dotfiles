@@ -19,6 +19,7 @@ local plugins = {
     { url = 'git@github.com:tpope/vim-speeddating.git' },
     {
         'tpope/vim-surround',
+        event = "VeryLazy",
         keys = {
             { "cs", "<Plug>Csurround", desc = "change surrounding #1 by #2" },
             { "ds", "<Plug>Dsurround", desc = "delete surrounding #1" },
@@ -141,6 +142,13 @@ local plugins = {
     { url = 'git@github.com:folke/lsp-colors.nvim.git' },
     { url = 'git@github.com:kyazdani42/nvim-web-devicons.git' },
     { url = 'git@github.com:folke/trouble.nvim.git' },
+    {
+      "folke/snacks.nvim",
+      priority = 1000,
+      lazy = false,
+      ---@type snacks.Config
+      opts = {},
+    },
     {
         'nvim-treesitter/nvim-treesitter',
         branch = 'main',
@@ -265,6 +273,7 @@ local plugins = {
     },
     {
       "nvim-treesitter/nvim-treesitter-textobjects",
+      event = "VeryLazy",
       branch = "main",
       select = {
         -- Automatically jump forward to textobj, similar to targets.vim
@@ -356,6 +365,67 @@ local plugins = {
     {
         url = 'git@github.com:StanAngeloff/claudius.nvim',
         opts = { keymaps = {enable = false}, provider = "claude" }
+    },
+    { "saghen/blink.cmp" },
+    {
+      "folke/sidekick.nvim",
+      event = "VeryLazy",
+      -- Next Edit Suggestions need a Copilot subscription, which I don't have :/
+      opts = { nes = { enabled = false } },
+      keys = {
+        {
+          "<c-.>",
+          function() require("sidekick.cli").toggle() end,
+          desc = "Sidekick Toggle",
+          mode = { "n", "t", "i", "x" },
+        },
+        {
+          "<leader>aa",
+          function() require("sidekick.cli").toggle() end,
+          desc = "Sidekick Toggle CLI",
+        },
+        {
+          "<leader>as",
+          function() require("sidekick.cli").select() end,
+          -- Or to select only installed tools:
+          -- require("sidekick.cli").select({ filter = { installed = true } })
+          desc = "Select CLI",
+        },
+        {
+          "<leader>ad",
+          function() require("sidekick.cli").close() end,
+          desc = "Detach a CLI Session",
+        },
+        {
+          "<leader>at",
+          function() require("sidekick.cli").send({ msg = "{this}" }) end,
+          mode = { "x", "n" },
+          desc = "Send This",
+        },
+        {
+          "<leader>af",
+          function() require("sidekick.cli").send({ msg = "{file}" }) end,
+          desc = "Send File",
+        },
+        {
+          "<leader>av",
+          function() require("sidekick.cli").send({ msg = "{selection}" }) end,
+          mode = { "x" },
+          desc = "Send Visual Selection",
+        },
+        {
+          "<leader>ap",
+          function() require("sidekick.cli").prompt() end,
+          mode = { "n", "x" },
+          desc = "Sidekick Select Prompt",
+        },
+        -- Example of a keybinding to open Claude directly
+        {
+          "<leader>ac",
+          function() require("sidekick.cli").toggle({ name = "claude", focus = true }) end,
+          desc = "Sidekick Toggle Claude",
+        },
+      },
     },
     {
       url = 'git@github.com:andymass/vim-matchup.git',
