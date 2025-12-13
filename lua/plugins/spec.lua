@@ -362,10 +362,6 @@ local plugins = {
     { url = 'git@github.com:bfredl/nvim-luadev.git' },
     { url = 'git@github.com:junegunn/fzf.git', dir = '~/.fzf', build = '.install --all' },
     { url = 'git@github.com:junegunn/fzf.vim.git' },
-    {
-        url = 'git@github.com:StanAngeloff/claudius.nvim',
-        opts = { keymaps = {enable = false}, provider = "claude" }
-    },
     { "saghen/blink.cmp" },
     {
       "folke/sidekick.nvim",
@@ -386,9 +382,7 @@ local plugins = {
         },
         {
           "<leader>as",
-          function() require("sidekick.cli").select() end,
-          -- Or to select only installed tools:
-          -- require("sidekick.cli").select({ filter = { installed = true } })
+          function() require("sidekick.cli").select({ filter = { installed = true } }) end,
           desc = "Select CLI",
         },
         {

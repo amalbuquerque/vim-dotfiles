@@ -1,16 +1,6 @@
-vim-dotfiles
-============
+# vim-dotfiles
 
-my vim dotfiles
+## TODO
 
-Howto, 2015-03-27 17:07:58:
----------------------------
-
-* mkdir -p ~/.vim/autoload ~/.vim/bundle
-* curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
-* cd ~/vim-dotfiles
-* cp ./bundles/bundle_list.txt ~/.vim/bundle
-* cp ./bundles/clone_bundles.sh ~/.vim/bundle
-* cd ~/.vim/bundle
-* clone_bundles.sh bundle_list.txt
-* touch ~/.vimrc && echo 'source ˜/vim-dotfiles/_vimrc' >> ~/.vimrc
+1. <leader>P to expand relative path to @+ and @p and copy it to host clipboard if inside SSH (check how `cy` is working)
+2. 
