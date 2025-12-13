@@ -20,6 +20,17 @@ vim.keymap.set('n', '<leader>P', function()
     print('Copied: ' .. path)
 end)
 
+local function paste_from_clipboard()
+    local clipboard = vim.fn.system('xclip -selection clipboard -o')
+    -- Remove trailing newline that system() adds
+    clipboard = clipboard:gsub('\n$', '')
+
+    -- Insert at cursor position
+    vim.api.nvim_put({clipboard}, 'c', true, true)
+end
+
+vim.keymap.set('n', 'gp', paste_from_clipboard)
+
 vim.api.nvim_create_autocmd({'BufEnter', 'BufWinEnter'}, {
     pattern = { '*.chat' },
     callback = function()

@@ -256,11 +256,6 @@ nnoremap <leader>M :! mv <C-R>=fnameescape(expand('%'))<CR> <C-R>=fnameescape(ex
 nnoremap <expr> ge '`[' . strpart(getregtype(), 0, 1) . '`]'
 
 nnoremap gP `[v`]
-if has("mac")
-  nnoremap gp :read !pbpaste<CR>
-else
-  nnoremap gp :read !xclip -selection clipboard -o<CR>
-endif
 
 " switch to last buffer, like alt+tab
 nnoremap <Leader><Tab> :b#<CR>
