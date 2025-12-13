@@ -603,9 +603,6 @@ map <left> :bp<cr>
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
 
-" When <leader>P copia a path do ficheiro actual para o clipboard
-map <leader>P :let @+=expand("%:p")<cr>
-
 " Specify the behavior when switching between buffers
 try
   set switchbuf=usetab

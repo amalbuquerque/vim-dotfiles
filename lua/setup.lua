@@ -6,6 +6,20 @@ local claudius_chat = require('claudius_chat')
 vim.keymap.set('v', '<leader>CC', claudius_chat.handle_visual_selection, { silent = true, noremap = true })
 vim.keymap.set('n', '<leader>CC', claudius_chat.toggle_chat, { silent = true, noremap = true })
 
+local function copy_to_clipboard(text)
+    local cmd = vim.g.vim_pbcopy_remote_cmd or vim.g.vim_pbcopy_local_cmd
+    vim.fn.system(cmd, text)
+    print('Copied to system clipboard')
+end
+
+vim.keymap.set('n', '<leader>P', function()
+    local path = vim.fn.expand('%:p')
+    vim.fn.setreg('+', path)
+    vim.fn.setreg('p', path)
+    copy_to_clipboard(path)
+    print('Copied: ' .. path)
+end)
+
 vim.api.nvim_create_autocmd({'BufEnter', 'BufWinEnter'}, {
     pattern = { '*.chat' },
     callback = function()

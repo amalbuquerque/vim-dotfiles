@@ -1,5 +1,5 @@
 -- use the following to reload this script
--- package.loaded['vimrc'] = nil, require('vimrc')
+-- package.loaded['stuff'] = nil, require('stuff')
 
 local M = {}
 
