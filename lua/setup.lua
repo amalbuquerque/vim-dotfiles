@@ -23,10 +23,9 @@ end)
 local function paste_from_clipboard()
     local clipboard = vim.fn.system('xclip -selection clipboard -o')
     -- Remove trailing newline that system() adds
-    clipboard = clipboard:gsub('\n$', '')
+    clipboard = clipboard:gsub('\n+$', '')
 
-    -- Insert at cursor position
-    vim.api.nvim_put({clipboard}, 'c', true, true)
+    vim.api.nvim_paste(clipboard, true, -1)
 end
 
 vim.keymap.set('n', 'gp', paste_from_clipboard)
@@ -86,9 +85,27 @@ telescope.load_extension('buffer_lines')
 
 local builtin = require('telescope.builtin')
 
+local function tmux_to_telescope(lines)
+  -- TODO: Search for an optional expression to mark the first line we're interested to copy
+  -- TODO: Fix the sort, we want to keep the sort
+  local cmd = string.format("/home/andre/dotfiles/get_lines_from_tmux_marked_pane.sh %d", lines or 1000)
+  print(string.format("Running this command: '%s'", cmd))
+
+  local pickers = require("telescope.pickers")
+  local finders = require("telescope.finders")
+
+  pickers.new({}, {
+    prompt_title = "Tmux Pane",
+    finder = finders.new_oneshot_job(
+      vim.split(cmd, " "),
+      {}
+    )
+  }):find()
+end
+
 vim.keymap.set('n', '<leader>r', builtin.oldfiles, { desc = 'Recently opened files', noremap = true })
 vim.keymap.set('n', '<leader>TT', builtin.tags, { desc = '[G]o to C[T]ags (telescope)', noremap = true })
--- vim.keymap.set('n', '<leader>TE', builtin.taglist, { desc = 'Specific taglist', noremap = true })
+vim.keymap.set('n', '<leader>TE', tmux_to_telescope, { desc = 'Tmux pane', noremap = true })
 
 require('onedark').setup()
 
