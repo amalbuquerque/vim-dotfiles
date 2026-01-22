@@ -80,6 +80,7 @@ local plugins = {
     { url = 'git@github.com:tpope/tpope-vim-abolish.git' },
     { url = 'git@github.com:jnurmine/Zenburn.git' },
     { url = 'git@github.com:dracula/vim.git' },
+    { url = 'git@github.com:EdenEast/nightfox.nvim.git' },
     {
         'nvim-lualine/lualine.nvim',
         dependencies = { 'nvim-tree/nvim-web-devicons' }
@@ -191,7 +192,6 @@ local plugins = {
           "jsdoc",
           "json",
           "json5",
-          "jsonc",
           "lua",
           "make",
           "markdown",
