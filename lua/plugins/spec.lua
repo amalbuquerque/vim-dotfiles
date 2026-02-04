@@ -124,7 +124,7 @@ local plugins = {
     { url = 'git@github.com:shumphrey/fugitive-gitlab.vim.git' },
     { url = 'git@github.com:nvim-lua/lsp-status.nvim.git' },
     {
-        url = 'git@github.com:ggandor/leap.nvim.git',
+        url = "https://codeberg.org/andyg/leap.nvim",
         config = function(_, opts)
           local leap = require("leap")
           for k, v in pairs(opts) do
