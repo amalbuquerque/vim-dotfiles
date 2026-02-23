@@ -113,6 +113,7 @@ endfunction
 function! Exit_from_Tmux_copy_mode()
   let l:target_pane = g:tslime['session'] . ':' . g:tslime['window'] . '.' . g:tslime['pane']
   call system("tmux send-keys -t " . l:target_pane . " -X cancel")
+  echo 'Exited from Tmux copy-mode'
 endfunction
 
 function! ChangeTestStrategyWithIndex(index)
@@ -151,10 +152,10 @@ function! ChangeTestStrategyWithIndex(index)
         let g:test#strategy = 'tslime'
         let g:test_strategy = 'tslime-iextests'
 
-        nmap <silent> qq V<Plug>SendSelectionToTmux
+        nmap <silent> qq :call Exit_from_Tmux_copy_mode()<CR>V<Plug>SendSelectionToTmux
         nmap <silent> qa ggVG<Plug>SendSelectionToTmux<C-o>
         vmap <silent> Q <Plug>SendSelectionToTmux
-        nmap <silent> <F6> :call Send_keys_to_Tmux('Up')<CR>:call Send_keys_to_Tmux('Enter')<CR>
+        nmap <silent> <F6> :call Exit_from_Tmux_copy_mode()<CR>:call Send_keys_to_Tmux('Up')<CR>:call Send_keys_to_Tmux('Enter')<CR>
 
         nmap <silent> <leader>Tx :call SendToTmux(g:only_format_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
         nmap <silent> <leader>Tb :call SendToTmux(g:only_run_changed_tests)<CR>:call Send_keys_to_Tmux('Enter')<CR>
