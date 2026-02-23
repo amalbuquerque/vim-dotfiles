@@ -230,7 +230,7 @@ local lspconfig = require('lspconfig')
 
 -- Set up lspconfig for Expert
 vim.lsp.config('expert', {
-    cmd = { '/home/andre/projs/personal/expert_linux_amd64' },
+    cmd = { '/home/andre/projs/personal/expert_linux_amd64', '--stdio' },
 })
 
 vim.lsp.enable('expert')

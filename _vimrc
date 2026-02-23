@@ -229,8 +229,8 @@ nmap <leader>w :w!<cr>
 let g:vim_pbcopy_local_cmd = "pbcopy"
 " also had to run `xhost +local:andre-jupiter` on the laptop, to consider andre-jupiter "remote" host as local
 " the `loops` config was in order for vim to not block waiting for the SSH connection to close
-" can be tested with `echo "it works nooow" | ssh andre@andre-thinkpad DISPLAY=:0 xclip -loops 5 -sel clip-board`
-let g:vim_pbcopy_remote_cmd = "ssh andre@andre-thinkpad DISPLAY=:0 xclip -loops 5 -sel clip-board"
+" can be tested with `echo "it works nooow" | ssh andre@andre-thinkpad DISPLAY=:0 xsel -b`
+let g:vim_pbcopy_remote_cmd = "ssh andre@andre-thinkpad DISPLAY=:0 xsel -b"
 let g:vim_pbcopy_escape_backslashes = 1
 
 inoremap jk <Esc>
