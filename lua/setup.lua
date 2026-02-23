@@ -106,6 +106,7 @@ end
 vim.keymap.set('n', '<leader>r', builtin.oldfiles, { desc = 'Recently opened files', noremap = true })
 vim.keymap.set('n', '<leader>TT', builtin.tags, { desc = '[G]o to C[T]ags (telescope)', noremap = true })
 vim.keymap.set('n', '<leader>TE', tmux_to_telescope, { desc = 'Tmux pane', noremap = true })
+vim.keymap.set('n', '::', ':Tmux ', { noremap = true })
 
 require('onedark').setup()
 

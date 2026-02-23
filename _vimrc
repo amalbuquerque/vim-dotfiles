@@ -82,8 +82,8 @@ set noshowmode
 " 2015/08/03 14:43:50, AA: 0 equals ^ only in normal mode
 noremap 0 ^
 
-let g:tslime_always_current_session = 1
-let g:tslime_always_current_window = 1
+let g:tslime_always_current_session = 0
+let g:tslime_always_current_window = 0
 let g:tslime_autoset_pane = 0
 
 " 2017/05/09 10:01:45, AA: Tslime + Neoterm + vim-test stuff
@@ -110,6 +110,11 @@ function! ChangeTestStrategy()
     let g:strategy_index_to_use += 1
 endfunction
 
+function! Exit_from_Tmux_copy_mode()
+  let l:target_pane = g:tslime['session'] . ':' . g:tslime['window'] . '.' . g:tslime['pane']
+  call system("tmux send-keys -t " . l:target_pane . " -X cancel")
+endfunction
+
 function! ChangeTestStrategyWithIndex(index)
     " Common
     nmap <silent> <leader>TF :lua require('stuff').tmux_or_neoterm_cmd('mix test --failed')<CR>
@@ -128,10 +133,10 @@ function! ChangeTestStrategyWithIndex(index)
         " this is for us to have access to the vim.g.test_strategy on the lua side
         let g:test_strategy = 'tslime'
 
-        nmap <silent> qq V<Plug>SendSelectionToTmux
+        nmap <silent> qq :call Exit_from_Tmux_copy_mode()<CR>V<Plug>SendSelectionToTmux
         nmap <silent> qa ggVG<Plug>SendSelectionToTmux<C-o>
         vmap <silent> Q <Plug>SendSelectionToTmux
-        nmap <silent> <F6> :call Send_keys_to_Tmux('Up')<CR>:call Send_keys_to_Tmux('Enter')<CR>
+        nmap <silent> <F6> :call Exit_from_Tmux_copy_mode()<CR>:call Send_keys_to_Tmux('Up')<CR>:call Send_keys_to_Tmux('Enter')<CR>
 
         nmap <silent> <leader>Tx :call SendToTmux(g:only_format_changed_files)<CR>:call Send_keys_to_Tmux('Enter')<CR>
         nmap <silent> <leader>Tb :call SendToTmux(g:only_run_changed_tests)<CR>:call Send_keys_to_Tmux('Enter')<CR>
@@ -877,12 +882,12 @@ au Filetype processing nnoremap <silent> <F5> :call ToggleProcessingPreview()<CR
 
 " places on the 't' register the penultimate tmux pane line
 function! CopyPenultimateLineFromTmuxPane()
+    let l:target_pane = g:tslime['session'] . ':' . g:tslime['window'] . '.' . g:tslime['pane']
     " capture-pane -p captures the full pane contents
     " awk NF removes empty lines
     " tail -2 gets the last 2 lines
     " head -1 gets the first of the last 2 lines
-    let l:tmux_pane = g:tslime['pane']
-    let @t = system("tmux capture-pane -p -t " . l:tmux_pane . " | awk NF | tail -2 | head -1")
+    let @t = system("tmux capture-pane -p -t " . l:target_pane . " | awk NF | tail -2 | head -1")
 endfunction
 
 au Filetype elixir nmap <leader>p orequire IEx; IEx.pry<Esc>
