@@ -117,11 +117,11 @@ endfunction
 
 function! ChangeTestStrategyWithIndex(index)
     " Common
-    nmap <silent> <leader>TF :lua require('stuff').tmux_or_neoterm_cmd('mix test --failed')<CR>
-    nmap <silent> <leader>Ti :lua require('stuff').start_iex_pry()<CR>
-    nmap <silent> <leader>Tf :w<CR>:lua require('stuff').test_current_file()<CR>
-    nmap <silent> <leader>t :w<CR>:lua require('stuff').test_current_line()<CR>
-    nmap <silent> <leader>Tw :w<CR>:lua require('stuff').watch_current_file()<CR>
+    nmap <silent> <leader>TF :call Exit_from_Tmux_copy_mode()<CR>:lua require('stuff').tmux_or_neoterm_cmd('mix test --failed')<CR>
+    nmap <silent> <leader>Ti :call Exit_from_Tmux_copy_mode()<CR>:lua require('stuff').start_iex_pry()<CR>
+    nmap <silent> <leader>Tf :call Exit_from_Tmux_copy_mode()<CR>:w<CR>:lua require('stuff').test_current_file()<CR>
+    nmap <silent> <leader>t :call Exit_from_Tmux_copy_mode()<CR>:w<CR>:lua require('stuff').test_current_line()<CR>
+    nmap <silent> <leader>Tw :call Exit_from_Tmux_copy_mode()<CR>:w<CR>:lua require('stuff').watch_current_file()<CR>
 
     let l:available_strategies = ['tslime', 'tslime-iextests', 'neoterm', 'neoterm-iextests']
 
